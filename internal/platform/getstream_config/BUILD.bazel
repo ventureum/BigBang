@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["getstream_client.go"],
+    importpath = "BigBang/internal/platform/getstream_config",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/app/feed_attributes:go_default_library",
+        "@in_gopkg_getstream_stream_go2_v1//:go_default_library",
+    ],
+)

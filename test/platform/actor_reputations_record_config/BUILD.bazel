@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["test_actor_reputations_record.go"],
+    importpath = "BigBang/test/platform/actor_reputations_record_config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/app/feed_attributes:go_default_library",
+        "//internal/platform/postgres_config/actor_reputations_record_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+    ],
+)

@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "activity.go",
+        "actor.go",
+        "actor_type.go",
+        "block_timestamp.go",
+        "content.go",
+        "feed_id.go",
+        "object.go",
+        "post_type.go",
+        "reputation.go",
+        "source.go",
+        "verb.go",
+        "vote_type.go",
+        "voter.go",
+    ],
+    importpath = "BigBang/internal/app/feed_attributes",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/pkg/utils:go_default_library",
+        "@com_github_ethereum_go_ethereum//common:go_default_library",
+        "@com_github_ethereum_go_ethereum//crypto:go_default_library",
+        "@com_github_jmoiron_sqlx//types:go_default_library",
+    ],
+)

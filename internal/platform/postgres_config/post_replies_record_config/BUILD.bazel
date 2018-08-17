@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "post_replies_record.go",
+        "post_replies_record_ops.go",
+        "post_replies_record_schema.go",
+        "post_replies_record_sql.go",
+    ],
+    importpath = "BigBang/internal/platform/postgres_config/post_replies_record_config",
+    visibility = ["//:__subpackages__"],
+    deps = ["//internal/platform/postgres_config/client_config:go_default_library"],
+)

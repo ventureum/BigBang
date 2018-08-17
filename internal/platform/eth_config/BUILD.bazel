@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "abi.go",
+        "eth_client.go",
+        "event.go",
+        "topic.go",
+    ],
+    importpath = "BigBang/internal/platform/eth_config",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/app/feed_attributes:go_default_library",
+        "//internal/platform/getstream_config:go_default_library",
+        "//internal/platform/postgres_config/actor_reputations_record_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/post_config:go_default_library",
+        "//internal/platform/postgres_config/post_replies_record_config:go_default_library",
+        "//internal/platform/postgres_config/post_reputations_record_config:go_default_library",
+        "//internal/platform/postgres_config/post_votes_record_config:go_default_library",
+        "//internal/platform/postgres_config/purchase_reputations_record_config:go_default_library",
+        "@com_github_ethereum_go_ethereum//:go_default_library",
+        "@com_github_ethereum_go_ethereum//accounts/abi:go_default_library",
+        "@com_github_ethereum_go_ethereum//common:go_default_library",
+        "@com_github_ethereum_go_ethereum//core/types:go_default_library",
+        "@com_github_ethereum_go_ethereum//crypto:go_default_library",
+        "@com_github_ethereum_go_ethereum//ethclient:go_default_library",
+    ],
+)

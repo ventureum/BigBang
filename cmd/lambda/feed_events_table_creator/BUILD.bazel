@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["feed_events_table_creator.go"],
+    importpath = "BigBang/cmd/lambda/feed_events_table_creator",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//internal/platform/postgres_config/actor_reputations_record_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/post_config:go_default_library",
+        "//internal/platform/postgres_config/post_replies_record_config:go_default_library",
+        "//internal/platform/postgres_config/post_reputations_record_config:go_default_library",
+        "//internal/platform/postgres_config/post_rewards_record_config:go_default_library",
+        "//internal/platform/postgres_config/post_votes_record_config:go_default_library",
+        "//internal/platform/postgres_config/reputations_refuel_record_config:go_default_library",
+        "@com_github_aws_aws_lambda_go//lambda:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "feed_events_table_creator",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
