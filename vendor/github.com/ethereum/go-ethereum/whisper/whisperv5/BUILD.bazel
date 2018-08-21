@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "api.go",
+        "config.go",
+        "doc.go",
+        "envelope.go",
+        "filter.go",
+        "gen_criteria_json.go",
+        "gen_message_json.go",
+        "gen_newmessage_json.go",
+        "message.go",
+        "peer.go",
+        "topic.go",
+        "whisper.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/whisper/whisperv5",
+    importpath = "github.com/ethereum/go-ethereum/whisper/whisperv5",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/deckarep/golang-set:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common/hexutil:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common/math:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/crypto:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/crypto/ecies:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rlp:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rpc:go_default_library",
+        "//vendor/github.com/syndtr/goleveldb/leveldb/errors:go_default_library",
+        "//vendor/golang.org/x/crypto/pbkdf2:go_default_library",
+        "//vendor/golang.org/x/sync/syncmap:go_default_library",
+    ],
+)

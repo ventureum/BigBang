@@ -11,8 +11,8 @@ go_library(
         "//internal/platform/getstream_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/post_config:go_default_library",
-        "@com_github_aws_aws_lambda_go//lambda:go_default_library",
-        "@in_gopkg_getstream_stream_go2_v1//:go_default_library",
+        "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",
+        "//vendor/gopkg.in/GetStream/stream-go2.v1:go_default_library",
     ],
 )
 
@@ -20,4 +20,14 @@ go_binary(
     name = "feed_post",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "feed_post_lambda",
+    srcs = ["feed_post"],
+    outs = ["feed_post.zip"],
+    tools = ["//scripts:generate-lambda-zip"],
+    cmd = """
+    $(location //scripts:generate-lambda-zip) $< $@
+    """,
 )

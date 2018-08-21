@@ -1,7 +1,9 @@
 package feed_attributes
 
-import "github.com/ethereum/go-ethereum/crypto"
-import "github.com/ethereum/go-ethereum/common"
+import (
+  "github.com/ethereum/go-ethereum/common"
+  "BigBang/internal/pkg/utils"
+)
 
 type PostType string
 
@@ -14,7 +16,7 @@ const (
 )
 
 func (postType PostType) Hash() string {
-  bytes4Hash := crypto.Keccak256Hash([]byte(postType.Value())).Bytes()[:4]
+  bytes4Hash := utils.Keccak256Hash([]byte(postType.Value())).Bytes()[:4]
   return "0x" + common.Bytes2Hex(bytes4Hash)
 }
 

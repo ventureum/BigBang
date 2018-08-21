@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "events.go",
+        "http.go",
+        "mocker.go",
+        "network.go",
+        "simulation.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/p2p/simulations",
+    importpath = "github.com/ethereum/go-ethereum/p2p/simulations",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/event:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/simulations/adapters:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rpc:go_default_library",
+        "//vendor/github.com/julienschmidt/httprouter:go_default_library",
+        "//vendor/golang.org/x/net/websocket:go_default_library",
+    ],
+)

@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/cmd/bootnode",
+    importpath = "github.com/ethereum/go-ethereum/cmd/bootnode",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/cmd/utils:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/crypto:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discv5:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/nat:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/netutil:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "bootnode",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

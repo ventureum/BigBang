@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ens.go",
+        "fifsregistrar.go",
+        "publicresolver.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/contracts/ens/contract",
+    importpath = "github.com/ethereum/go-ethereum/contracts/ens/contract",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/accounts/abi:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/accounts/abi/bind:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/types:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/event:go_default_library",
+    ],
+)

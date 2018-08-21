@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["mailserver.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/whisper/mailserver",
+    importpath = "github.com/ethereum/go-ethereum/whisper/mailserver",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/crypto:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rlp:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/whisper/whisperv6:go_default_library",
+        "//vendor/github.com/syndtr/goleveldb/leveldb:go_default_library",
+        "//vendor/github.com/syndtr/goleveldb/leveldb/util:go_default_library",
+    ],
+)

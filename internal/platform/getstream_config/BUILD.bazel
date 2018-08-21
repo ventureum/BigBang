@@ -7,6 +7,6 @@ go_library(
     visibility = ["//:__subpackages__"],
     deps = [
         "//internal/app/feed_attributes:go_default_library",
-        "@in_gopkg_getstream_stream_go2_v1//:go_default_library",
+        "//vendor/gopkg.in/GetStream/stream-go2.v1:go_default_library",
     ],
 )

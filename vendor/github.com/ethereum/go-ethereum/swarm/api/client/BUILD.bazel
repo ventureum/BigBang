@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["client.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm/api/client",
+    importpath = "github.com/ethereum/go-ethereum/swarm/api/client",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/swarm/api:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/storage/mru:go_default_library",
+    ],
+)

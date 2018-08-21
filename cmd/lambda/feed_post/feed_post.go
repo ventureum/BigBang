@@ -3,12 +3,12 @@ package main
 import (
   "log"
   "gopkg.in/GetStream/stream-go2.v1"
-  "github.com/aws/aws-lambda-go/lambda"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/post_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/platform/eth_config"
+  "github.com/aws/aws-lambda-go/lambda"
 )
 
 
@@ -77,18 +77,18 @@ func Handler(request Request) (response Response, err error) {
 }
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
+  //// TODO(david.shao): remove example when deployed to production
   //content := feed_attributes.Content{
-  //  Title: "titleSample1",
-  //  Text: "hello, world",
+  //Title: "titleSample1",
+  //Text: "hello, world",
   //}
   //request := Request{
-  //  Actor:  "0x00999",
-  //  BoardId: "0x02",
-  //  ParentHash: "0x007",
-  //  PostHash: "0x009",
-  //  TypeHash:  feed_attributes.ReplyPostType.Hash(),
-  //  Content: content,
+  //Actor:  "0x00999",
+  //BoardId: "0x02",
+  //ParentHash: "0x007",
+  //PostHash: "0x009",
+  //TypeHash:  feed_attributes.ReplyPostType.Hash(),
+  //Content: content,
   //}
   //reposnse, _ := Handler(request)
   //log.Printf("%+v", reposnse)

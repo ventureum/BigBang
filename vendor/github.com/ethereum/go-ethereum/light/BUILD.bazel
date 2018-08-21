@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "lightchain.go",
+        "nodeset.go",
+        "odr.go",
+        "odr_util.go",
+        "postprocess.go",
+        "trie.go",
+        "txpool.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/light",
+    importpath = "github.com/ethereum/go-ethereum/light",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common/bitutil:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/consensus:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/rawdb:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/state:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/types:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/crypto:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/ethdb:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/event:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/params:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rlp:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/trie:go_default_library",
+        "//vendor/github.com/hashicorp/golang-lru:go_default_library",
+    ],
+)

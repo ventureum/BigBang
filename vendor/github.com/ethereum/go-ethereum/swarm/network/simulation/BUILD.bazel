@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bucket.go",
+        "connect.go",
+        "events.go",
+        "http.go",
+        "kademlia.go",
+        "node.go",
+        "service.go",
+        "simulation.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm/network/simulation",
+    importpath = "github.com/ethereum/go-ethereum/swarm/network/simulation",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/node:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/simulations:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/simulations/adapters:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/network:go_default_library",
+    ],
+)

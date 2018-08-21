@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["db.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm/storage/mock/db",
+    importpath = "github.com/ethereum/go-ethereum/swarm/storage/mock/db",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/storage/mock:go_default_library",
+        "//vendor/github.com/syndtr/goleveldb/leveldb:go_default_library",
+        "//vendor/github.com/syndtr/goleveldb/leveldb/util:go_default_library",
+    ],
+)

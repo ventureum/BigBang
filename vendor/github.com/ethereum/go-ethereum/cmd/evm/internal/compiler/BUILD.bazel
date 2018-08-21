@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["compiler.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/cmd/evm/internal/compiler",
+    importpath = "github.com/ethereum/go-ethereum/cmd/evm/internal/compiler",
+    visibility = ["//vendor/github.com/ethereum/go-ethereum/cmd/evm:__subpackages__"],
+    deps = ["//vendor/github.com/ethereum/go-ethereum/core/asm:go_default_library"],
+)

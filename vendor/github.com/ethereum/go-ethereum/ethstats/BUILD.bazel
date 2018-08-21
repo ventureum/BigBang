@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["ethstats.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/ethstats",
+    importpath = "github.com/ethereum/go-ethereum/ethstats",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common/mclock:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/consensus:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/types:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/eth:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/event:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/les:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rpc:go_default_library",
+        "//vendor/golang.org/x/net/websocket:go_default_library",
+    ],
+)

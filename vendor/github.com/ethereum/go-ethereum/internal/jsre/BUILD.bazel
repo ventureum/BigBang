@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "completion.go",
+        "jsre.go",
+        "pretty.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/internal/jsre",
+    importpath = "github.com/ethereum/go-ethereum/internal/jsre",
+    visibility = ["//vendor/github.com/ethereum/go-ethereum:__subpackages__"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/internal/jsre/deps:go_default_library",
+        "//vendor/github.com/fatih/color:go_default_library",
+        "//vendor/github.com/robertkrimen/otto:go_default_library",
+    ],
+)

@@ -1,0 +1,52 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "genesis.go",
+        "module.go",
+        "module_dashboard.go",
+        "module_ethstats.go",
+        "module_explorer.go",
+        "module_faucet.go",
+        "module_nginx.go",
+        "module_node.go",
+        "module_wallet.go",
+        "puppeth.go",
+        "ssh.go",
+        "wizard.go",
+        "wizard_dashboard.go",
+        "wizard_ethstats.go",
+        "wizard_explorer.go",
+        "wizard_faucet.go",
+        "wizard_genesis.go",
+        "wizard_intro.go",
+        "wizard_netstats.go",
+        "wizard_network.go",
+        "wizard_nginx.go",
+        "wizard_node.go",
+        "wizard_wallet.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/cmd/puppeth",
+    importpath = "github.com/ethereum/go-ethereum/cmd/puppeth",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/accounts/keystore:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common/hexutil:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/consensus/ethash:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/params:go_default_library",
+        "//vendor/github.com/olekukonko/tablewriter:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh/terminal:go_default_library",
+        "//vendor/gopkg.in/urfave/cli.v1:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "puppeth",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

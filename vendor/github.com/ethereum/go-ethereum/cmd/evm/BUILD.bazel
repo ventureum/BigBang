@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "compiler.go",
+        "disasm.go",
+        "json_logger.go",
+        "main.go",
+        "runner.go",
+        "staterunner.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/cmd/evm",
+    importpath = "github.com/ethereum/go-ethereum/cmd/evm",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/cmd/evm/internal/compiler:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/cmd/utils:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common/math:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/asm:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/state:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/vm:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/core/vm/runtime:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/ethdb:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/params:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/tests:go_default_library",
+        "//vendor/gopkg.in/urfave/cli.v1:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "evm",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

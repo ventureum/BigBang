@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["overlay.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm/network/simulations",
+    importpath = "github.com/ethereum/go-ethereum/swarm/network/simulations",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/node:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/simulations:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/simulations/adapters:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/network:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/state:go_default_library",
+        "//vendor/github.com/mattn/go-colorable:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "simulations",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

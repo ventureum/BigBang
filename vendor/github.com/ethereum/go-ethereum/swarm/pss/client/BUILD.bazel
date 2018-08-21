@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "doc.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm/pss/client",
+    importpath = "github.com/ethereum/go-ethereum/swarm/pss/client",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common/hexutil:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/protocols:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rlp:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rpc:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/pss:go_default_library",
+    ],
+)

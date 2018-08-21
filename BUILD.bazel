@@ -1,4 +1,8 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
 # gazelle:prefix BigBang
-gazelle(name = "gazelle")
+gazelle(
+    name = "gazelle",
+    external = "vendored",
+    prefix = "github.com/ventureum/BigBang",
+)

@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["tracing.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm/tracing",
+    importpath = "github.com/ethereum/go-ethereum/swarm/tracing",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/uber/jaeger-client-go:go_default_library",
+        "//vendor/github.com/uber/jaeger-client-go/config:go_default_library",
+        "//vendor/github.com/uber/jaeger-client-go/log:go_default_library",
+        "//vendor/gopkg.in/urfave/cli.v1:go_default_library",
+    ],
+)

@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+cc_library(
+    name = "ext",
+    srcs = ["ext.h"],
+    hdrs = ["ext.h"],
+    deps = ["@secp256k1_lib//:secp256k1_lib"],
+    visibility = ["//visibility:public"],
+    alwayslink = 1,
+    textual_hdrs = ["libsecp256k1/src/secp256k1.c"],
+)
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "curve.go",
+        "ext.h",
+        "panic_cb.go",
+        "secp256.go",
+    ],
+    cdeps = [
+        "@secp256k1_lib//:secp256k1_lib",
+        ":ext",
+    ],
+    cgo = True,
+    copts = [
+        "-IBigBang/third_party/libsecp256k1/include",
+        "-IBigBang/third_party/libsecp256k1/src",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/crypto/secp256k1",
+    importpath = "github.com/ethereum/go-ethereum/crypto/secp256k1",
+    visibility = ["//visibility:public"],
+)

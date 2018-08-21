@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["ping-pong.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/p2p/simulations/examples",
+    importpath = "github.com/ethereum/go-ethereum/p2p/simulations/examples",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/node:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/simulations:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/simulations/adapters:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rpc:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "examples",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

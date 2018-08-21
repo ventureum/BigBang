@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["web3ext.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/internal/web3ext",
+    importpath = "github.com/ethereum/go-ethereum/internal/web3ext",
+    visibility = ["//vendor/github.com/ethereum/go-ethereum:__subpackages__"],
+)

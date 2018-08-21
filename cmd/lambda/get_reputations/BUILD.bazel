@@ -8,7 +8,7 @@ go_library(
     deps = [
         "//internal/platform/postgres_config/actor_reputations_record_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
-        "@com_github_aws_aws_lambda_go//lambda:go_default_library",
+        "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",
     ],
 )
 

@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "enr.go",
+        "entries.go",
+        "idscheme.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/p2p/enr",
+    importpath = "github.com/ethereum/go-ethereum/p2p/enr",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common/math:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/crypto:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/crypto/sha3:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rlp:go_default_library",
+    ],
+)

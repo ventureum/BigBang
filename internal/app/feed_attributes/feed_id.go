@@ -3,7 +3,6 @@ package feed_attributes
 import (
   "strings"
   "log"
-  "github.com/ethereum/go-ethereum/crypto"
   "BigBang/internal/pkg/utils"
 )
 
@@ -23,7 +22,7 @@ const (
 )
 
 
-var AllBoardId = UserId(crypto.Keccak256Hash([]byte("%__AllBoardId__%")).String())
+var AllBoardId = UserId(utils.Keccak256Hash([]byte("%__AllBoardId__%")).String())
 
 
 func CreateFeedId(feedSlug string, userid string) FeedId {

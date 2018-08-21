@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "aes_gcm_storage.go",
+        "storage.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/signer/storage",
+    importpath = "github.com/ethereum/go-ethereum/signer/storage",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/ethereum/go-ethereum/log:go_default_library"],
+)

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["rpc.go"],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm/storage/mock/rpc",
+    importpath = "github.com/ethereum/go-ethereum/swarm/storage/mock/rpc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rpc:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/storage/mock:go_default_library",
+    ],
+)

@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "state.go",
+        "swarm.go",
+    ],
+    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/swarm",
+    importpath = "github.com/ethereum/go-ethereum/swarm",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ethereum/go-ethereum/accounts/abi/bind:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/contracts/chequebook:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/contracts/ens:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/ethclient:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/metrics:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/discover:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/p2p/protocols:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/params:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/rpc:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/api:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/api/http:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/fuse:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/log:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/network:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/network/stream:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/pss:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/state:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/storage:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/storage/mock:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/storage/mru:go_default_library",
+        "//vendor/github.com/ethereum/go-ethereum/swarm/tracing:go_default_library",
+    ],
+)
