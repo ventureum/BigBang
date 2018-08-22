@@ -21,13 +21,3 @@ go_binary(
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
 )
-
-genrule(
-    name = "feed_post_lambda",
-    srcs = ["feed_post"],
-    outs = ["feed_post.zip"],
-    tools = ["//scripts:generate-lambda-zip"],
-    cmd = """
-    $(location //scripts:generate-lambda-zip) $< $@
-    """,
-)

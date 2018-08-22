@@ -211,8 +211,12 @@ func ProcessPostRecord(
 
 func ProcessPostVotesRecord(
     postVotesRecord *post_votes_record_config.PostVotesRecord,
-    postgresFeedClient *client_config.PostgresFeedClient) {
+    postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
   postgresFeedClient.Begin()
+  voteType := postVotesRecord.VoteType
+  var voteInfo feed_attributes.VoteInfo
+  voteInfo.Actor = postVotesRecord.Actor
+  voteInfo.PostHash = postVotesRecord.PostHash
 
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
@@ -223,13 +227,17 @@ func ProcessPostVotesRecord(
   cutOffTimeStamp := time.Now()
 
   // Actor List for PostHash and VoteType
-  actorList := *postReputationsRecordExecutor.GetActorListByPostHashAndVoteTypeTx(
-    postVotesRecord.PostHash, postVotesRecord.VoteType)
 
-  log.Printf("Actor List for PostHash and VoteType: %+v\n", actorList)
+  var actorList []string
+  if voteType != feed_attributes.LOOKUP_VOTE_TYPE {
+    actorList = *postReputationsRecordExecutor.GetActorListByPostHashAndVoteTypeTx(
+      postVotesRecord.PostHash, postVotesRecord.VoteType)
+    log.Printf("Actor List for PostHash and VoteType: %+v\n", actorList)
+  }
 
   // Current Actor Reputation
   actorReputation := actorReputationsRecordExecutor.GetActorReputationsTx(postVotesRecord.Actor)
+  voteInfo.Reputations = actorReputation
 
   log.Printf("Current Actor Reputation: %+v\n", actorReputation)
 
@@ -241,15 +249,17 @@ func ProcessPostVotesRecord(
   // Total Actor Reputations for PostHash
   totalReputationsForPostHash := postReputationsRecordExecutor.GetTotalReputationsByPostHashTx(postVotesRecord.PostHash)
 
-
   log.Printf("Total Actor Reputations for PostHash: %+v\n", totalReputationsForPostHash)
 
   // Total Actor Reputations for PostHash with the same voteType as actor
-  totalReputationsForPostHashWithSameVoteType := postReputationsRecordExecutor.GetReputationsByPostHashAndVoteTypeTx(
-    postVotesRecord.PostHash, postVotesRecord.VoteType)
 
-  log.Printf("Total Actor Reputations for PostHash with the same voteType as actor: %+v\n",
-    totalReputationsForPostHashWithSameVoteType)
+  var totalReputationsForPostHashWithSameVoteType feed_attributes.Reputation
+  if voteType != feed_attributes.LOOKUP_VOTE_TYPE {
+    totalReputationsForPostHashWithSameVoteType = postReputationsRecordExecutor.GetReputationsByPostHashAndVoteTypeTx(
+      postVotesRecord.PostHash, voteType)
+    log.Printf("Total Actor Reputations for PostHash with the same voteType as actor: %+v\n",
+      totalReputationsForPostHashWithSameVoteType)
+  }
 
   // Last Actor Reputation when doing vote
   lastActorReputation := postReputationsRecordExecutor.GetReputationsByPostHashAndActorTx(
@@ -257,22 +267,19 @@ func ProcessPostVotesRecord(
 
   log.Printf("Last Actor Reputation when doing vote: %+v\n", lastActorReputation)
 
-  totalReputationsForPostHash  =  totalReputationsForPostHash - lastActorReputation + actorReputation
-  totalReputationsForPostHashWithSameVoteType = totalReputationsForPostHashWithSameVoteType -
-    lastActorReputation + actorReputation
+  totalReputationsForPostHash = totalReputationsForPostHash - lastActorReputation + actorReputation
 
-  log.Printf("Updated  totalReputationsForPostHash: %+v\n",  totalReputationsForPostHash)
-  log.Printf("Updated  totalReputationsForPostHashWithSameVoteType : %+v\n",
-    totalReputationsForPostHashWithSameVoteType)
-  log.Printf("totalActorReputations : %+v\n",  totalActorReputations )
+  log.Printf("Updated  totalReputationsForPostHash: %+v\n", totalReputationsForPostHash)
+
+  log.Printf("totalActorReputations : %+v\n", totalActorReputations)
 
   // Calculate Vote Cost
-  voteCost := post_votes_record_config.STACK_FRACTION * float64(actorReputation)*
-      (1.00 - float64(totalReputationsForPostHash) / float64(totalActorReputations))
+  voteCost := post_votes_record_config.STACK_FRACTION * float64(actorReputation) *
+      (1.00 - float64(totalReputationsForPostHash)/float64(totalActorReputations))
 
   log.Printf("voteCost: %+v\n", voteCost)
 
-  voteCount :=  postReputationsRecordExecutor.GetTotalVotesCountByPostHashAndActorType(
+  voteCount := postReputationsRecordExecutor.GetTotalVotesCountByPostHashAndActorType(
     postVotesRecord.PostHash, postVotesRecord.Actor)
 
   log.Printf("Vote Count: %+v\n", voteCount)
@@ -280,6 +287,16 @@ func ProcessPostVotesRecord(
   votePenalty := feed_attributes.PenaltyForVote(feed_attributes.Reputation(voteCost), voteCount)
 
   log.Printf("vote Penalty : %+v\n", votePenalty)
+  voteInfo.Cost = feed_attributes.Reputation(votePenalty)
+
+  if voteType == feed_attributes.LOOKUP_VOTE_TYPE {
+    return &voteInfo
+  }
+
+  totalReputationsForPostHashWithSameVoteType = totalReputationsForPostHashWithSameVoteType -
+      lastActorReputation + actorReputation
+  log.Printf("Updated totalReputationsForPostHashWithSameVoteType: %+v\n",
+    totalReputationsForPostHashWithSameVoteType)
 
   // Deduct  votePenalty
   actorReputationsRecordExecutor.SubActorReputationsTx(postVotesRecord.Actor, votePenalty)
@@ -290,30 +307,35 @@ func ProcessPostVotesRecord(
 
   // Update Actor Reputation For the postHash
   postReputationsRecord := post_reputations_record_config.PostReputationsRecord{
-    Actor: postVotesRecord.Actor,
-    PostHash: postVotesRecord.PostHash,
-    Reputations: actorReputation.SubReputations(votePenalty),
-    LatestVoteType: postVotesRecord.VoteType,
+    Actor:          postVotesRecord.Actor,
+    PostHash:       postVotesRecord.PostHash,
+    Reputations:    actorReputation.SubReputations(votePenalty),
+    LatestVoteType: voteType,
   }
-  postReputationsRecordExecutor.UpsertPostReputationsRecordTx(&postReputationsRecord)
+  upsertedPostReputationsRecord := postReputationsRecordExecutor.UpsertPostReputationsRecordTx(&postReputationsRecord)
 
+  voteInfo.Reputations = upsertedPostReputationsRecord.Reputations
+  voteInfo.UpVoteCount = upsertedPostReputationsRecord.UpVoteCount
+  voteInfo.DownVoteCount = upsertedPostReputationsRecord.DownVoteCount
 
   if totalReputationsForPostHashWithSameVoteType > 0 {
     // Distribute Rewards
     for _, actorAddress := range actorList {
       awardedActorReputation := postReputationsRecordExecutor.GetReputationsByPostHashAndActorWithLatestVoteTypeAndTimeCutOffTx(
-          postVotesRecord.PostHash,
-          actorAddress,
-          postVotesRecord.VoteType,
-          cutOffTimeStamp)
-      rewards :=  int64(float64(votePenalty) * float64(awardedActorReputation) / float64(totalReputationsForPostHashWithSameVoteType))
+        postVotesRecord.PostHash,
+        actorAddress,
+        voteType,
+        cutOffTimeStamp)
+      rewards := int64(float64(votePenalty) * float64(awardedActorReputation) / float64(totalReputationsForPostHashWithSameVoteType))
 
-      log.Printf(" rewards  %+v for actorAddress %s\n",  rewards , actorAddress)
+      log.Printf("rewards %+v for actorAddress %s\n", rewards, actorAddress)
       actorReputationsRecordExecutor.AddActorReputationsTx(actorAddress, feed_attributes.Reputation(rewards))
     }
   }
 
   postgresFeedClient.Commit()
+
+  return &voteInfo
 }
 
 func ProcessPurchaseReputationsRecord(

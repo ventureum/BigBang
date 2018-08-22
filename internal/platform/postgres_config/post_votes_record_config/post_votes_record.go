@@ -16,4 +16,4 @@ type PostVotesRecord struct {
 }
 
 
-const STACK_FRACTION float64 = 0.01
+const STACK_FRACTION float64 = 0.001

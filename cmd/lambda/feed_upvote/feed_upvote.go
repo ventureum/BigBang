@@ -8,8 +8,6 @@ import (
   "BigBang/internal/platform/eth_config"
 )
 
-
-
 type Request struct {
   Actor string `json:"actor,required"`
   BoardId string `json:"boardId,required"`
@@ -18,6 +16,7 @@ type Request struct {
 }
 
 type Response struct {
+  VoteInfo *feed_attributes.VoteInfo `json:"voteInfo,omitempty"`
   Ok      bool   `json:"ok"`
   Message string `json:"message,omitempty"`
 }
@@ -25,6 +24,7 @@ type Response struct {
 func ProcessRequest(request Request, response *Response) {
   defer func() {
     if errStr := recover(); errStr != nil { //catch
+      response.VoteInfo = nil
       response.Message = errStr.(string)
     }
   }()
@@ -36,7 +36,7 @@ func ProcessRequest(request Request, response *Response) {
     VoteType: feed_attributes.CreateVoteTypeFromValue(request.Value),
   }
 
-  eth_config.ProcessPostVotesRecord(&postVotesRecord, postgresFeedClient)
+  response.VoteInfo = eth_config.ProcessPostVotesRecord(&postVotesRecord, postgresFeedClient)
   response.Ok = true
 }
 

@@ -14,6 +14,7 @@ go_library(
         "reputation.go",
         "source.go",
         "verb.go",
+        "vote_info.go",
         "vote_type.go",
         "voter.go",
     ],

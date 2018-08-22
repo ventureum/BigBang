@@ -24,8 +24,8 @@ go_library(
     ],
     cgo = True,
     copts = [
-        "-IBigBang/third_party/libsecp256k1/include",
-        "-IBigBang/third_party/libsecp256k1/src",
+        "-Ivendor/github.com/ethereum/go-ethereum/crypto/secp256k1/libsecp256k1",
+        "-Ivendor/github.com/ethereum/go-ethereum/crypto/secp256k1/libsecp256k1/src",
     ],
     importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/crypto/secp256k1",
     importpath = "github.com/ethereum/go-ethereum/crypto/secp256k1",
