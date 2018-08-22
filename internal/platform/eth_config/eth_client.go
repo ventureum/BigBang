@@ -23,6 +23,7 @@ import (
   "BigBang/internal/platform/postgres_config/post_replies_record_config"
   "BigBang/internal/platform/postgres_config/post_reputations_record_config"
   "BigBang/internal/platform/getstream_config"
+  "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
 )
 
 
@@ -222,6 +223,7 @@ func ProcessPostVotesRecord(
     *postgresFeedClient}
   postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
   postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
+  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
 
   // CutOff Time
   cutOffTimeStamp := time.Now()
@@ -314,9 +316,16 @@ func ProcessPostVotesRecord(
   }
   upsertedPostReputationsRecord := postReputationsRecordExecutor.UpsertPostReputationsRecordTx(&postReputationsRecord)
 
+  postVotesCountersRecord := post_votes_counters_record_config.PostVotesCountersRecord{
+    PostHash: postVotesRecord.PostHash,
+    LatestVoteType: voteType,
+  }
+  upsertPostVotesCountersRecord := postVotesCountersRecordExecutor.UpsertPostVotesCountersRecordTx(
+    &postVotesCountersRecord)
+
   voteInfo.Reputations = upsertedPostReputationsRecord.Reputations
-  voteInfo.UpVoteCount = upsertedPostReputationsRecord.UpVoteCount
-  voteInfo.DownVoteCount = upsertedPostReputationsRecord.DownVoteCount
+  voteInfo.UpVoteCount = upsertPostVotesCountersRecord.UpVoteCount
+  voteInfo.DownVoteCount = upsertPostVotesCountersRecord.DownVoteCount
 
   if totalReputationsForPostHashWithSameVoteType > 0 {
     // Distribute Rewards
