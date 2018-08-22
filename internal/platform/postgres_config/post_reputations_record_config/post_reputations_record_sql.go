@@ -1,26 +1,40 @@
 package post_reputations_record_config
 
 const UPSERT_POST_REPUTATIONS_RECORD_COMMAND = `
+WITH counters AS (
+  SELECT downvote_count, upvote_count, total_vote_count
+  FROM post_reputations_records
+  WHERE post_hash = :post_hash AND actor = :actor
+)
 INSERT INTO post_reputations_records
 (
   post_hash,
   actor,
   reputations,
-  latest_vote_type
+  latest_vote_type,
+  downvote_count,
+  upvote_count,
+  total_vote_count
 )
-VALUES 
-(
+VALUES (
   :post_hash,
   :actor,
   :reputations,
-  :latest_vote_type
+  :latest_vote_type,
+  COALESCE((select downvote_count from counters), 0) + CAST((:latest_vote_type = 'DOWN') as integer),
+  COALESCE((select upvote_count from counters), 0) + CAST((:latest_vote_type = 'UP') as integer),
+  COALESCE((select total_vote_count from counters), 0) + 1
 )
-ON CONFLICT (post_hash, actor) 
+ON CONFLICT (post_hash, actor)
 DO
- UPDATE
-    SET reputations = :reputations, 
-        latest_vote_type = :latest_vote_type, 
-        total_vote_count = post_reputations_records.total_vote_count + 1;
+  UPDATE
+    SET
+      reputations = EXCLUDED.reputations,
+      latest_vote_type = EXCLUDED.latest_vote_type,
+      downvote_count = EXCLUDED.downvote_count,
+      upvote_count = EXCLUDED.upvote_count,
+      total_vote_count = EXCLUDED.total_vote_count
+RETURNING *;
 `
 
 const DELETE_POST_REPUTATIONS_RECORDS_BY_POST_HASH_AND_ACTOR_COMMAND = `

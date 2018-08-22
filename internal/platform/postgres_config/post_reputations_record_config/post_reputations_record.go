@@ -10,6 +10,8 @@ type PostReputationsRecord struct {
   Actor string  `db:"actor"`
   Reputations feed_attributes.Reputation `db:"reputations"`
   LatestVoteType feed_attributes.VoteType `db:"latest_vote_type"`
+  DownVoteCount int64 `db:"downvote_count"`
+  UpVoteCount int64 `db:"upvote_count"`
   TotalVoteCount int64 `db:"total_vote_count"`
   CreatedAt time.Time `db:"created_at"`
   UpdatedAt time.Time `db:"updated_at"`
