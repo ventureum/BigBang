@@ -7,7 +7,9 @@ CREATE TABLE post_reputations_records (
     actor TEXT NOT NULL,
     reputations BIGINT NOT NULL DEFAULT 0 check(reputations >= 0),
     latest_vote_type vote_type_enum NOT NULL,
-    total_vote_count BIGINT NOT NULL DEFAULT 1,
+    downvote_count BIGINT NOT NULL DEFAULT 0,
+    upvote_count BIGINT NOT NULL DEFAULT 0,
+    total_vote_count BIGINT NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (post_hash, actor)

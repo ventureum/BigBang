@@ -23,15 +23,27 @@ func (postReputationsRecordExecutor *PostReputationsRecordExecutor) DeletePostRe
   postReputationsRecordExecutor.DeleteTable(TABLE_NAME_FOR_POST_REPUTATIONS_RECORD)
 }
 
-func (postReputationsRecordExecutor *PostReputationsRecordExecutor) UpsertPostReputationsRecord(
-    postReputationsRecord *PostReputationsRecord) {
-   _, err := postReputationsRecordExecutor.C.NamedExec(UPSERT_POST_REPUTATIONS_RECORD_COMMAND, postReputationsRecord)
+func (postReputationsRecordExecutor *PostReputationsRecordExecutor) UpsertPostReputationsRecord (
+    postReputationsRecord *PostReputationsRecord) *PostReputationsRecord {
+  res, err := postReputationsRecordExecutor.C.NamedQuery(UPSERT_POST_REPUTATIONS_RECORD_COMMAND, postReputationsRecord)
 
   if err != nil {
     log.Panicf("Failed to upsert post reputations record: %+v with error:\n %+v", postReputationsRecord, err.Error())
   }
+
   log.Printf("Sucessfully upserted post reputations record for post_hash %s and actor %s with reputaions %d\n",
     postReputationsRecord.PostHash, postReputationsRecord.Actor, postReputationsRecord.Reputations)
+
+  upsertedPostReputationsRecord := PostReputationsRecord{}
+  for res.Next() {
+    err = res.StructScan(&upsertedPostReputationsRecord)
+    if err != nil {
+      log.Panicf("Failed to scan upserted post reputations for post_hash %s and actor %s with error: %v\n",
+        postReputationsRecord.PostHash, postReputationsRecord.Actor, err)
+    }
+  }
+
+  return &upsertedPostReputationsRecord
 }
 
 func (postReputationsRecordExecutor *PostReputationsRecordExecutor) DeletePostReputationsRecordsByPostHash(postHash string) {
@@ -138,23 +150,27 @@ func (postReputationsRecordExecutor *PostReputationsRecordExecutor) GetActorList
 /*
  * Tx versions
  */
-func (postReputationsRecordExecutor *PostReputationsRecordExecutor) UpsertPostReputationsRecordTx(
-    postReputationsRecord *PostReputationsRecord) {
-  _, err := postReputationsRecordExecutor.Tx.NamedExec(UPSERT_POST_REPUTATIONS_RECORD_COMMAND, postReputationsRecord)
+func (postReputationsRecordExecutor *PostReputationsRecordExecutor) UpsertPostReputationsRecordTx (
+    postReputationsRecord *PostReputationsRecord) *PostReputationsRecord {
+  res, err := postReputationsRecordExecutor.Tx.NamedQuery(UPSERT_POST_REPUTATIONS_RECORD_COMMAND, postReputationsRecord)
 
   if err != nil {
-    log.Panicf("Failed to upsert post reputations record: %+v with error:\n %+v", postReputationsRecord, err.Error())
+    log.Panicf("Failed to upsert post reputations record: %+v with error: %+v\n", postReputationsRecord, err)
   }
+
   log.Printf("Sucessfully upserted post reputations record for post_hash %s and actor %s with reputaions %d\n",
     postReputationsRecord.PostHash, postReputationsRecord.Actor, postReputationsRecord.Reputations)
-}
 
-func (postReputationsRecordExecutor *PostReputationsRecordExecutor) DeletePostReputationsRecordsByPostHashTx(postHash string) {
-  _, err := postReputationsRecordExecutor.Tx.Exec(DELETE_POST_REPUTATIONS_RECORDS_BY_POST_HASH_COMMAND, postHash)
-  if err != nil {
-    log.Panicf("Failed to delete post reputations records for postHash %s with error:\n %+v", postHash, err.Error())
+  upsertedPostReputationsRecord := PostReputationsRecord{}
+  for res.Next() {
+    err = res.StructScan(&upsertedPostReputationsRecord)
+    if err != nil {
+      log.Panicf("Failed to scan upserted post reputations for post_hash %s and actor %s with error: %v\n",
+        postReputationsRecord.PostHash, postReputationsRecord.Actor, err)
+    }
   }
-  log.Printf("Sucessfully deleted post reputations records for postHash %s\n", postHash)
+
+  return &upsertedPostReputationsRecord
 }
 
 func (postReputationsRecordExecutor *PostReputationsRecordExecutor) DeletePostReputationsRecordsByActorTx(actor string) {

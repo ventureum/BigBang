@@ -55,13 +55,29 @@ func main() {
     LatestVoteType: feed_attributes.DOWN_VOTE_TYPE,
   }
 
-  postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord1)
-  postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord2)
-  postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord3)
-  postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord4)
-  postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord5)
-  postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord3)
+  updatedRes := postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord1)
+  log.Printf("Upserted PostReputationsRecord for postHash %s and actor %s: %+v\n",
+    updatedRes.PostHash, updatedRes.Actor, updatedRes)
 
+  updatedRes = postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord2)
+  log.Printf("Upserted PostReputationsRecord for postHash %s and actor %s: %+v\n",
+    updatedRes.PostHash, updatedRes.Actor, updatedRes)
+
+  updatedRes = postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord3)
+  log.Printf("Upserted PostReputationsRecord for postHash %s and actor %s: %+v\n",
+    updatedRes.PostHash, updatedRes.Actor, updatedRes)
+
+  updatedRes = postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord4)
+  log.Printf("Upserted PostReputationsRecord for postHash %s and actor %s: %+v\n",
+    updatedRes.PostHash, updatedRes.Actor, updatedRes)
+
+  updatedRes = postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord5)
+  log.Printf("Upserted PostReputationsRecord for postHash %s and actor %s: %+v\n",
+    updatedRes.PostHash, updatedRes.Actor, updatedRes)
+
+  updatedRes = postReputationsRecordExecutor.UpsertPostReputationsRecord(postReputationsRecord3)
+  log.Printf("Upserted PostReputationsRecord for postHash %s and actor %s: %+v\n",
+    updatedRes.PostHash, updatedRes.Actor, updatedRes)
 
   reputationsForPostHashOneAndActorOne := postReputationsRecordExecutor.GetReputationsByPostHashAndActor(
      postHashOne, actorOne)
@@ -72,7 +88,6 @@ func main() {
     postHashOne, actorTwo)
   log.Printf("total reputations for postHash %s and actor %s: %+v\n",
     postHashOne, actorTwo, reputationsForPostHashOneAndActorTwo)
-
 
   reputationsForPostHashTwoAndActorOne := postReputationsRecordExecutor.GetReputationsByPostHashAndActor(
     postHashTwo, actorOne)
