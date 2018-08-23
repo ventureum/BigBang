@@ -6,6 +6,7 @@ import (
   "BigBang/internal/platform/postgres_config/post_votes_record_config"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/eth_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 type Request struct {
@@ -18,25 +19,32 @@ type Request struct {
 type Response struct {
   VoteInfo *feed_attributes.VoteInfo `json:"voteInfo,omitempty"`
   Ok      bool   `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
 func ProcessRequest(request Request, response *Response) {
-  defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.VoteInfo = nil
-      response.Message = errStr.(string)
-    }
-  }()
   postgresFeedClient := client_config.ConnectPostgresClient()
-  defer postgresFeedClient.Close()
+  defer func() {
+    if errPanic := recover(); errPanic != nil { //catch
+      response.VoteInfo = nil
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresFeedClient.RollBack()
+    }
+    postgresFeedClient.Close()
+  }()
+
   postVotesRecord := post_votes_record_config.PostVotesRecord {
     Actor: request.Actor,
     PostHash: request.PostHash,
     VoteType: feed_attributes.CreateVoteTypeFromValue(request.Value),
   }
 
-  response.VoteInfo = eth_config.ProcessPostVotesRecord(&postVotesRecord, postgresFeedClient)
+  if postVotesRecord.VoteType == feed_attributes.LOOKUP_VOTE_TYPE {
+    response.VoteInfo =  eth_config.QueryPostVotesInfo(&postVotesRecord, postgresFeedClient)
+  } else {
+    response.VoteInfo = eth_config.ProcessPostVotesRecord(&postVotesRecord, postgresFeedClient)
+  }
+
   response.Ok = true
 }
 

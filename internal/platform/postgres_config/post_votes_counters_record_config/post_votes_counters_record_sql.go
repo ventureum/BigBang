@@ -36,3 +36,7 @@ const DELETE_POST_VOTES_COUNTRS_RECORDS_BY_POST_HASH_COMMAND = `
 DELETE FROM post_votes_counters_records
 WHERE post_hash = $1;
 `
+const QUERY_POST_VOTES_COUNTRS_RECORDS_BY_POST_HASH_COMMAND = `
+SELECT * FROM post_votes_counters_records
+WHERE post_hash = $1;
+`

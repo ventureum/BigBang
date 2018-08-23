@@ -231,11 +231,11 @@ func ProcessPostVotesRecord(
   // Actor List for PostHash and VoteType
 
   var actorList []string
-  if voteType != feed_attributes.LOOKUP_VOTE_TYPE {
-    actorList = *postReputationsRecordExecutor.GetActorListByPostHashAndVoteTypeTx(
-      postVotesRecord.PostHash, postVotesRecord.VoteType)
-    log.Printf("Actor List for PostHash and VoteType: %+v\n", actorList)
-  }
+
+  actorList = *postReputationsRecordExecutor.GetActorListByPostHashAndVoteTypeTx(
+    postVotesRecord.PostHash, postVotesRecord.VoteType)
+  log.Printf("Actor List for PostHash and VoteType: %+v\n", actorList)
+
 
   // Current Actor Reputation
   actorReputation := actorReputationsRecordExecutor.GetActorReputationsTx(postVotesRecord.Actor)
@@ -256,12 +256,11 @@ func ProcessPostVotesRecord(
   // Total Actor Reputations for PostHash with the same voteType as actor
 
   var totalReputationsForPostHashWithSameVoteType feed_attributes.Reputation
-  if voteType != feed_attributes.LOOKUP_VOTE_TYPE {
-    totalReputationsForPostHashWithSameVoteType = postReputationsRecordExecutor.GetReputationsByPostHashAndVoteTypeTx(
-      postVotesRecord.PostHash, voteType)
-    log.Printf("Total Actor Reputations for PostHash with the same voteType as actor: %+v\n",
-      totalReputationsForPostHashWithSameVoteType)
-  }
+  totalReputationsForPostHashWithSameVoteType = postReputationsRecordExecutor.GetReputationsByPostHashAndVoteTypeTx(
+    postVotesRecord.PostHash, voteType)
+  log.Printf("Total Actor Reputations for PostHash with the same voteType as actor: %+v\n",
+    totalReputationsForPostHashWithSameVoteType)
+
 
   // Last Actor Reputation when doing vote
   lastActorReputation := postReputationsRecordExecutor.GetReputationsByPostHashAndActorTx(
@@ -281,7 +280,7 @@ func ProcessPostVotesRecord(
 
   log.Printf("voteCost: %+v\n", voteCost)
 
-  voteCount := postReputationsRecordExecutor.GetTotalVotesCountByPostHashAndActorType(
+  voteCount := postReputationsRecordExecutor.GetTotalVotesCountByPostHashAndActorTypeTx(
     postVotesRecord.PostHash, postVotesRecord.Actor)
 
   log.Printf("Vote Count: %+v\n", voteCount)
@@ -290,10 +289,6 @@ func ProcessPostVotesRecord(
 
   log.Printf("vote Penalty : %+v\n", votePenalty)
   voteInfo.Cost = feed_attributes.Reputation(votePenalty)
-
-  if voteType == feed_attributes.LOOKUP_VOTE_TYPE {
-    return &voteInfo
-  }
 
   totalReputationsForPostHashWithSameVoteType = totalReputationsForPostHashWithSameVoteType -
       lastActorReputation + actorReputation
@@ -343,6 +338,64 @@ func ProcessPostVotesRecord(
   }
 
   postgresFeedClient.Commit()
+
+  return &voteInfo
+}
+
+func QueryPostVotesInfo(
+    postVotesRecord *post_votes_record_config.PostVotesRecord,
+    postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
+  var voteInfo feed_attributes.VoteInfo
+  voteInfo.Actor = postVotesRecord.Actor
+  voteInfo.PostHash = postVotesRecord.PostHash
+
+  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+    *postgresFeedClient}
+  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
+
+  // Current Actor Reputation
+  actorReputation := actorReputationsRecordExecutor.GetActorReputations(postVotesRecord.Actor)
+  voteInfo.Reputations = actorReputation
+
+  log.Printf("Current Actor Reputation: %+v\n", actorReputation)
+
+  // Total Actor Reputations
+  totalActorReputations := actorReputationsRecordExecutor.GetTotalActorReputations()
+
+  log.Printf("Total Actor Reputations: %+v\n", totalActorReputations)
+
+  // Total Actor Reputations for PostHash
+  totalReputationsForPostHash := postReputationsRecordExecutor.GetTotalReputationsByPostHash(postVotesRecord.PostHash)
+
+  log.Printf("Total Actor Reputations for PostHash: %+v\n", totalReputationsForPostHash)
+
+  // Last Actor Reputation when doing vote
+  lastActorReputation := postReputationsRecordExecutor.GetReputationsByPostHashAndActor(
+    postVotesRecord.PostHash, postVotesRecord.Actor)
+
+  log.Printf("Last Actor Reputation when doing vote: %+v\n", lastActorReputation)
+
+  totalReputationsForPostHash = totalReputationsForPostHash - lastActorReputation + actorReputation
+
+  log.Printf("Updated  totalReputationsForPostHash: %+v\n", totalReputationsForPostHash)
+
+  log.Printf("totalActorReputations : %+v\n", totalActorReputations)
+
+  // Calculate Vote Cost
+  voteCost := post_votes_record_config.STACK_FRACTION * float64(actorReputation) *
+      (1.00 - float64(totalReputationsForPostHash)/float64(totalActorReputations))
+
+  log.Printf("voteCost: %+v\n", voteCost)
+
+  voteCount := postReputationsRecordExecutor.GetTotalVotesCountByPostHashAndActorType(
+    postVotesRecord.PostHash, postVotesRecord.Actor)
+
+  log.Printf("Vote Count: %+v\n", voteCount)
+
+  votePenalty := feed_attributes.PenaltyForVote(feed_attributes.Reputation(voteCost), voteCount)
+
+  log.Printf("vote Penalty : %+v\n", votePenalty)
+  voteInfo.Cost = feed_attributes.Reputation(votePenalty)
 
   return &voteInfo
 }

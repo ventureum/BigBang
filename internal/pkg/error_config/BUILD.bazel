@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "error_code.go",
+        "error_data.go",
+        "error_info.go",
+        "error_message.go",
+    ],
+    importpath = "BigBang/internal/pkg/error_config",
+    visibility = ["//:__subpackages__"],
+    deps = ["//vendor/github.com/jmoiron/sqlx/types:go_default_library"],
+)
