@@ -3,6 +3,7 @@ package post_votes_counters_record_config
 import (
   "log"
   "BigBang/internal/platform/postgres_config/client_config"
+  "database/sql"
 )
 
 
@@ -50,6 +51,17 @@ func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) DeletePo
   log.Printf("Sucessfully deleted post votes counters records for postHash %s\n", postHash)
 }
 
+func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) GetPostVotesCountersRecordByPostHash(
+  postHash string) *PostVotesCountersRecord {
+  var postVotesCountersRecord PostVotesCountersRecord
+  err := postVotesCountersRecordExecutor.C.Get(
+    &postVotesCountersRecord, QUERY_POST_VOTES_COUNTRS_RECORDS_BY_POST_HASH_COMMAND, postHash)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf("Failed to query post votes counters record by postHash %s with error: %+v\n", postHash, err)
+  }
+
+  return &postVotesCountersRecord
+}
 
 /*
  * Tx versions
@@ -82,4 +94,17 @@ func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) DeletePo
     log.Panicf("Failed to delete post votes counters records for postHash %s with error: %+v\n", postHash, err)
   }
   log.Printf("Sucessfully deleted post votes counters records for postHash %s\n", postHash)
+}
+
+func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) GetPostVotesCountersRecordByPostHashTx(
+    postHash string) *PostVotesCountersRecord {
+  var postVotesCountersRecord PostVotesCountersRecord
+  err := postVotesCountersRecordExecutor.Tx.Get(
+    &postVotesCountersRecord, QUERY_POST_VOTES_COUNTRS_RECORDS_BY_POST_HASH_COMMAND, postHash)
+
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf("Failed to query post votes counters record by postHash %s with error: %+v\n", postHash, err)
+  }
+
+  return &postVotesCountersRecord
 }

@@ -146,6 +146,19 @@ func (postReputationsRecordExecutor *PostReputationsRecordExecutor) GetActorList
   return &actorList
 }
 
+func (postReputationsRecordExecutor *PostReputationsRecordExecutor) GetPostReputationsRecordByPostHashAndActor (
+    postHash string, actor string) *PostReputationsRecord {
+  var postReputationsRecord PostReputationsRecord
+  err := postReputationsRecordExecutor.C.Get(
+    &postReputationsRecord, QUERY_POST_REPUTATIONS_RECORDS_BY_POST_HASH_AND_ACTOR_COMMAND, postHash, actor)
+
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf("Failed to query post reputations record by postHash %s and actor %s with error: %+v\n",
+      postHash, actor, err)
+  }
+
+  return &postReputationsRecord
+}
 
 /*
  * Tx versions
@@ -263,4 +276,18 @@ func (postReputationsRecordExecutor *PostReputationsRecordExecutor) GetActorList
       "Failed to get actor list for postHash %s and voteType %s with error:\n %+v", postHash,  voteType, err)
   }
   return &actorList
+}
+
+func (postReputationsRecordExecutor *PostReputationsRecordExecutor) GetPostReputationsRecordByPostHashAndActorTx (
+    postHash string, actor string) *PostReputationsRecord {
+  var postReputationsRecord PostReputationsRecord
+  err := postReputationsRecordExecutor.Tx.Get(
+    &postReputationsRecord, QUERY_POST_REPUTATIONS_RECORDS_BY_POST_HASH_AND_ACTOR_COMMAND, postHash, actor)
+
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf("Failed to query post reputations record by postHash %s and actor %s with error: %+v\n",
+      postHash, actor, err)
+  }
+
+  return &postReputationsRecord
 }

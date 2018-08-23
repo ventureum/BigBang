@@ -7,11 +7,16 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/post_rewards_record_config"
   "BigBang/internal/platform/postgres_config/post_replies_record_config"
+  "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
+  "BigBang/internal/platform/postgres_config/post_reputations_record_config"
+  "BigBang/internal/pkg/error_config"
+  "log"
 )
 
 
 type Request struct {
   PostHash string `json:"postHash,required"`
+  Requestor string `json:"requestor,omitempty"`
 }
 
 type ResponseContent struct {
@@ -26,9 +31,11 @@ type ResponseContent struct {
 }
 
 type Response struct {
-  Post ResponseContent `json:"post,omitempty"`
+  Post *ResponseContent `json:"post,omitempty"`
+  PostVoteInfo *feed_attributes.VoteInfo `json:"postVoteInfo,omitempty"`
+  RequestorVoteInfo *feed_attributes.VoteInfo `json:"requestorVoteInfo,omitempty"`
   Ok bool `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
 func PostRecordResultToResponseContent(result *post_config.PostRecordResult) *ResponseContent {
@@ -43,26 +50,54 @@ func PostRecordResultToResponseContent(result *post_config.PostRecordResult) *Re
 }
 
 func ProcessRequest(request Request, response *Response) {
+  postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Message = errStr.(string)
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Post = nil
+      response.PostVoteInfo = nil
+      response.RequestorVoteInfo = nil
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresFeedClient.RollBack()
     }
+    postgresFeedClient.Close()
   }()
 
   postHash := request.PostHash
-  postgresFeedClient := client_config.ConnectPostgresClient()
-  defer postgresFeedClient.Close()
+  requestor := request.Requestor
+
   postgresFeedClient.Begin()
 
   postExecutor := post_config.PostExecutor{*postgresFeedClient}
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
   postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
+  postVotesCounterRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
+  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
 
   postRecordResult := postExecutor.GetPostRecordTx(postHash).ToPostRecordResult()
-
-  response.Post = *PostRecordResultToResponseContent(postRecordResult)
+  response.Post = PostRecordResultToResponseContent(postRecordResult)
   response.Post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCountTx(postHash)
   response.Post.Rewards = postRewardsRecordExecutor.GetPostRewardsTx(postHash).Value()
+
+  log.Printf("Post Content is loaded for postHash %s\n", postHash)
+
+  postVotesCounterRecord := postVotesCounterRecordExecutor.GetPostVotesCountersRecordByPostHashTx(postHash)
+  response.PostVoteInfo = &feed_attributes.VoteInfo{
+    DownVoteCount:  postVotesCounterRecord.DownVoteCount,
+    UpVoteCount:    postVotesCounterRecord.UpVoteCount,
+    TotalVoteCount: postVotesCounterRecord.TotalVoteCount,
+  }
+
+  log.Printf("PostVoteInfo is loaded for postHash %s\n", postHash)
+
+  if requestor != "" {
+    postReputationsRecord := postReputationsRecordExecutor.GetPostReputationsRecordByPostHashAndActorTx(postHash, requestor)
+    response.RequestorVoteInfo = &feed_attributes.VoteInfo{
+      DownVoteCount:  postReputationsRecord.DownVoteCount,
+      UpVoteCount:    postReputationsRecord.UpVoteCount,
+      TotalVoteCount: postReputationsRecord.TotalVoteCount,
+    }
+    log.Printf("RequestorVoteInfo is loaded for postHash %s\n", postHash)
+  }
 
   postgresFeedClient.Commit()
   response.Ok = true

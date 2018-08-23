@@ -33,7 +33,7 @@ func (sessionRecord *SessionRecord) ToSessionRecordResult() *SessionRecordResult
     PostHash:    sessionRecord.PostHash,
     StartTime:   sessionRecord.StartTime,
     EndTime:     sessionRecord.EndTime,
-    Content:     feed_attributes.CreatedContentFromToJsonText(sessionRecord.Content),
+    Content:     feed_attributes.CreatedContentFromJsonText(sessionRecord.Content),
     CreatedAt:   sessionRecord.CreatedAt,
     UpdatedAt:   sessionRecord.UpdatedAt,
   }

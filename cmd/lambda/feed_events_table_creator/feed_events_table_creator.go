@@ -10,6 +10,10 @@ import (
   "BigBang/internal/platform/postgres_config/post_replies_record_config"
   "BigBang/internal/platform/postgres_config/post_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
+  "BigBang/internal/platform/postgres_config/actor_profile_record_config"
+  "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
+  "BigBang/internal/platform/postgres_config/purchase_reputations_record_config"
+  "BigBang/internal/platform/postgres_config/session_record_config"
 )
 
 type Response struct {
@@ -32,33 +36,49 @@ func ProcessRequest(response *Response) {
   db.LoadVoteTypeEnum()
   db.LoadActorTypeEnum()
 
-  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*db}
-  postVotesRecordExecutor.DeletePostVotesRecordTable()
-  postVotesRecordExecutor.CreatePostVotesRecordTable()
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*db}
+  actorProfileRecordExecutor.DeleteActorProfileRecordTable()
+  actorProfileRecordExecutor.CreateActorProfileRecordTable()
 
-  reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{*db}
-  reputationsRefuelRecordExecutor.DeleteReputationsRefuelRecordTable()
-  reputationsRefuelRecordExecutor.CreateReputationsRefuelRecordTable()
-
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*db}
-  postRewardsRecordExecutor.DeletePostRewardsRecordTable()
-  postRewardsRecordExecutor.CreatePostRewardsRecordTable()
-
-  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*db}
-  postReputationsRecordExecutor.DeletePostReputationsRecordTable()
-  postReputationsRecordExecutor.CreatePostReputationsRecordTable()
-
-  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*db}
-  postRepliesRecordExecutor.DeletePostRepliesRecordTable()
-  postRepliesRecordExecutor.CreatePostRepliesRecordTable()
+  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{*db}
+  actorReputationsRecordExecutor.DeleteActorReputationsRecordTable()
+  actorReputationsRecordExecutor.CreateActorReputationsRecordTable()
 
   postExecutor := post_config.PostExecutor{*db}
   postExecutor.DeletePostTable()
   postExecutor.CreatePostTable()
 
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{*db}
-  actorReputationsRecordExecutor.DeleteActorReputationsRecordTable()
-  actorReputationsRecordExecutor.CreateActorReputationsRecordTable()
+  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*db}
+  postRepliesRecordExecutor.DeletePostRepliesRecordTable()
+  postRepliesRecordExecutor.CreatePostRepliesRecordTable()
+
+  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*db}
+  postReputationsRecordExecutor.DeletePostReputationsRecordTable()
+  postReputationsRecordExecutor.CreatePostReputationsRecordTable()
+
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*db}
+  postRewardsRecordExecutor.DeletePostRewardsRecordTable()
+  postRewardsRecordExecutor.CreatePostRewardsRecordTable()
+
+  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*db}
+  postVotesCountersRecordExecutor.DeletePostVotesCountersRecordTable()
+  postVotesCountersRecordExecutor.CreatePostVotesCountersRecordTable()
+
+  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*db}
+  postVotesRecordExecutor.DeletePostVotesRecordTable()
+  postVotesRecordExecutor.CreatePostVotesRecordTable()
+
+  purchaseReputationsRecordExecutor := purchase_reputations_record_config.PurchaseReputationsRecordExecutor{*db}
+  purchaseReputationsRecordExecutor.DeletePurchaseReputationsRecordTable()
+  purchaseReputationsRecordExecutor.CreatePurchaseReputationsRecordTable()
+
+  reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{*db}
+  reputationsRefuelRecordExecutor.DeleteReputationsRefuelRecordTable()
+  reputationsRefuelRecordExecutor.CreateReputationsRefuelRecordTable()
+
+  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*db}
+  sessionRecordExecutor.DeleteSessionRecordTable()
+  sessionRecordExecutor.CreateSessionRecordTable()
 
   db.Commit()
   response.Ok = true

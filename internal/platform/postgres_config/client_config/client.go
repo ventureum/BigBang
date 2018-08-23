@@ -43,6 +43,13 @@ func (postgresFeedClient *PostgresFeedClient) Commit() {
   }
 }
 
+func (postgresFeedClient *PostgresFeedClient) RollBack() {
+  err := postgresFeedClient.Tx.Rollback()
+  if err != nil {
+    log.Panicf("Failed to Rollback with error: %+v\n", err)
+  }
+}
+
 func (postgresFeedClient *PostgresFeedClient) Close() {
   err := postgresFeedClient.C.Close()
   if err != nil {

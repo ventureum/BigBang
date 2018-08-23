@@ -54,8 +54,9 @@ DO
 
 const SUB_ACTOR_REPUTATIONS_COMMAND = `
 UPDATE actor_reputations_records
-  SET reputations = actor_reputations_records.reputations - $2
-  WHERE actor = $1;
+  SET reputations = LEAST(GREATEST(actor_reputations_records.reputations - $2, 0), actor_reputations_records.reputations)
+  WHERE actor = $1
+RETURNING $2 - actor_reputations_records.reputations;
 `
 
 const QUARY_TOTAL_REPUTATIONS_COMMAND = `

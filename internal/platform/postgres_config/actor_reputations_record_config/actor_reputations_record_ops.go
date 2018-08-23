@@ -5,6 +5,7 @@ import (
   "database/sql"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/app/feed_attributes"
+  "BigBang/internal/pkg/error_config"
 )
 
 type ActorReputationsRecordExecutor struct {
@@ -64,16 +65,31 @@ func (actorReputationsRecordExecutor *ActorReputationsRecordExecutor) AddActorRe
 
 func (actorReputationsRecordExecutor *ActorReputationsRecordExecutor) SubActorReputations(
     actor string, reputationToSub feed_attributes.Reputation) {
-  updated, err := actorReputationsRecordExecutor.Tx.Exec(SUB_ACTOR_REPUTATIONS_COMMAND, actor, reputationToSub)
+  var diff int64
+  err := actorReputationsRecordExecutor.C.Get(&diff, SUB_ACTOR_REPUTATIONS_COMMAND, actor, reputationToSub)
 
-  if err != nil {
-    log.Panicf("Failed to substract reputaions from actor %s with error:\n %+v", actor, err.Error())
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoActorExisting,
+      ErrorData: map[string]interface{} {
+        "actor": actor,
+      },
+    }
+    log.Panic(errorInfo.ToJsonText())
   }
 
-  updatedRows, _ := updated.RowsAffected()
+  if diff > 0 {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.InsufficientReputaionsAmount,
+      ErrorData: map[string]interface{} {
+        "diff": diff,
+      },
+    }
+    log.Panic(errorInfo.ToJsonText())
+  }
 
-  if updatedRows == 0 {
-    log.Panicf("Not enough reputaions for actor %s", actor)
+  if err != nil {
+    log.Panicf("Failed to substract reputaions from actor %s with error:\n %+v", actor, err)
   }
 
   log.Printf("Successfully substracted reputaions %d from actor %s", reputationToSub, actor)
@@ -135,16 +151,31 @@ func (actorReputationsRecordExecutor *ActorReputationsRecordExecutor) AddActorRe
 
 func (actorReputationsRecordExecutor *ActorReputationsRecordExecutor) SubActorReputationsTx(
     actor string, reputationToSub feed_attributes.Reputation) {
-  updated, err := actorReputationsRecordExecutor.Tx.Exec(SUB_ACTOR_REPUTATIONS_COMMAND, actor, reputationToSub)
+  var diff int64
+  err := actorReputationsRecordExecutor.Tx.Get(&diff, SUB_ACTOR_REPUTATIONS_COMMAND, actor, reputationToSub)
 
-  if err != nil {
-    log.Panicf("Failed to substract reputaions from actor %s with error:\n %+v", actor, err.Error())
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoActorExisting,
+      ErrorData: map[string]interface{} {
+        "actor": actor,
+      },
+    }
+    log.Panic(errorInfo.Marshal())
   }
 
-  updatedRows, _ := updated.RowsAffected()
+  if diff > 0 {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.InsufficientReputaionsAmount,
+      ErrorData: map[string]interface{} {
+        "diff": diff,
+      },
+    }
+    log.Panic(errorInfo.Marshal())
+  }
 
-  if updatedRows == 0 {
-    log.Panicf("Not enough reputaions for actor %s", actor)
+  if err != nil {
+    log.Panicf("Failed to substract reputaions from actor %s with error:\n %+v", actor, err)
   }
 
   log.Printf("Successfully substracted reputaions %d from actor %s", reputationToSub, actor)

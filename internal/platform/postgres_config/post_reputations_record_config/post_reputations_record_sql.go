@@ -52,6 +52,11 @@ DELETE FROM post_reputations_records
 WHERE actor = $1;
 `
 
+const QUERY_POST_REPUTATIONS_RECORDS_BY_POST_HASH_AND_ACTOR_COMMAND = `
+SELECT * FROM post_reputations_records
+WHERE post_hash = $1 and actor = $2;
+`
+
 const QUERY_TOTAL_REPUTATIONS_BY_POST_HASH_COMMAND = `
 SELECT sum(reputations) FROM post_reputations_records
 WHERE post_hash = $1;
