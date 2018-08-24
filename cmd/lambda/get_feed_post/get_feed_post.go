@@ -100,6 +100,12 @@ func ProcessRequest(request Request, response *Response) {
   }
 
   postgresFeedClient.Commit()
+
+  postExecutor.Close()
+  postRewardsRecordExecutor.Close()
+  postRepliesRecordExecutor.Close()
+  postVotesCounterRecordExecutor.Close()
+  postReputationsRecordExecutor.Close()
   response.Ok = true
 }
 

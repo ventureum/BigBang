@@ -5,6 +5,7 @@ import (
   "BigBang/internal/platform/postgres_config/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 
@@ -19,9 +20,9 @@ type ResponseContent struct {
 }
 
 type Response struct {
-  Profile ResponseContent `json:"profile,omitempty"`
+  Profile *ResponseContent `json:"profile,omitempty"`
   Ok bool `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
 func ProfileRecordResultToResponseContent(actorProfileRecord *actor_profile_record_config.ActorProfileRecord) *ResponseContent {
@@ -32,16 +33,18 @@ func ProfileRecordResultToResponseContent(actorProfileRecord *actor_profile_reco
 }
 
 func ProcessRequest(request Request, response *Response) {
+  postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Profile = ResponseContent{}
-      response.Message = errStr.(string)
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Profile = nil
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresFeedClient.RollBack()
     }
+    postgresFeedClient.Close()
   }()
 
+
   actor := request.Actor
-  postgresFeedClient := client_config.ConnectPostgresClient()
-  defer postgresFeedClient.Close()
   postgresFeedClient.Begin()
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
@@ -49,7 +52,7 @@ func ProcessRequest(request Request, response *Response) {
 
   actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecordTx(actor)
 
-  response.Profile = *ProfileRecordResultToResponseContent(actorProfileRecord)
+  response.Profile = ProfileRecordResultToResponseContent(actorProfileRecord)
   response.Profile.Reputations = actorReputationsRecordExecutor.GetActorReputationsTx(actor).Value()
 
   postgresFeedClient.Commit()

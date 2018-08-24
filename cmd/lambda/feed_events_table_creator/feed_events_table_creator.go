@@ -14,73 +14,75 @@ import (
   "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
   "BigBang/internal/platform/postgres_config/purchase_reputations_record_config"
   "BigBang/internal/platform/postgres_config/session_record_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 type Response struct {
   Ok bool `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
 func ProcessRequest(response *Response) {
+  postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Message = errStr.(string)
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresFeedClient.RollBack()
     }
+    postgresFeedClient.Close()
   }()
 
-  db := client_config.ConnectPostgresClient()
-  defer db.Close()
+  postgresFeedClient.Begin()
+  postgresFeedClient.LoadUuidExtension()
+  postgresFeedClient.LoadVoteTypeEnum()
+  postgresFeedClient.LoadActorTypeEnum()
+  postgresFeedClient.SetIdleInTransactionSessionTimeout(60000)
 
-  db.Begin()
-  db.LoadUuidExtension()
-  db.LoadVoteTypeEnum()
-  db.LoadActorTypeEnum()
-
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*db}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
   actorProfileRecordExecutor.DeleteActorProfileRecordTable()
   actorProfileRecordExecutor.CreateActorProfileRecordTable()
 
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{*db}
+  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{*postgresFeedClient}
   actorReputationsRecordExecutor.DeleteActorReputationsRecordTable()
   actorReputationsRecordExecutor.CreateActorReputationsRecordTable()
 
-  postExecutor := post_config.PostExecutor{*db}
+  postExecutor := post_config.PostExecutor{*postgresFeedClient}
   postExecutor.DeletePostTable()
   postExecutor.CreatePostTable()
 
-  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*db}
+  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
   postRepliesRecordExecutor.DeletePostRepliesRecordTable()
   postRepliesRecordExecutor.CreatePostRepliesRecordTable()
 
-  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*db}
+  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
   postReputationsRecordExecutor.DeletePostReputationsRecordTable()
   postReputationsRecordExecutor.CreatePostReputationsRecordTable()
 
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*db}
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
   postRewardsRecordExecutor.DeletePostRewardsRecordTable()
   postRewardsRecordExecutor.CreatePostRewardsRecordTable()
 
-  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*db}
+  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
   postVotesCountersRecordExecutor.DeletePostVotesCountersRecordTable()
   postVotesCountersRecordExecutor.CreatePostVotesCountersRecordTable()
 
-  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*db}
+  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
   postVotesRecordExecutor.DeletePostVotesRecordTable()
   postVotesRecordExecutor.CreatePostVotesRecordTable()
 
-  purchaseReputationsRecordExecutor := purchase_reputations_record_config.PurchaseReputationsRecordExecutor{*db}
+  purchaseReputationsRecordExecutor := purchase_reputations_record_config.PurchaseReputationsRecordExecutor{*postgresFeedClient}
   purchaseReputationsRecordExecutor.DeletePurchaseReputationsRecordTable()
   purchaseReputationsRecordExecutor.CreatePurchaseReputationsRecordTable()
 
-  reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{*db}
+  reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{*postgresFeedClient}
   reputationsRefuelRecordExecutor.DeleteReputationsRefuelRecordTable()
   reputationsRefuelRecordExecutor.CreateReputationsRefuelRecordTable()
 
-  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*db}
+  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
   sessionRecordExecutor.DeleteSessionRecordTable()
   sessionRecordExecutor.CreateSessionRecordTable()
 
-  db.Commit()
+  postgresFeedClient.Commit()
   response.Ok = true
 }
 

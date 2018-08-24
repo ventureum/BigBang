@@ -4,6 +4,7 @@ import (
   "github.com/aws/aws-lambda-go/lambda"
   "BigBang/internal/platform/postgres_config/session_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 type Request struct {
@@ -13,26 +14,24 @@ type Request struct {
 type Response struct {
   Session *session_record_config.SessionRecordResult `json:"session,omitempty"`
   Ok bool `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo`json:"message,omitempty"`
 }
 
 func ProcessRequest(request Request, response *Response) {
+  postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Message = errStr.(string)
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Session = nil
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
+    postgresFeedClient.Close()
   }()
 
   postHash := request.PostHash
-  postgresFeedClient := client_config.ConnectPostgresClient()
-  defer postgresFeedClient.Close()
-  postgresFeedClient.Begin()
 
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
+  response.Session = sessionRecordExecutor.GetSessionRecord(postHash).ToSessionRecordResult()
 
-  response.Session = sessionRecordExecutor.GetSessionRecordTx(postHash).ToSessionRecordResult()
-
-  postgresFeedClient.Commit()
   response.Ok = true
 }
 

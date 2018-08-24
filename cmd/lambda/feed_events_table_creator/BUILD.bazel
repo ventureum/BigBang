@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/feed_events_table_creator",
     visibility = ["//visibility:private"],
     deps = [
+        "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/actor_profile_record_config:go_default_library",
         "//internal/platform/postgres_config/actor_reputations_record_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",

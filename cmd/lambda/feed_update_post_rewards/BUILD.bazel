@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/feed_update_post_rewards",
     visibility = ["//visibility:private"],
     deps = [
+        "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/post_rewards_record_config:go_default_library",
         "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",

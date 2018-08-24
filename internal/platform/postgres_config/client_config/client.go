@@ -104,13 +104,21 @@ func (postgresFeedClient *PostgresFeedClient) LoadUuidExtension() {
 func (postgresFeedClient *PostgresFeedClient) LoadVoteTypeEnum() {
   _, err := postgresFeedClient.C.Exec(LOAD_VOTE_TYPE_ENUM)
   if err != nil {
-    log.Fatalf("Failed to load vote type enum with error: %+v\n", err)
+    log.Panicf("Failed to load vote type enum with error: %+v\n", err)
   }
 }
 
 func (postgresFeedClient *PostgresFeedClient) LoadActorTypeEnum() {
   _, err := postgresFeedClient.C.Exec(LOAD_ACTOR_TYPE_ENUM)
   if err != nil {
-    log.Fatalf("Failed to load actor type enum with error: %+v\n", err)
+    log.Panicf("Failed to load actor type enum with error: %+v\n", err)
+  }
+}
+
+func (postgresFeedClient *PostgresFeedClient) SetIdleInTransactionSessionTimeout(ms int64) {
+  command := fmt.Sprintf(SET_IDLE_IN_TX_SESSION_TIMEOUT, ms)
+  _, err := postgresFeedClient.C.Exec(command)
+  if err != nil {
+    log.Panicf("Failed to Set Idle In Transaction Session Timeout: %+v\n", err)
   }
 }

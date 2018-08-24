@@ -11,6 +11,7 @@ import (
   "BigBang/internal/platform/postgres_config/session_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/getstream_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 
@@ -26,7 +27,7 @@ type Request struct {
 
 type Response struct {
   Ok bool `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
 func (request *Request) ToSessionRecord() (*session_record_config.SessionRecord) {
@@ -40,10 +41,13 @@ func (request *Request) ToSessionRecord() (*session_record_config.SessionRecord)
 }
 
 func ProcessRequest(request Request, response *Response) {
+  postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Message = errStr.(string)
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresFeedClient.RollBack()
     }
+    postgresFeedClient.Close()
   }()
 
   var err error
@@ -58,10 +62,8 @@ func ProcessRequest(request Request, response *Response) {
     log.Panic(err.Error())
   }
 
-  postgresFeedClient := client_config.ConnectPostgresClient()
   getStreamClient := &getstream_config.GetStreamClient{C: getStreamIOClient}
   sessionRecord := request.ToSessionRecord()
-  defer postgresFeedClient.Close()
 
   postgresFeedClient.Begin()
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}

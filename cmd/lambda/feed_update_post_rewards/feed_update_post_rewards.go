@@ -4,22 +4,23 @@ import (
   "github.com/aws/aws-lambda-go/lambda"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/post_rewards_record_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 type Response struct {
   Ok bool `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
 func ProcessRequest(response *Response) {
-  defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Message = errStr.(string)
-    }
-  }()
-
   postgresFeedClient := client_config.ConnectPostgresClient()
-  defer postgresFeedClient.Close()
+  defer func() {
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresFeedClient.RollBack()
+    }
+    postgresFeedClient.Close()
+  }()
 
   postgresFeedClient.Begin()
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
