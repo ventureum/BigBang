@@ -1,30 +1,22 @@
 package main
 
 import (
+  "log"
   "github.com/aws/aws-lambda-go/lambda"
-  "BigBang/internal/platform/postgres_config/actor_profile_record_config"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/client_config"
-  "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
+  "BigBang/internal/pkg/error_config"
 )
 
-
 type Request struct {
-  Actor string `json:"actor,required"`
-  UserType string `json:"userType,required"`
+  UserAddress string `json:"userAddress,required"`
+  Reputations int64 `json:"reputations,required"`
 }
 
 type Response struct {
-  Ok bool `json:"ok"`
+  Ok      bool   `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
-}
-
-func (request *Request) ToActorProfileRecord() (*actor_profile_record_config.ActorProfileRecord) {
-  return &actor_profile_record_config.ActorProfileRecord{
-    Actor:      request.Actor,
-    ActorType: feed_attributes.ActorType(request.UserType),
-  }
 }
 
 func ProcessRequest(request Request, response *Response) {
@@ -37,22 +29,25 @@ func ProcessRequest(request Request, response *Response) {
     postgresFeedClient.Close()
   }()
 
+  reputations := feed_attributes.Reputation(request.Reputations)
+  actor := request.UserAddress
+
   postgresFeedClient.Begin()
 
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
 
-  actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())
-
-
   actorReputationsRecord := actor_reputations_record_config.ActorReputationsRecord{
-    Actor: request.Actor,
-    Reputations: 0,
+    Actor: actor,
+    Reputations: reputations,
   }
+
   actorReputationsRecordExecutor.UpsertActorReputationsRecordTx(&actorReputationsRecord)
 
   postgresFeedClient.Commit()
+
+  log.Printf("Reset reputations for actor %s to be %d", actor, reputations)
+
   response.Ok = true
 }
 
@@ -63,13 +58,12 @@ func Handler(request Request) (response Response, err error) {
 }
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
+  //TODO(david.shao): remove example when deployed to production
   //request := Request{
-  // Actor:  "0x005",
-  // UserType: "KOL",
+  // UserAddress: "0x003",
+  // Reputations: 400000,
   //}
-  //response, _ := Handler(request)
-  //log.Printf("%+v\n",  response)
+  //Handler(request)
 
   lambda.Start(Handler)
 }

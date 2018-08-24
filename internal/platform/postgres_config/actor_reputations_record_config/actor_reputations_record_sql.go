@@ -62,3 +62,9 @@ RETURNING $2 - actor_reputations_records.reputations;
 const QUARY_TOTAL_REPUTATIONS_COMMAND = `
 SELECT sum(reputations) FROM actor_reputations_records;
 `
+
+const RESET_ACTOR_REPUTATIONS_COMMAND = `
+UPDATE actor_reputations_records
+  SET reputations = $2
+  WHERE actor = $1;
+`

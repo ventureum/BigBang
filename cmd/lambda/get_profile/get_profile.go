@@ -14,9 +14,9 @@ type Request struct {
 }
 
 type ResponseContent struct {
-  Actor string `json:"actor,omitempty"`
-  ActorType string `json:"userType,omitempty"`
-  Reputations int64 `json:"reputations,omitempty"`
+  Actor string `json:"actor"`
+  ActorType string `json:"userType"`
+  Reputations int64 `json:"reputations"`
 }
 
 type Response struct {
