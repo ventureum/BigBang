@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/get_session",
     visibility = ["//visibility:private"],
     deps = [
+        "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/session_record_config:go_default_library",
         "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",

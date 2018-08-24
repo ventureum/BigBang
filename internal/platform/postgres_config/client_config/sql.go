@@ -39,3 +39,7 @@ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'actor_type_enum') THEN
 END IF;
 END$$;
 `
+
+const SET_IDLE_IN_TX_SESSION_TIMEOUT = `
+set idle_in_transaction_session_timeout = %d;
+`

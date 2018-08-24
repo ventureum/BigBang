@@ -7,6 +7,7 @@ import (
   "BigBang/internal/platform/postgres_config/reputations_refuel_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 type Request struct {
@@ -16,14 +17,17 @@ type Request struct {
 
 type Response struct {
   Ok      bool   `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
 func ProcessRequest(request Request, response *Response) {
+  postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Message = errStr.(string)
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresFeedClient.RollBack()
     }
+    postgresFeedClient.Close()
   }()
 
   reputations := feed_attributes.Reputation(request.Reputations)
@@ -33,9 +37,6 @@ func ProcessRequest(request Request, response *Response) {
     Actor: actor,
     Reputations: reputations,
   }
-
-  postgresFeedClient := client_config.ConnectPostgresClient()
-  defer postgresFeedClient.Close()
 
   postgresFeedClient.Begin()
   reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{

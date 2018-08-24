@@ -4,6 +4,7 @@ import (
   "github.com/aws/aws-lambda-go/lambda"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 type Request struct {
@@ -12,20 +13,20 @@ type Request struct {
 
 type Response struct {
   Ok      bool   `json:"ok"`
-  Message string `json:"message,omitempty"`
+  Message *error_config.ErrorInfo `json:"message,omitempty"`
   Reputations int64 `json:"reputations"`
 }
 
 func ProcessRequest(request Request, response *Response) {
+  postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
-    if errStr := recover(); errStr != nil { //catch
-      response.Message = errStr.(string)
+    if errPanic := recover(); errPanic != nil { //catch
+      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
+    postgresFeedClient.Close()
   }()
 
   actor := request.UserAddress
-  postgresFeedClient := client_config.ConnectPostgresClient()
-  defer postgresFeedClient.Close()
 
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
