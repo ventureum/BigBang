@@ -6,6 +6,7 @@ import (
   "time"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/app/feed_attributes"
+  "BigBang/internal/pkg/error_config"
 )
 
 
@@ -28,7 +29,10 @@ func (postReputationsRecordExecutor *PostReputationsRecordExecutor) UpsertPostRe
   res, err := postReputationsRecordExecutor.C.NamedQuery(UPSERT_POST_REPUTATIONS_RECORD_COMMAND, postReputationsRecord)
 
   if err != nil {
-    log.Panicf("Failed to upsert post reputations record: %+v with error:\n %+v", postReputationsRecord, err.Error())
+    errorInfo := error_config.MatchError(err, "Actor", postReputationsRecord.Actor, error_config.PostReputationsRecordLocation)
+    errorInfo.ErrorData["postHash"] = postReputationsRecord.PostHash
+    log.Printf("Failed to upsert post reputations record: %+v with error: %+v\n", postReputationsRecord, err)
+    log.Panic(errorInfo.Marshal())
   }
 
   log.Printf("Sucessfully upserted post reputations record for post_hash %s and actor %s with reputaions %d\n",
@@ -168,7 +172,10 @@ func (postReputationsRecordExecutor *PostReputationsRecordExecutor) UpsertPostRe
   res, err := postReputationsRecordExecutor.Tx.NamedQuery(UPSERT_POST_REPUTATIONS_RECORD_COMMAND, postReputationsRecord)
 
   if err != nil {
-    log.Panicf("Failed to upsert post reputations record: %+v with error: %+v\n", postReputationsRecord, err)
+    errorInfo := error_config.MatchError(err, "Actor", postReputationsRecord.Actor, error_config.PostReputationsRecordLocation)
+    errorInfo.ErrorData["postHash"] = postReputationsRecord.PostHash
+    log.Printf("Failed to upsert post reputations record: %+v with error: %+v\n", postReputationsRecord, err)
+    log.Panic(errorInfo.Marshal())
   }
 
   log.Printf("Sucessfully upserted post reputations record for post_hash %s and actor %s with reputaions %d\n",
