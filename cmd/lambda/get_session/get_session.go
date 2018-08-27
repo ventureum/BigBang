@@ -5,6 +5,7 @@ import (
   "BigBang/internal/platform/postgres_config/session_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/internal/platform/postgres_config/post_config"
 )
 
 type Request struct {
@@ -29,7 +30,11 @@ func ProcessRequest(request Request, response *Response) {
 
   postHash := request.PostHash
 
+  postExecutor := post_config.PostExecutor{*postgresFeedClient}
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
+
+  postExecutor.VerifyPostRecordExisting(postHash)
+
   response.Session = sessionRecordExecutor.GetSessionRecord(postHash).ToSessionRecordResult()
 
   response.Ok = true

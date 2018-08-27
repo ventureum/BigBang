@@ -47,4 +47,6 @@ func main() {
 
   actorProfile3 := actorProfileRecordExecutor.GetActorProfileRecord(actorProfileRecord3.Actor)
   log.Printf("actorProfile3: %+v\n", actorProfile3)
+
+  actorProfileRecordExecutor.VerifyActorExisting(actor1)
 }

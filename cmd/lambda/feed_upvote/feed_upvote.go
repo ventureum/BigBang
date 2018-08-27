@@ -28,7 +28,9 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.VoteInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      if feed_attributes.CreateVoteTypeFromValue(request.Value) != feed_attributes.LOOKUP_VOTE_TYPE {
+        postgresFeedClient.RollBack()
+      }
     }
     postgresFeedClient.Close()
   }()

@@ -29,27 +29,11 @@ SELECT reputations FROM actor_reputations_records
 WHERE actor = $1;
 `
 
-const QUERY_ACTOR_REPUTATIONS_FOR_UPDATE_COMMAND = `
-SELECT reputations FROM actor_reputations_records
-WHERE actor = $1 FOR UPDATE;
-`
-
 const ADD_ACTOR_REPUTATIONS_COMMAND = `
-INSERT INTO actor_reputations_records
-(
-  actor,
-  reputations
-)
-VALUES 
-(
-  $1, 
-  $2
-)
-ON CONFLICT (actor) 
-DO
- UPDATE
+UPDATE actor_reputations_records
     SET reputations = actor_reputations_records.reputations + $2
-    WHERE actor_reputations_records.actor = $1;
+    WHERE actor = $1
+RETURNING reputations;
 `
 
 const SUB_ACTOR_REPUTATIONS_COMMAND = `
@@ -60,11 +44,9 @@ RETURNING $2 - actor_reputations_records.reputations;
 `
 
 const QUARY_TOTAL_REPUTATIONS_COMMAND = `
-SELECT sum(reputations) FROM actor_reputations_records;
+SELECT COALESCE(sum(reputations), 0) FROM actor_reputations_records;
 `
 
-const RESET_ACTOR_REPUTATIONS_COMMAND = `
-UPDATE actor_reputations_records
-  SET reputations = $2
-  WHERE actor = $1;
+const VERIFY_ACTOR_EXISTING_COMMAND = `
+select exists(select 1 from actor_reputations_records where actor =$1);
 `

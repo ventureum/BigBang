@@ -2,7 +2,7 @@ package actor_reputations_record_config
 
 const TABLE_SCHEMA_FOR_ACTOR_REPUTATIONS_RECORD = `
 CREATE TABLE actor_reputations_records (
-    actor TEXT NOT NULL,
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
     reputations BIGINT NOT NULL DEFAULT 0 CHECK(reputations >= 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

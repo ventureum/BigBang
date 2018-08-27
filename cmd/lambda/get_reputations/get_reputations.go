@@ -5,6 +5,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/internal/platform/postgres_config/actor_profile_record_config"
 )
 
 type Request struct {
@@ -30,6 +31,10 @@ func ProcessRequest(request Request, response *Response) {
 
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+
+  actorProfileRecordExecutor.VerifyActorExisting(actor)
+  actorReputationsRecordExecutor.VerifyActorExisting(actor)
 
   // Get Reputations
   response.Reputations = actorReputationsRecordExecutor.GetActorReputations(actor).Value()

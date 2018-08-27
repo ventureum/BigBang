@@ -3,7 +3,7 @@ package reputations_refuel_record_config
 const TABLE_SCHEMA_FOR_REPUTATION_REFUEL_RECORD = `
 CREATE TABLE reputations_refuel_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),
-    actor TEXT NOT NULL,
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
     reputations BIGINT NOT NULL DEFAULT 0 check(reputations >= 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

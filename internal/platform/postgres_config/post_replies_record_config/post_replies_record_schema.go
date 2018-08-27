@@ -2,8 +2,8 @@ package post_replies_record_config
 
 const TABLE_SCHEMA_FOR_POST_REPLIES_RECORD = `
 CREATE TABLE post_replies_records (
-    post_hash TEXT NOT NULL,
-    reply_hash TEXT UNIQUE NOT NULL,
+    post_hash TEXT NOT NULL REFERENCES posts(post_hash),
+    reply_hash TEXT UNIQUE NOT NULL REFERENCES posts(post_hash),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (post_hash, reply_hash)

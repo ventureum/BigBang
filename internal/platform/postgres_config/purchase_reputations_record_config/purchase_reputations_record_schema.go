@@ -4,7 +4,7 @@ package purchase_reputations_record_config
 const TABLE_SCHEMA_FOR_PURCHASE_REPUTATIONS_RECORDS = `
 CREATE TABLE purchase_reputations_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),
-    purchaser TEXT NOT NULL,
+    purchaser TEXT NOT NULL REFERENCES actor_profile_records(actor),
     vetx BIGINT NOT NULL,
     reputations BIGINT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

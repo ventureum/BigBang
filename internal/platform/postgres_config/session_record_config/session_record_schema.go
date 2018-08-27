@@ -3,8 +3,8 @@ package session_record_config
 
 const TABLE_SCHEMA_FOR_SESSION_RECORDS = `
 CREATE TABLE session_records (
-    actor TEXT NOT NULL,
-    post_hash TEXT NOT NULL,
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    post_hash TEXT NOT NULL REFERENCES posts(post_hash),
     start_time BIGINT NOT NULL,
     end_time BIGINT NOT NULL,
     content JSONB NOT NULL,

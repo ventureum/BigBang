@@ -8,6 +8,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/internal/platform/postgres_config/actor_profile_record_config"
 )
 
 type Request struct {
@@ -39,16 +40,22 @@ func ProcessRequest(request Request, response *Response) {
   }
 
   postgresFeedClient.Begin()
+
   reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{
     *postgresFeedClient}
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+
+
+  actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+  actorReputationsRecordExecutor.VerifyActorExistingTx(actor)
 
   // Update Reputations Refuel Record
   reputationsRefuelRecordExecutor.UpsertReputationsRefuelRecordTx(&reputationsRefuelRecord)
 
   // Update Actor Reputations Record
-  actorReputationsRecordExecutor.AddActorReputations(actor, reputations)
+  actorReputationsRecordExecutor.AddActorReputationsTx(actor, reputations)
 
   postgresFeedClient.Commit()
 

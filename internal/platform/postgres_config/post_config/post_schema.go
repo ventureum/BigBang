@@ -3,7 +3,7 @@ package post_config
 
 const TABLE_SCHEMA_FOR_POST = `
 CREATE TABLE posts (
-    actor TEXT NOT NULL,
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
     board_id TEXT NOT NULL,
     parent_hash TEXT NOT NULL,
     post_hash TEXT NOT NULL,
