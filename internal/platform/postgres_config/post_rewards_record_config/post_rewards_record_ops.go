@@ -41,7 +41,7 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) DeletePostRewardsRec
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetPostRewards(postHash string) feed_attributes.Reputation {
   var postRewards sql.NullInt64
   err := postRewardsRecordExecutor.C.Get(&postRewards , QUERY_POST_REWARDS_COMMAND, postHash)
-  if err != nil {
+  if err != nil && err != sql.ErrNoRows {
     log.Panicf("Failed to get post rewards for postHash %s with error:\n %+v", postHash, err.Error())
   }
   return feed_attributes.Reputation(postRewards.Int64)
@@ -58,13 +58,12 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) AddPostRewards(
   log.Printf("Successfully added post rewards %d for postHash %s", reputationToAdd, postHash)
 }
 
-
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) SubPostRewards(
     postHash string, reputationToSub feed_attributes.Reputation) {
   _, err := postRewardsRecordExecutor.C.Exec(SUB_POST_REWARDS_COMMAND, postHash, reputationToSub)
 
   if err != nil {
-    log.Panicf("Failed to add post rewards for postHash %s with error:\n %+v", postHash, err.Error())
+    log.Panicf("Failed to substarct post rewards from postHash %s with error:\n %+v", postHash, err.Error())
   }
 
   log.Printf("Successfully substracted post rewards %d from postHash %s", reputationToSub, postHash)
