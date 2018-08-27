@@ -26,7 +26,7 @@ func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) UpsertPo
   res, err := postVotesCountersRecordExecutor.C.NamedQuery(UPSERT_POST_VOTES_COUNTRS_RECORD_COMMAND, postVotesCountersRecord)
 
   if err != nil {
-    log.Panicf("Failed to upsert post votes counters record: %+v with error:\n %+v", postVotesCountersRecord, err.Error())
+    log.Panicf("Failed to upsert post votes counters record: %+v with error:\n %+v", postVotesCountersRecord)
   }
 
   log.Printf("Sucessfully upserted post votes counters record for post_hash %s", postVotesCountersRecord.PostHash)
@@ -71,7 +71,7 @@ func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) UpsertPo
   res, err := postVotesCountersRecordExecutor.Tx.NamedQuery(UPSERT_POST_VOTES_COUNTRS_RECORD_COMMAND, postVotesCountersRecord)
 
   if err != nil {
-    log.Panicf("Failed to upsert post votes counters record: %+v with error:\n %+v", postVotesCountersRecord, err.Error())
+    log.Panicf("Failed to upsert post votes counters record: %+v with error:\n %+v", postVotesCountersRecord)
   }
 
   log.Printf("Sucessfully upserted post votes counters record for post_hash %s", postVotesCountersRecord.PostHash)

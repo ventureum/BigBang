@@ -7,6 +7,8 @@ import (
 
 const RegexpForActorFkeyViolation = `violates foreign key constraint .*_actor_fkey`
 const RegexpForPostHashFkeyViolation = `violates foreign key constraint .*_post_hash_fkey`
+const RegexpForUpvoteLimitViolation = `violates check constraint .*_upvote_count_check`
+const RegexpForDownvoteLimitViolation = `violates check constraint .*_downvote_count_check`
 
 func MatchErrorString(regExpStr string, str string) (bool) {
   re := regexp.MustCompile(regExpStr)
@@ -26,6 +28,18 @@ func MatchError(err error, fieldName string, val interface{}, location ErrorLoca
     errorInfo.ErrorCode = NoPostHashExisting
     errorInfo.ErrorData = map[string]interface{}{
       "postHash": val,
+    }
+    errorInfo.ErrorLocation = location
+  } else if MatchErrorString(RegexpForUpvoteLimitViolation, errStr) {
+    errorInfo.ErrorCode = ExceedingUpvoteLimit
+    errorInfo.ErrorData = map[string]interface{}{
+      fieldName: val,
+    }
+    errorInfo.ErrorLocation = location
+  }  else if MatchErrorString(RegexpForDownvoteLimitViolation, errStr) {
+    errorInfo.ErrorCode = ExceedingDownvoteLimit
+    errorInfo.ErrorData = map[string]interface{}{
+      fieldName: val,
     }
     errorInfo.ErrorLocation = location
   } else {

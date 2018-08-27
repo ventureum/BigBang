@@ -39,47 +39,40 @@ func ProcessRequest(response *Response) {
   postgresFeedClient.SetIdleInTransactionSessionTimeout(60000)
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  actorProfileRecordExecutor.DeleteActorProfileRecordTable()
-  actorProfileRecordExecutor.CreateActorProfileRecordTable()
-
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{*postgresFeedClient}
-  actorReputationsRecordExecutor.DeleteActorReputationsRecordTable()
-  actorReputationsRecordExecutor.CreateActorReputationsRecordTable()
-
   postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  postExecutor.DeletePostTable()
-  postExecutor.CreatePostTable()
-
   postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
-  postRepliesRecordExecutor.DeletePostRepliesRecordTable()
-  postRepliesRecordExecutor.CreatePostRepliesRecordTable()
-
   postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
-  postReputationsRecordExecutor.DeletePostReputationsRecordTable()
-  postReputationsRecordExecutor.CreatePostReputationsRecordTable()
-
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
-  postRewardsRecordExecutor.DeletePostRewardsRecordTable()
-  postRewardsRecordExecutor.CreatePostRewardsRecordTable()
-
   postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
-  postVotesCountersRecordExecutor.DeletePostVotesCountersRecordTable()
-  postVotesCountersRecordExecutor.CreatePostVotesCountersRecordTable()
-
-  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
-  postVotesRecordExecutor.DeletePostVotesRecordTable()
-  postVotesRecordExecutor.CreatePostVotesRecordTable()
-
   purchaseReputationsRecordExecutor := purchase_reputations_record_config.PurchaseReputationsRecordExecutor{*postgresFeedClient}
-  purchaseReputationsRecordExecutor.DeletePurchaseReputationsRecordTable()
-  purchaseReputationsRecordExecutor.CreatePurchaseReputationsRecordTable()
-
-  reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{*postgresFeedClient}
-  reputationsRefuelRecordExecutor.DeleteReputationsRefuelRecordTable()
-  reputationsRefuelRecordExecutor.CreateReputationsRefuelRecordTable()
-
+  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
+  reputationsRefuelRecordExecutor := reputations_refuel_record_config.ReputationsRefuelRecordExecutor{*postgresFeedClient}
+
   sessionRecordExecutor.DeleteSessionRecordTable()
+  postVotesRecordExecutor.DeletePostVotesRecordTable()
+  purchaseReputationsRecordExecutor.DeletePurchaseReputationsRecordTable()
+  postVotesCountersRecordExecutor.DeletePostVotesCountersRecordTable()
+  postRewardsRecordExecutor.DeletePostRewardsRecordTable()
+  postReputationsRecordExecutor.DeletePostReputationsRecordTable()
+  postRepliesRecordExecutor.DeletePostRepliesRecordTable()
+  reputationsRefuelRecordExecutor.DeleteReputationsRefuelRecordTable()
+  postExecutor.DeletePostTable()
+  actorReputationsRecordExecutor.DeleteActorReputationsRecordTable()
+  actorProfileRecordExecutor.DeleteActorProfileRecordTable()
+
+
+  actorProfileRecordExecutor.CreateActorProfileRecordTable()
+  actorReputationsRecordExecutor.CreateActorReputationsRecordTable()
+  postExecutor.CreatePostTable()
+  postRepliesRecordExecutor.CreatePostRepliesRecordTable()
+  postReputationsRecordExecutor.CreatePostReputationsRecordTable()
+  postRewardsRecordExecutor.CreatePostRewardsRecordTable()
+  postVotesCountersRecordExecutor.CreatePostVotesCountersRecordTable()
+  postVotesRecordExecutor.CreatePostVotesRecordTable()
+  purchaseReputationsRecordExecutor.CreatePurchaseReputationsRecordTable()
+  reputationsRefuelRecordExecutor.CreateReputationsRefuelRecordTable()
   sessionRecordExecutor.CreateSessionRecordTable()
 
   postgresFeedClient.Commit()
