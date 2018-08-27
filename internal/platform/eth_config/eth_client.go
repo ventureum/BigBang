@@ -337,6 +337,7 @@ func ProcessPostVotesRecord(
   voteInfo.Reputations = upsertedPostReputationsRecord.Reputations
   voteInfo.UpVoteCount = upsertPostVotesCountersRecord.UpVoteCount
   voteInfo.DownVoteCount = upsertPostVotesCountersRecord.DownVoteCount
+  voteInfo.TotalVoteCount = upsertPostVotesCountersRecord.TotalVoteCount
 
   if totalReputationsForPostHashWithSameVoteType > 0 {
     // Distribute Rewards
@@ -417,7 +418,15 @@ func QueryPostVotesInfo(
   votePenalty := feed_attributes.PenaltyForVote(feed_attributes.Reputation(voteCost), voteCount)
 
   log.Printf("vote Penalty : %+v\n", votePenalty)
+
+  postReputationsRecord := postReputationsRecordExecutor.GetPostReputationsRecordByPostHashAndActor(
+    postVotesRecord.PostHash, postVotesRecord.Actor)
+  voteInfo.PostHash = postVotesRecord.PostHash
+  voteInfo.Actor = postVotesRecord.Actor
   voteInfo.Cost = feed_attributes.Reputation(votePenalty)
+  voteInfo.DownVoteCount = postReputationsRecord.DownVoteCount
+  voteInfo.UpVoteCount =  postReputationsRecord.UpVoteCount
+  voteInfo.TotalVoteCount = postReputationsRecord.TotalVoteCount
 
   return &voteInfo
 }
