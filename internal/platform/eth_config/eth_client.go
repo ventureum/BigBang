@@ -24,6 +24,7 @@ import (
   "BigBang/internal/platform/postgres_config/post_reputations_record_config"
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
+  "BigBang/internal/platform/postgres_config/actor_profile_record_config"
 )
 
 
@@ -183,10 +184,19 @@ func ProcessPostRecord(
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
   postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+
+
+  actorProfileRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
+  actorReputationsRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
+
 
   updateCount :=  postExecutor.GetPostUpdateCountTx(postRecord.PostHash)
   reputationsPenalty := feed_attributes.PenaltyForPostType(
     feed_attributes.PostType(postRecord.PostType), updateCount)
+
+  log.Printf("UpdateCount for PostHash %s: %d", postRecord.PostHash, updateCount)
+  log.Printf("Penalty for PostHash %s: %d", postRecord.PostHash, reputationsPenalty)
 
   // Update Actor Reputation
   actorReputationsRecordExecutor.SubActorReputationsTx(postRecord.Actor, reputationsPenalty)
@@ -224,6 +234,12 @@ func ProcessPostVotesRecord(
   postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
   postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
   postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+  postExecutor := post_config.PostExecutor{*postgresFeedClient}
+
+  actorProfileRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
+  actorReputationsRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
+  postExecutor.VerifyPostRecordExistingTx(postVotesRecord.PostHash)
 
   // CutOff Time
   cutOffTimeStamp := time.Now()
@@ -352,6 +368,12 @@ func QueryPostVotesInfo(
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
   postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+  postExecutor := post_config.PostExecutor{*postgresFeedClient}
+
+  actorProfileRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
+  actorReputationsRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
+  postExecutor.VerifyPostRecordExisting(postVotesRecord.PostHash)
 
   // Current Actor Reputation
   actorReputation := actorReputationsRecordExecutor.GetActorReputations(postVotesRecord.Actor)

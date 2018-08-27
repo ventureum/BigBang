@@ -63,6 +63,7 @@ func ProcessRequest(request Request, response *Response) {
   }
 
   getStreamClient := &getstream_config.GetStreamClient{C: getStreamIOClient}
+
   postRecord := request.ToPostRecord()
   eth_config.ProcessPostRecord(
     postRecord,

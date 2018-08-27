@@ -4,8 +4,8 @@ package post_votes_record_config
 const TABLE_SCHEMA_FOR_POST_VOTES_RECORD = `
 CREATE TABLE post_votes_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),
-    actor TEXT NOT NULL,
-    post_hash TEXT NOT NULL,
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    post_hash TEXT NOT NULL REFERENCES posts(post_hash),
     vote_type vote_type_enum NOT NULL,
     signed_reputations BIGINT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

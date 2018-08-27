@@ -12,6 +12,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/internal/platform/postgres_config/post_config"
 )
 
 
@@ -66,8 +67,14 @@ func ProcessRequest(request Request, response *Response) {
   sessionRecord := request.ToSessionRecord()
 
   postgresFeedClient.Begin()
+
+  postExecutor := post_config.PostExecutor{*postgresFeedClient}
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
+
+  postExecutor.VerifyPostRecordExistingTx(sessionRecord.PostHash)
+
   updatedTimestamp := sessionRecordExecutor.UpsertSessionRecordTx(sessionRecord)
+
 
   // Insert Activity to GetStream
   activity := sessionRecord.ConvertSessionRecordToActivity(feed_attributes.BlockTimestamp(updatedTimestamp.Unix()))

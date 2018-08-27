@@ -43,6 +43,10 @@ WHERE post_hash = $1;
 `
 
 const QUERY_POST_UPDATE_COUNT_COMMAND = `
-SELECT update_count FROM posts
+SELECT COALESCE(update_count, 0) FROM posts
 WHERE post_hash = $1;
+`
+
+const VERIFY_POSTHASH_EXISTING_COMMAND = `
+select exists(select 1 from posts where post_hash =$1);
 `

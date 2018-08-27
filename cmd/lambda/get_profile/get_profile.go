@@ -6,6 +6,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
   "BigBang/internal/pkg/error_config"
+  "log"
 )
 
 
@@ -38,24 +39,25 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Profile = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
     }
     postgresFeedClient.Close()
   }()
 
 
   actor := request.Actor
-  postgresFeedClient.Begin()
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{*postgresFeedClient}
 
-  actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecordTx(actor)
+  actorProfileRecordExecutor.VerifyActorExisting(actor)
+  actorReputationsRecordExecutor.VerifyActorExisting(actor)
 
+  actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(actor)
   response.Profile = ProfileRecordResultToResponseContent(actorProfileRecord)
-  response.Profile.Reputations = actorReputationsRecordExecutor.GetActorReputationsTx(actor).Value()
+  log.Printf("Loaded Profile content for actor %s\n", actor)
+  response.Profile.Reputations = actorReputationsRecordExecutor.GetActorReputations(actor).Value()
+  log.Printf("Loaded profile reputations for actor %s\n", actor)
 
-  postgresFeedClient.Commit()
   response.Ok = true
 }
 

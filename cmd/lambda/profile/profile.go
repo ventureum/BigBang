@@ -7,6 +7,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
+  "log"
 )
 
 
@@ -40,19 +41,29 @@ func ProcessRequest(request Request, response *Response) {
   postgresFeedClient.Begin()
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
-    *postgresFeedClient}
 
-  actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())
+  inserted := actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())
 
+  if inserted {
+    actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+      *postgresFeedClient}
+    actorReputationsRecord := actor_reputations_record_config.ActorReputationsRecord{
+      Actor: request.Actor,
+      Reputations: 0,
+    }
+    actorReputationsRecordExecutor.UpsertActorReputationsRecordTx(&actorReputationsRecord)
 
-  actorReputationsRecord := actor_reputations_record_config.ActorReputationsRecord{
-    Actor: request.Actor,
-    Reputations: 0,
+    log.Printf("Created Actor Reputations Account for actor %s", request.Actor)
   }
-  actorReputationsRecordExecutor.UpsertActorReputationsRecordTx(&actorReputationsRecord)
 
   postgresFeedClient.Commit()
+
+  if inserted {
+    log.Printf("Created Profile for actor %s", request.Actor)
+  } else {
+    log.Printf("Updated Profile for actor %s", request.Actor)
+  }
+
   response.Ok = true
 }
 

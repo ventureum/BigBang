@@ -11,20 +11,14 @@ type ErrorInfo struct {
   ErrorCode ErrorCode `json:"errorCode,omitempty"`
   ErrorData ErrorData `json:"errorData,omitempty"`
   ErrorMessage ErrorMessage `json:"errorMessage,omitempty"`
+  ErrorLocation interface{} `json:"errorLocation,omitempty"`
   ErrorUnknownType interface{} `json:"errorUnknownType,omitempty"`
 }
 
-func (errorInfo ErrorInfo) Marshal() string {
-  res, _ := json.Marshal(errorInfo)
-  return string(res)
-}
 
-func (errorInfo *ErrorInfo) ToJsonText() types.JSONText {
-  marshaled, err := json.Marshal(errorInfo)
-  if err != nil {
-    log.Panicf("Failed to marshal errorInfo %+v with error: %+v\n", errorInfo, err)
-  }
-  return types.JSONText(string(marshaled))
+func (errorInfo *ErrorInfo) Marshal() string {
+  res, _ := json.Marshal(*errorInfo)
+  return string(res)
 }
 
 func CreatedErrorInfoFromString(errObj interface{}) *ErrorInfo{
@@ -41,11 +35,9 @@ func CreatedErrorInfoFromString(errObj interface{}) *ErrorInfo{
     default:
       errorInfo.ErrorUnknownType = errObj
   }
-
   return &errorInfo
 }
 
-
-
-
-
+func (errorInfo *ErrorInfo) AddErrorData(fieldName string, val interface{}) {
+  errorInfo.ErrorData[fieldName] = val
+}

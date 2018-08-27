@@ -10,5 +10,8 @@ go_library(
     ],
     importpath = "BigBang/internal/platform/postgres_config/post_replies_record_config",
     visibility = ["//:__subpackages__"],
-    deps = ["//internal/platform/postgres_config/client_config:go_default_library"],
+    deps = [
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+    ],
 )
