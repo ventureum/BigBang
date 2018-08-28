@@ -4,6 +4,7 @@ const TABLE_SCHEMA_FOR_ACTOR_PROFILE_RECORD = `
 CREATE TABLE actor_profile_records (
     actor TEXT NOT NULL,
     actor_type actor_type_enum NOT NULL,
+    actor_profile_status actor_profile_status_enum NOT NULL DEFAULT 'ACTIVATED',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (actor)

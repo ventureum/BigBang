@@ -34,8 +34,8 @@ type ResponseContent struct {
 
 type Response struct {
   Post *ResponseContent `json:"post,omitempty"`
-  PostVoteInfo *feed_attributes.VoteInfo `json:"postVoteInfo,omitempty"`
-  RequestorVoteInfo *feed_attributes.VoteInfo `json:"requestorVoteInfo,omitempty"`
+  PostVoteCountInfo *feed_attributes.VoteCountInfo `json:"postVoteCountInfo,omitempty"`
+  RequestorVoteCountInfo *feed_attributes.VoteCountInfo `json:"requestorCountVoteInfo,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
@@ -56,8 +56,8 @@ func ProcessRequest(request Request, response *Response) {
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Post = nil
-      response.PostVoteInfo = nil
-      response.RequestorVoteInfo = nil
+      response.PostVoteCountInfo = nil
+      response.RequestorVoteCountInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
     postgresFeedClient.Close()
@@ -89,7 +89,7 @@ func ProcessRequest(request Request, response *Response) {
   log.Printf("Post Content is loaded for postHash %s\n", postHash)
 
   postVotesCounterRecord := postVotesCounterRecordExecutor.GetPostVotesCountersRecordByPostHash(postHash)
-  response.PostVoteInfo = &feed_attributes.VoteInfo{
+  response.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
     DownVoteCount:  postVotesCounterRecord.DownVoteCount,
     UpVoteCount:    postVotesCounterRecord.UpVoteCount,
     TotalVoteCount: postVotesCounterRecord.TotalVoteCount,
@@ -99,7 +99,7 @@ func ProcessRequest(request Request, response *Response) {
 
   if requestor != "" {
     postReputationsRecord := postReputationsRecordExecutor.GetPostReputationsRecordByPostHashAndActor(postHash, requestor)
-    response.RequestorVoteInfo = &feed_attributes.VoteInfo{
+    response.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
       DownVoteCount:  postReputationsRecord.DownVoteCount,
       UpVoteCount:    postReputationsRecord.UpVoteCount,
       TotalVoteCount: postReputationsRecord.TotalVoteCount,

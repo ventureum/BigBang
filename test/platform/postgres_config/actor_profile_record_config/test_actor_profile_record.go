@@ -11,10 +11,11 @@ import (
 func main() {
   db := client_config.ConnectPostgresClient()
   db.LoadActorTypeEnum()
+  db.LoadActorProfileStatusEnum()
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*db}
-  actorProfileRecordExecutor.DeleteActorProfileRecordTable()
-  actorProfileRecordExecutor.CreateActorProfileRecordTable()
+  //actorProfileRecordExecutor.DeleteActorProfileRecordTable()
+  //actorProfileRecordExecutor.CreateActorProfileRecordTable()
 
   actor1 := "0xactor001"
   actor2 := "0xactor002"

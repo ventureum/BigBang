@@ -226,6 +226,7 @@ func ProcessPostVotesRecord(
   postgresFeedClient.Begin()
   voteType := postVotesRecord.VoteType
   var voteInfo feed_attributes.VoteInfo
+  voteInfo.For = feed_attributes.VoteInfoForPost
   voteInfo.Actor = postVotesRecord.Actor
   voteInfo.PostHash = postVotesRecord.PostHash
 
@@ -363,8 +364,7 @@ func QueryPostVotesInfo(
     postVotesRecord *post_votes_record_config.PostVotesRecord,
     postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
   var voteInfo feed_attributes.VoteInfo
-  voteInfo.Actor = postVotesRecord.Actor
-  voteInfo.PostHash = postVotesRecord.PostHash
+  voteInfo.For = feed_attributes.VoteInfoForVoter
 
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
