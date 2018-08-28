@@ -35,3 +35,6 @@ echo "generating profile zip"
 
 echo "generating refuel_reputations zip"
 ./generate_refuel_reputations_zip.sh
+
+echo "generating delete profile zip"
+./generate_delete_profile_zip.sh

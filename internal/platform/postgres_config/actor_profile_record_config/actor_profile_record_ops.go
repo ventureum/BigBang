@@ -49,6 +49,16 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) DeleteActorProfile
   log.Printf("Sucessfully deleted profile records for actor %s\n", actor)
 }
 
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) DeactivateActorProfileRecords(actor string) {
+  _, err := actorProfileRecordExecutor.C.Exec(DEACTIVATE_ACTOR_PROFILE_RECORD_COMMAND, actor)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    log.Printf("Failed to deactivate profile records for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully deactivated profile records for actor %s\n", actor)
+}
+
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorProfileRecord(actor string) *ActorProfileRecord {
   var actorProfileRecord ActorProfileRecord
   err := actorProfileRecordExecutor.C.Get(&actorProfileRecord, QUERY_ACTOR_PROFILE_RECORD_COMMAND, actor)
@@ -110,6 +120,16 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) DeleteActorProfile
     log.Panicln(errInfo.Marshal())
   }
   log.Printf("Sucessfully deleted profile records for actor %s\n", actor)
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) DeactivateActorProfileRecordsTx(actor string) {
+  _, err := actorProfileRecordExecutor.Tx.Exec(DEACTIVATE_ACTOR_PROFILE_RECORD_COMMAND, actor)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    log.Printf("Failed to deactivate profile records for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully deactivated profile records for actor %s\n", actor)
 }
 
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorProfileRecordTx(actor string) *ActorProfileRecord {

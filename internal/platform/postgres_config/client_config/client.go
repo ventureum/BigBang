@@ -115,6 +115,13 @@ func (postgresFeedClient *PostgresFeedClient) LoadActorTypeEnum() {
   }
 }
 
+func (postgresFeedClient *PostgresFeedClient) LoadActorProfileStatusEnum() {
+  _, err := postgresFeedClient.C.Exec(LOAD_ACTOR_PROFILE_STATUS_ENUM)
+  if err != nil {
+    log.Panicf("Failed to load actor profile status enum with error: %+v\n", err)
+  }
+}
+
 func (postgresFeedClient *PostgresFeedClient) SetIdleInTransactionSessionTimeout(ms int64) {
   command := fmt.Sprintf(SET_IDLE_IN_TX_SESSION_TIMEOUT, ms)
   _, err := postgresFeedClient.C.Exec(command)
