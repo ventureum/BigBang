@@ -12,7 +12,6 @@ const (
   ReplyPostType   PostType = "COMMENT"
   AuditPostType   PostType = "AUDIT"
   AirdropPostType PostType = "AIRDROP"
-  SessionPostType    PostType = "SESSION"
 )
 
 func (postType PostType) Hash() string {

@@ -73,3 +73,31 @@ func (getStreamClient *GetStreamClient) GetAllFeedActivitiesByFlatFeed(flatFeed 
   }
   log.Printf("Activities for Feed Id %s\n %+v\n",flatFeed.ID(), flatFeedResponse.Results)
 }
+
+func (getStreamClient *GetStreamClient) UpdateFeedActivityToGetStream(activity *feed_attributes.Activity) {
+  actor := string(activity.Actor)
+  verb := string(activity.Verb)
+  obj := activity.Object.Value()
+  timestamp := activity.Time
+  extra := map[string]interface{} {
+    "postType": activity.PostType.Value(),
+  }
+  for k, v := range activity.Extra {
+    extra[k] = v
+  }
+  streamActivity := stream.Activity{
+    Actor: actor,
+    Verb: verb,
+    Object: obj,
+    Time: stream.Time{
+      Time: time.Unix(int64(timestamp), 0).UTC(),
+    },
+    ForeignID: obj,
+    To: feed_attributes.ConvertToStringArray(activity.To),
+    Extra: extra,
+  }
+
+  getStreamClient.C.UpdateActivities(streamActivity)
+  log.Printf("Updated feed activity to GetStream with object: %s by user %s with stream activty: %v+\n",
+    obj, actor, streamActivity)
+}

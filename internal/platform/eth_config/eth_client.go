@@ -202,11 +202,17 @@ func ProcessPostRecord(
   actorReputationsRecordExecutor.SubActorReputationsTx(postRecord.Actor, reputationsPenalty)
 
   // Insert Post Record
-  updatedTimestamp := postExecutor.UpsertPostRecordTx(postRecord)
+  createdTimestamp := postExecutor.UpsertPostRecordTx(postRecord)
+  activity := ConvertPostRecordToActivity(postRecord, source, feed_attributes.BlockTimestamp(createdTimestamp.Unix()))
+
 
   // Insert Activity to GetStream
-  activity := ConvertPostRecordToActivity(postRecord, source, feed_attributes.BlockTimestamp(updatedTimestamp.Unix()))
-  getStreamClient.AddFeedActivityToGetStream(activity)
+  if (updateCount == 0) {
+    getStreamClient.AddFeedActivityToGetStream(activity)
+  } else {
+    getStreamClient.UpdateFeedActivityToGetStream(activity)
+  }
+
 
   // Update Post Replies Record
   if activity.Verb == feed_attributes.ReplyVerb {

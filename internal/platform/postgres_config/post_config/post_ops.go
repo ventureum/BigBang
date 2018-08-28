@@ -33,11 +33,11 @@ func (postExecutor *PostExecutor) UpsertPostRecord(postRecord *PostRecord) time.
 
   log.Printf("Sucessfully upserted post record for postHash %s\n", postRecord.PostHash)
 
-  var updatedTime time.Time
+  var createdTime time.Time
   for res.Next() {
-    res.Scan(&updatedTime)
+    res.Scan(&createdTime)
   }
-  return updatedTime
+  return createdTime
 }
 
 func (postExecutor *PostExecutor) DeletePostRecord(postHash string) {
@@ -106,11 +106,11 @@ func (postExecutor *PostExecutor) UpsertPostRecordTx(postRecord *PostRecord) tim
 
   log.Printf("Sucessfully upserted post record for postHash %s\n", postRecord.PostHash)
 
-  var updatedTime time.Time
+  var createdTime time.Time
   for res.Next() {
-    res.Scan(&updatedTime)
+    res.Scan(&createdTime)
   }
-  return updatedTime
+  return createdTime
 }
 
 func (postExecutor *PostExecutor) DeletePostRecordTx(postHash string) {

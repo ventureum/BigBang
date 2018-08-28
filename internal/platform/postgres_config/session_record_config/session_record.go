@@ -40,20 +40,8 @@ func (sessionRecord *SessionRecord) ToSessionRecordResult() *SessionRecordResult
 }
 
 
-func (sessionRecord *SessionRecord) ConvertSessionRecordToActivity(
-  timestamp feed_attributes.BlockTimestamp) *feed_attributes.Activity {
-  extraParam := map[string]interface{}{
-    "source": feed_attributes.OFF_CHAIN,
-    "start_time": sessionRecord.StartTime,
-    "end_time": sessionRecord.EndTime,
-  }
-  obj := feed_attributes.Object{
-    ObjType:feed_attributes.PostObjectType,
-    ObjId: sessionRecord.PostHash,
-  }
-  actor := feed_attributes.Actor(sessionRecord.Actor)
-  postType := feed_attributes.SessionPostType
-  verb := feed_attributes.SubmitVerb
-  to := []feed_attributes.FeedId{}
-  return feed_attributes.CreateNewActivity(actor, verb, obj, timestamp, postType, to, extraParam)
+func (sessionRecord *SessionRecord) EmbedSessionRecordToActivity(activity *feed_attributes.Activity) {
+  activity.Extra["start_time"] = sessionRecord.StartTime
+  activity.Extra["end_time"] = sessionRecord.EndTime
+  activity.Extra["is_session"] = true
 }
