@@ -29,7 +29,7 @@ DO
         content = :content,
         update_count = posts.update_count + 1
     WHERE posts.post_hash = :post_hash
-RETURNING updated_at;
+RETURNING created_at;
 `
 
 const DELETE_POST_COMMAND = `
