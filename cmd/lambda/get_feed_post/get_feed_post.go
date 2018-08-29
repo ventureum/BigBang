@@ -35,7 +35,7 @@ type ResponseContent struct {
 type Response struct {
   Post *ResponseContent `json:"post,omitempty"`
   PostVoteCountInfo *feed_attributes.VoteCountInfo `json:"postVoteCountInfo,omitempty"`
-  RequestorVoteCountInfo *feed_attributes.VoteCountInfo `json:"requestorCountVoteInfo,omitempty"`
+  RequestorVoteCountInfo *feed_attributes.VoteCountInfo `json:"requestorVoteCountInfo,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }

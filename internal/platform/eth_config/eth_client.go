@@ -186,10 +186,8 @@ func ProcessPostRecord(
   postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
 
-
   actorProfileRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
   actorReputationsRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
-
 
   updateCount :=  postExecutor.GetPostUpdateCountTx(postRecord.PostHash)
   reputationsPenalty := feed_attributes.PenaltyForPostType(
@@ -232,7 +230,6 @@ func ProcessPostVotesRecord(
   postgresFeedClient.Begin()
   voteType := postVotesRecord.VoteType
   var voteInfo feed_attributes.VoteInfo
-  voteInfo.For = feed_attributes.VoteInfoForPost
   voteInfo.Actor = postVotesRecord.Actor
   voteInfo.PostHash = postVotesRecord.PostHash
 
@@ -342,9 +339,18 @@ func ProcessPostVotesRecord(
     &postVotesCountersRecord)
 
   voteInfo.Reputations = upsertedPostReputationsRecord.Reputations
-  voteInfo.UpVoteCount = upsertPostVotesCountersRecord.UpVoteCount
-  voteInfo.DownVoteCount = upsertPostVotesCountersRecord.DownVoteCount
-  voteInfo.TotalVoteCount = upsertPostVotesCountersRecord.TotalVoteCount
+
+  voteInfo.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
+    UpVoteCount: upsertPostVotesCountersRecord.UpVoteCount,
+    DownVoteCount: upsertPostVotesCountersRecord.DownVoteCount,
+    TotalVoteCount: upsertPostVotesCountersRecord.TotalVoteCount,
+  }
+  voteInfo.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
+    UpVoteCount: upsertedPostReputationsRecord.UpVoteCount,
+    DownVoteCount: upsertedPostReputationsRecord.DownVoteCount,
+    TotalVoteCount: upsertedPostReputationsRecord.TotalVoteCount,
+  }
+
 
   if totalReputationsForPostHashWithSameVoteType > 0 {
     // Distribute Rewards
@@ -370,13 +376,13 @@ func QueryPostVotesInfo(
     postVotesRecord *post_votes_record_config.PostVotesRecord,
     postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
   var voteInfo feed_attributes.VoteInfo
-  voteInfo.For = feed_attributes.VoteInfoForVoter
 
   actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
     *postgresFeedClient}
   postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
   postExecutor := post_config.PostExecutor{*postgresFeedClient}
+  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
 
   actorProfileRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
   actorReputationsRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
@@ -425,14 +431,22 @@ func QueryPostVotesInfo(
 
   log.Printf("vote Penalty : %+v\n", votePenalty)
 
+  postVotesCountersRecord := postVotesCountersRecordExecutor.GetPostVotesCountersRecordByPostHash(postVotesRecord.PostHash)
   postReputationsRecord := postReputationsRecordExecutor.GetPostReputationsRecordByPostHashAndActor(
     postVotesRecord.PostHash, postVotesRecord.Actor)
   voteInfo.PostHash = postVotesRecord.PostHash
   voteInfo.Actor = postVotesRecord.Actor
   voteInfo.Cost = feed_attributes.Reputation(votePenalty)
-  voteInfo.DownVoteCount = postReputationsRecord.DownVoteCount
-  voteInfo.UpVoteCount =  postReputationsRecord.UpVoteCount
-  voteInfo.TotalVoteCount = postReputationsRecord.TotalVoteCount
+  voteInfo.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
+    UpVoteCount: postVotesCountersRecord.UpVoteCount,
+    DownVoteCount: postVotesCountersRecord.DownVoteCount,
+    TotalVoteCount: postVotesCountersRecord.TotalVoteCount,
+  }
+  voteInfo.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
+    UpVoteCount:  postReputationsRecord.UpVoteCount,
+    DownVoteCount:  postReputationsRecord.DownVoteCount,
+    TotalVoteCount:  postReputationsRecord.TotalVoteCount,
+  }
 
   return &voteInfo
 }
