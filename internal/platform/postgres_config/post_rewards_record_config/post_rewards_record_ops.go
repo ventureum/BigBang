@@ -25,7 +25,7 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) DeletePostRewardsRec
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpsertPostRewardsRecord(postRewardsRecord *PostRewardsRecord) {
   _, err := postRewardsRecordExecutor.C.NamedExec(UPSERT_POST_REWARDS_RECORD_COMMAND, postRewardsRecord)
   if err != nil {
-    log.Panicf("Failed to upsert post rewards record: %+v with error:\n %+v", postRewardsRecord, err.Error())
+    log.Panicf("Failed to upsert post rewards record: %+v with error: %+v\n", postRewardsRecord, err)
   }
   log.Printf("Sucessfully upserted post rewards record for postHash %s\n", postRewardsRecord.PostHash)
 }
@@ -33,50 +33,43 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpsertPostRewardsRec
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) DeletePostRewardsRecords(postHash string) {
   _, err := postRewardsRecordExecutor.C.Exec(DELETE_POST_REWARDS_RECORD_COMMAND, postHash)
   if err != nil {
-    log.Panicf("Failed to delete post rewards records for postHash %s with error:\n %+v", postHash, err.Error())
+    log.Panicf("Failed to delete post rewards records for postHash %s with error: %+v\n", postHash, err)
   }
   log.Printf("Sucessfully deleted post rewards records for postHash %s\n", postHash)
 }
 
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetPostRewards(postHash string) feed_attributes.Reputation {
-  var postRewards sql.NullInt64
-  err := postRewardsRecordExecutor.C.Get(&postRewards , QUERY_POST_REWARDS_COMMAND, postHash)
+func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetPostRewardsRecordByPostHash(
+    postHash string) *PostRewardsRecord {
+  var postRewardsRecord PostRewardsRecord
+  err := postRewardsRecordExecutor.C.Get(
+    &postRewardsRecord, QUERY_POST_REWARDS_RECORD_COMMAND, postHash)
   if err != nil && err != sql.ErrNoRows {
-    log.Panicf("Failed to get post rewards for postHash %s with error:\n %+v", postHash, err.Error())
-  }
-  return feed_attributes.Reputation(postRewards.Int64)
-}
-
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) AddPostRewards(
-    postHash string, reputationToAdd feed_attributes.Reputation) {
-  _, err := postRewardsRecordExecutor.C.Exec(ADD_POST_REWARDS_COMMAND, postHash, reputationToAdd)
-
-  if err != nil {
-    log.Panicf("Failed to add post rewards for postHash %s with error:\n %+v", postHash, err.Error())
+    log.Panicf("Failed to query post rewards record by postHash %s with error: %+v\n", postHash, err)
   }
 
-  log.Printf("Successfully added post rewards %d for postHash %s", reputationToAdd, postHash)
+  return &postRewardsRecord
 }
-
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) SubPostRewards(
-    postHash string, reputationToSub feed_attributes.Reputation) {
-  _, err := postRewardsRecordExecutor.C.Exec(SUB_POST_REWARDS_COMMAND, postHash, reputationToSub)
-
-  if err != nil {
-    log.Panicf("Failed to substarct post rewards from postHash %s with error:\n %+v", postHash, err.Error())
-  }
-
-  log.Printf("Successfully substracted post rewards %d from postHash %s", reputationToSub, postHash)
-}
-
 
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpdatePostRewardsRecordsByAggregations() {
   _, err := postRewardsRecordExecutor.C.Exec(UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND)
   if err != nil && err != sql.ErrNoRows {
     log.Panicf(
-      "Failed to update post rewards records by aggregations with error:\n %+v", err)
+      "Failed to update post rewards records by aggregations with error: %+v\n", err)
   }
 }
+
+func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetRecentPostRewardsRecordsByActor(
+    actor string, postType feed_attributes.PostType, limit int64) *[]PostRewardsRecord {
+  var postRewardsRecords []PostRewardsRecord
+  err := postRewardsRecordExecutor.C.Select(
+    &postRewardsRecords, QUERY_RECENT_POST_REWARDS_RECORDS_BY_ACTOR_COMMAND, actor, postType, limit)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get recent %d post rewards records for actor %s and postType %s with error:\n %+v", limit, actor, postType, err)
+  }
+  return &postRewardsRecords
+}
+
 
 /*
  * Tx versions
@@ -84,7 +77,7 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpdatePostRewardsRec
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpsertPostRewardsRecordTx(postRewardsRecord *PostRewardsRecord) {
   _, err := postRewardsRecordExecutor.Tx.NamedExec(UPSERT_POST_REWARDS_RECORD_COMMAND, postRewardsRecord)
   if err != nil {
-    log.Panicf("Failed to upsert post rewards record: %+v with error:\n %+v", postRewardsRecord, err.Error())
+    log.Panicf("Failed to upsert post rewards record: %+v with error: %+v\n", postRewardsRecord, err)
   }
   log.Printf("Sucessfully upserted post rewards record for postHash %s\n", postRewardsRecord.PostHash)
 }
@@ -92,46 +85,39 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpsertPostRewardsRec
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) DeletePostRewardsRecordsTx(postHash string) {
   _, err := postRewardsRecordExecutor.Tx.Exec(DELETE_POST_REWARDS_RECORD_COMMAND, postHash)
   if err != nil {
-    log.Panicf("Failed to delete post rewards records for postHash %s with error:\n %+v", postHash, err.Error())
+    log.Panicf("Failed to delete post rewards records for postHash %s with error: %+v\n", postHash, err)
   }
   log.Printf("Sucessfully deleted post rewards records for postHash %s\n", postHash)
-}
-
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetPostRewardsTx(postHash string) feed_attributes.Reputation {
-  var postRewards sql.NullInt64
-  err := postRewardsRecordExecutor.Tx.Get(&postRewards , QUERY_POST_REWARDS_COMMAND, postHash)
-  if err != nil && err != sql.ErrNoRows {
-    log.Panicf("Failed to get post rewards for postHash %s with error:\n %+v", postHash, err.Error())
-  }
-  return feed_attributes.Reputation(postRewards.Int64)
-}
-
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) AddPostRewardsTx(
-    postHash string, reputationToAdd feed_attributes.Reputation) {
-  _, err := postRewardsRecordExecutor.Tx.Exec(ADD_POST_REWARDS_COMMAND, postHash, reputationToAdd)
-
-  if err != nil {
-    log.Panicf("Failed to add post rewards for postHash %s with error:\n %+v", postHash, err.Error())
-  }
-
-  log.Printf("Successfully added post rewards %d for postHash %s", reputationToAdd, postHash)
-}
-
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) SubPostRewardsTx(
-    postHash string, reputationToSub feed_attributes.Reputation) {
-  _, err := postRewardsRecordExecutor.Tx.Exec(SUB_POST_REWARDS_COMMAND, postHash, reputationToSub)
-
-  if err != nil {
-    log.Panicf("Failed to add post rewards for postHash %s with error:\n %+v", postHash, err.Error())
-  }
-
-  log.Printf("Successfully substracted post rewards %d from postHash %s", reputationToSub, postHash)
 }
 
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpdatePostRewardsRecordsByAggregationsTx() {
   _, err := postRewardsRecordExecutor.Tx.Exec(UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND)
   if err != nil && err != sql.ErrNoRows {
     log.Panicf(
-      "Failed to update post rewards records by aggregations with error:\n %+v", err)
+      "Failed to update post rewards records by aggregations with error: %+v\n", err)
   }
+}
+
+func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetPostRewardsRecordByPostHashTx(
+    postHash string) *PostRewardsRecord {
+  var postRewardsRecord PostRewardsRecord
+  err := postRewardsRecordExecutor.Tx.Get(
+    &postRewardsRecord, QUERY_POST_REWARDS_RECORD_COMMAND, postHash)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf("Failed to query post rewards record by postHash %s with error: %+v\n", postHash, err)
+  }
+
+  return &postRewardsRecord
+}
+
+func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetRecentPostRewardsRecordsByActorTx(
+    actor string, postType feed_attributes.PostType, limit int64) *[]PostRewardsRecord {
+  var postRewardsRecords []PostRewardsRecord
+  err := postRewardsRecordExecutor.Tx.Select(
+    &postRewardsRecords, QUERY_RECENT_POST_REWARDS_RECORDS_BY_ACTOR_COMMAND, actor, postType, limit)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get recent %d post rewards records for actor %s and postType %s with error:\n %+v", limit, actor, postType, err)
+  }
+  return &postRewardsRecords
 }

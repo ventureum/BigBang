@@ -18,13 +18,13 @@ type SessionRecord struct {
 }
 
 type SessionRecordResult struct {
-  Actor       string
-  PostHash    string
-  StartTime   int64
-  EndTime     int64
-  Content     *feed_attributes.Content
-  CreatedAt   time.Time
-  UpdatedAt   time.Time
+  Actor       string `json:"actor"`
+  PostHash    string `json:"postHash"`
+  StartTime   int64  `json:"startTime"`
+  EndTime     int64  `json:"endTime"`
+  Content     *feed_attributes.Content `json:"content"`
+  CreatedAt   time.Time  `json:"createdAt"`
+  UpdatedAt   time.Time  `json:"updatedAt"`
 }
 
 func (sessionRecord *SessionRecord) ToSessionRecordResult() *SessionRecordResult{

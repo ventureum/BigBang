@@ -166,3 +166,15 @@ func (postExecutor *PostExecutor) VerifyPostRecordExistingTx (postHash string) {
     log.Panicln(errorInfo.Marshal())
   }
 }
+
+//func (postExecutor *postExecutor) GetRecentPostVotesRecordsByActor(
+//    actor string, limit int64) *[]PostVotesRecord {
+//  var actorPostVoteRecords []PostVotesRecord
+//  err := postVotesRecordExecutor.C.Select(
+//    &actorPostVoteRecords, QUERY_RECENT_POST_VOTES_RECORDS_BY_ACTOR_COMMAND, actor, limit)
+//  if err != nil && err != sql.ErrNoRows {
+//    log.Panicf(
+//      "Failed to get recent %d post votes records for actor %s with error:\n %+v", limit, actor, err)
+//  }
+//  return &actorPostVoteRecords
+//}

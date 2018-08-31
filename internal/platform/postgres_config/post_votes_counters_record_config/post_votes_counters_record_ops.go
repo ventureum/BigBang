@@ -63,6 +63,18 @@ func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) GetPostV
   return &postVotesCountersRecord
 }
 
+func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) GetPostVotesCountersRecordByPostHashForUpdate(
+    postHash string) *PostVotesCountersRecord {
+  var postVotesCountersRecord PostVotesCountersRecord
+  err := postVotesCountersRecordExecutor.C.Get(
+    &postVotesCountersRecord, QUERY_POST_VOTES_COUNTRS_RECORDS_BY_POST_HASH_FOR_UPDATE_COMMAND, postHash)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf("Failed to query post votes counter record for update by postHash %s with error: %+v\n", postHash, err)
+  }
+
+  return &postVotesCountersRecord
+}
+
 /*
  * Tx versions
  */
@@ -104,6 +116,18 @@ func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) GetPostV
 
   if err != nil && err != sql.ErrNoRows {
     log.Panicf("Failed to query post votes counters record by postHash %s with error: %+v\n", postHash, err)
+  }
+
+  return &postVotesCountersRecord
+}
+
+func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) GetPostVotesCountersRecordByPostHashForUpdateTx(
+    postHash string) *PostVotesCountersRecord {
+  var postVotesCountersRecord PostVotesCountersRecord
+  err := postVotesCountersRecordExecutor.Tx.Get(
+    &postVotesCountersRecord, QUERY_POST_VOTES_COUNTRS_RECORDS_BY_POST_HASH_FOR_UPDATE_COMMAND, postHash)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf("Failed to query post votes counter record for update by postHash %s with error: %+v\n", postHash, err)
   }
 
   return &postVotesCountersRecord

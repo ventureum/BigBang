@@ -61,7 +61,7 @@ func ProcessRequest(request Request, response *Response) {
   }
 
   if err != nil {
-    log.Panic(err.Error())
+    log.Panic(err)
   }
 
   getStreamClient := &getstream_config.GetStreamClient{C: getStreamIOClient}

@@ -8,18 +8,18 @@ import (
 
 func main() {
   db := client_config.ConnectPostgresClient()
-  purchaseReputationsRecordExecutor := purchase_reputations_record_config.PurchaseReputationsRecordExecutor{*db}
+  purchaseReputationsRecordExecutor := purchase_mps_record_config.PurchaseReputationsRecordExecutor{*db}
   purchaseReputationsRecordExecutor.LoadVoteTypeEnum()
   purchaseReputationsRecordExecutor.DeletePurchaseReputationsRecordTable()
   purchaseReputationsRecordExecutor.CreatePurchaseReputationsRecordTable()
 
-  purchaseReputationsRecord1 := &purchase_reputations_record_config.PurchaseReputationsRecord{
+  purchaseReputationsRecord1 := &purchase_mps_record_config.PurchaseReputationsRecord{
     Purchaser: "0x001",
     VetX: 100,
     Reputations: 2000,
   }
 
-  purchaseReputationsRecord2 := &purchase_reputations_record_config.PurchaseReputationsRecord{
+  purchaseReputationsRecord2 := &purchase_mps_record_config.PurchaseReputationsRecord{
     Purchaser: "0x002",
     VetX: 100,
     Reputations: 2000,

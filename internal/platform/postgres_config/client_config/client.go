@@ -68,7 +68,7 @@ func (postgresFeedClient *PostgresFeedClient) CreateTable(schema string, tableNa
 }
 
 func (postgresFeedClient *PostgresFeedClient) DeleteTable(tableName string) {
-  command := fmt.Sprintf("DROP TABLE IF EXISTS %s;", tableName)
+  command := fmt.Sprintf("DROP TABLE IF EXISTS %s cascade;", tableName)
   tx := postgresFeedClient.C.MustBegin()
   res, err := tx.Exec(command)
   if err != nil {

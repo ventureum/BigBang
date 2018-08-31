@@ -18,13 +18,15 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/post_config"
   "BigBang/internal/platform/postgres_config/post_votes_record_config"
-  "BigBang/internal/platform/postgres_config/purchase_reputations_record_config"
-  "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
   "BigBang/internal/platform/postgres_config/post_replies_record_config"
-  "BigBang/internal/platform/postgres_config/post_reputations_record_config"
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
   "BigBang/internal/platform/postgres_config/actor_profile_record_config"
+  "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
+  "BigBang/internal/platform/postgres_config/purchase_mps_record_config"
+  "BigBang/internal/platform/postgres_config/actor_votes_counters_record_config"
+  "BigBang/internal/platform/postgres_config/post_rewards_record_config"
+  "math"
 )
 
 
@@ -168,8 +170,8 @@ func processEvent(
     case reflect.TypeOf(post_votes_record_config.PostVotesRecord{}):
       postVotesRecord := (*event).(post_votes_record_config.PostVotesRecord)
       ProcessPostVotesRecord(&postVotesRecord, postgresFeedClient)
-    case reflect.TypeOf(purchase_reputations_record_config.PurchaseReputationsRecord{}):
-      purchaseReputationsRecord := (*event).(purchase_reputations_record_config.PurchaseReputationsRecord)
+    case reflect.TypeOf(purchase_mps_record_config.PurchaseMPsRecord{}):
+      purchaseReputationsRecord := (*event).(purchase_mps_record_config.PurchaseMPsRecord)
       ProcessPurchaseReputationsRecord(&purchaseReputationsRecord, postgresFeedClient)
   }
 }
@@ -181,28 +183,34 @@ func ProcessPostRecord(
     source feed_attributes.Source) {
   postgresFeedClient.Begin()
   postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
     *postgresFeedClient}
   postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
-  actorReputationsRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
+  actorRewardsInfoRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
 
   updateCount :=  postExecutor.GetPostUpdateCountTx(postRecord.PostHash)
-  reputationsPenalty := feed_attributes.PenaltyForPostType(
+  fuelsPenalty := feed_attributes.FuelsPenaltyForPostType(
     feed_attributes.PostType(postRecord.PostType), updateCount)
 
   log.Printf("UpdateCount for PostHash %s: %d", postRecord.PostHash, updateCount)
-  log.Printf("Penalty for PostHash %s: %d", postRecord.PostHash, reputationsPenalty)
+  log.Printf("Fuel Penalty for PostHash %s: %d", postRecord.PostHash, fuelsPenalty)
 
-  // Update Actor Reputation
-  actorReputationsRecordExecutor.SubActorReputationsTx(postRecord.Actor, reputationsPenalty)
+  // Update Actor Fuel
+  actorRewardsInfoRecordExecutor.SubActorFuelTx(postRecord.Actor, fuelsPenalty)
 
   // Insert Post Record
   createdTimestamp := postExecutor.UpsertPostRecordTx(postRecord)
   activity := ConvertPostRecordToActivity(postRecord, source, feed_attributes.BlockTimestamp(createdTimestamp.Unix()))
 
+  postRewardsRecordExecutor.UpsertPostRewardsRecordTx(&post_rewards_record_config.PostRewardsRecord{
+    PostHash: postRecord.PostHash,
+    Actor: postRecord.Actor,
+    PostType: postRecord.PostType,
+    DeltaFuel: int64(fuelsPenalty.Neg()),
+  })
 
   // Insert Activity to GetStream
   if (updateCount == 0) {
@@ -227,22 +235,27 @@ func ProcessPostRecord(
 func ProcessPostVotesRecord(
     postVotesRecord *post_votes_record_config.PostVotesRecord,
     postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
+
   postgresFeedClient.Begin()
+
+  actor := postVotesRecord.Actor
+  postHash := postVotesRecord.PostHash
   voteType := postVotesRecord.VoteType
+
   var voteInfo feed_attributes.VoteInfo
   voteInfo.Actor = postVotesRecord.Actor
   voteInfo.PostHash = postVotesRecord.PostHash
 
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
     *postgresFeedClient}
-  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
+  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresFeedClient}
   postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
   postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
   postExecutor := post_config.PostExecutor{*postgresFeedClient}
 
   actorProfileRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
-  actorReputationsRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
+  actorRewardsInfoRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
   postExecutor.VerifyPostRecordExistingTx(postVotesRecord.PostHash)
 
   // CutOff Time
@@ -252,118 +265,104 @@ func ProcessPostVotesRecord(
 
   var actorList []string
 
-  actorList = *postReputationsRecordExecutor.GetActorListByPostHashAndVoteTypeTx(
+  actorList = *postVotesRecordExecutor.GetActorListByPostHashAndVoteTypeTx(
     postVotesRecord.PostHash, postVotesRecord.VoteType)
   log.Printf("Actor List for PostHash and VoteType: %+v\n", actorList)
 
 
-  // Current Actor Reputation
-  actorReputation := actorReputationsRecordExecutor.GetActorReputationsTx(postVotesRecord.Actor)
-  voteInfo.Reputations = actorReputation
+  // Current Actor MilestonePoints
+  actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
+  log.Printf("Current Actor RewardsInfo: %+v\n", actorRewardsInfo)
 
-  log.Printf("Current Actor Reputation: %+v\n", actorReputation)
+  // Total Actor Reputation
+  totalActorReputations := actorRewardsInfoRecordExecutor.GetTotalActorReputationTx()
+  log.Printf("Total Actor Reputation: %+v\n", totalActorReputations)
 
-  // Total Actor Reputations
-  totalActorReputations := actorReputationsRecordExecutor.GetTotalActorReputationsTx()
+  postVotesCountersRecord := postVotesCountersRecordExecutor.GetPostVotesCountersRecordByPostHashTx(postHash)
 
-  log.Printf("Total Actor Reputations: %+v\n", totalActorReputations)
+  // Total Actor Reputation for PostHash
+  totalReputationsForPostHash := actorVotesCountersRecordExecutor.GetTotalActorReputationByPostHashTx(postHash)
+  log.Printf("Total Actor Reputation for PostHash %s: %+v\n", postHash, totalReputationsForPostHash)
 
-  // Total Actor Reputations for PostHash
-  totalReputationsForPostHash := postReputationsRecordExecutor.GetTotalReputationsByPostHashTx(postVotesRecord.PostHash)
 
-  log.Printf("Total Actor Reputations for PostHash: %+v\n", totalReputationsForPostHash)
-
-  // Total Actor Reputations for PostHash with the same voteType as actor
-
+  // Total Reputation for PostHash with the same voteType as actor
   var totalReputationsForPostHashWithSameVoteType feed_attributes.Reputation
-  totalReputationsForPostHashWithSameVoteType = postReputationsRecordExecutor.GetReputationsByPostHashAndVoteTypeTx(
-    postVotesRecord.PostHash, voteType)
-  log.Printf("Total Actor Reputations for PostHash with the same voteType as actor: %+v\n",
+  if voteType == feed_attributes.UP_VOTE_TYPE {
+    totalReputationsForPostHashWithSameVoteType = postVotesCountersRecord.TotalReputationForUpvote
+  } else {
+    totalReputationsForPostHashWithSameVoteType = postVotesCountersRecord.TotalReputationForDownvote
+  }
+  log.Printf("Total Actor Reputaions for PostHash with the same voteType as actor: %+v\n",
     totalReputationsForPostHashWithSameVoteType)
 
+  // Calculate FuelCost
+  var fuelCost feed_attributes.Fuel
+  if totalActorReputations > 0 {
+    fuelCost = feed_attributes.Fuel(math.Round(float64(feed_attributes.BetaMax) * (1.00 - float64(totalReputationsForPostHash)/(float64(totalActorReputations)))))
+  } else {
+    fuelCost = feed_attributes.BetaMax
+  }
+  voteInfo.FuelCost = feed_attributes.Fuel(fuelCost)
+  log.Printf("FuelCost for PostHash %s: %+v\n", postHash, voteInfo.FuelCost)
 
-  // Last Actor Reputation when doing vote
-  lastActorReputation := postReputationsRecordExecutor.GetReputationsByPostHashAndActorTx(
-    postVotesRecord.PostHash, postVotesRecord.Actor)
 
-  log.Printf("Last Actor Reputation when doing vote: %+v\n", lastActorReputation)
+  // Update Fuel
+  actorRewardsInfoRecordExecutor.SubActorFuelTx(actor, feed_attributes.Fuel(fuelCost))
 
-  totalReputationsForPostHash = totalReputationsForPostHash - lastActorReputation + actorReputation
-
-  log.Printf("Updated  totalReputationsForPostHash: %+v\n", totalReputationsForPostHash)
-
-  log.Printf("totalActorReputations : %+v\n", totalActorReputations)
-
-  // Calculate Vote Cost
-  voteCost := post_votes_record_config.STACK_FRACTION * float64(actorReputation) *
-      (1.00 - float64(totalReputationsForPostHash)/float64(totalActorReputations))
-
-  log.Printf("voteCost: %+v\n", voteCost)
-
-  voteCount := postReputationsRecordExecutor.GetTotalVotesCountByPostHashAndActorTypeTx(
-    postVotesRecord.PostHash, postVotesRecord.Actor)
-
-  log.Printf("Vote Count: %+v\n", voteCount)
-
-  votePenalty := feed_attributes.PenaltyForVote(feed_attributes.Reputation(voteCost), voteCount)
-
-  log.Printf("vote Penalty : %+v\n", votePenalty)
-  voteInfo.Cost = feed_attributes.Reputation(votePenalty)
-
-  totalReputationsForPostHashWithSameVoteType = totalReputationsForPostHashWithSameVoteType -
-      lastActorReputation + actorReputation
-  log.Printf("Updated totalReputationsForPostHashWithSameVoteType: %+v\n",
-    totalReputationsForPostHashWithSameVoteType)
-
-  // Deduct  votePenalty
-  actorReputationsRecordExecutor.SubActorReputationsTx(postVotesRecord.Actor, votePenalty)
-
-  // Record current vote
-  postVotesRecord.SignedReputations = actorReputation.Value() * postVotesRecord.VoteType.Value()
-  postVotesRecordExecutor.UpsertPostVotesRecordTx(postVotesRecord)
 
   // Update Actor Reputation For the postHash
-  postReputationsRecord := post_reputations_record_config.PostReputationsRecord{
-    Actor:          postVotesRecord.Actor,
-    PostHash:       postVotesRecord.PostHash,
-    Reputations:    actorReputation.SubReputations(votePenalty),
+  actorVotesCountersRecord := actor_votes_counters_record_config.ActorVotesCountersRecord{
+    Actor:          actor,
+    PostHash:       postHash,
+    LatestReputation:  actorRewardsInfo.Reputation,
     LatestVoteType: voteType,
   }
-  upsertedPostReputationsRecord := postReputationsRecordExecutor.UpsertPostReputationsRecordTx(&postReputationsRecord)
+  upsertedPostReputationsRecord := actorVotesCountersRecordExecutor.UpsertActorVotesCountersRecordTx(&actorVotesCountersRecord)
 
-  postVotesCountersRecord := post_votes_counters_record_config.PostVotesCountersRecord{
-    PostHash: postVotesRecord.PostHash,
+  // Record current vote
+  postVotesRecord.DeltaFuel = int64(fuelCost.Neg())
+  postVotesRecord.DeltaReputation = 0
+  postVotesRecord.DeltaMilestonePoints = 0
+  postVotesRecord.SignedReputation = actorRewardsInfo.Reputation.Value() * postVotesRecord.VoteType.Value()
+  postVotesRecordExecutor.UpsertPostVotesRecordTx(postVotesRecord)
+
+  newPostVotesCountersRecord := post_votes_counters_record_config.PostVotesCountersRecord{
+    PostHash: postHash,
     LatestVoteType: voteType,
+    LatestActorReputation: actorRewardsInfo.Reputation,
   }
   upsertPostVotesCountersRecord := postVotesCountersRecordExecutor.UpsertPostVotesCountersRecordTx(
-    &postVotesCountersRecord)
+    &newPostVotesCountersRecord)
 
-  voteInfo.Reputations = upsertedPostReputationsRecord.Reputations
+
+  voteInfo.RewardsInfo = actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
 
   voteInfo.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
     UpVoteCount: upsertPostVotesCountersRecord.UpVoteCount,
     DownVoteCount: upsertPostVotesCountersRecord.DownVoteCount,
     TotalVoteCount: upsertPostVotesCountersRecord.TotalVoteCount,
   }
+
   voteInfo.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
     UpVoteCount: upsertedPostReputationsRecord.UpVoteCount,
     DownVoteCount: upsertedPostReputationsRecord.DownVoteCount,
     TotalVoteCount: upsertedPostReputationsRecord.TotalVoteCount,
   }
 
-
   if totalReputationsForPostHashWithSameVoteType > 0 {
     // Distribute Rewards
     for _, actorAddress := range actorList {
-      awardedActorReputation := postReputationsRecordExecutor.GetReputationsByPostHashAndActorWithLatestVoteTypeAndTimeCutOffTx(
+      awardedActorReputation := actorVotesCountersRecordExecutor.GetReputationByPostHashAndActorWithLatestVoteTypeAndTimeCutOffTx(
         postVotesRecord.PostHash,
         actorAddress,
         voteType,
         cutOffTimeStamp)
-      rewards := int64(float64(votePenalty) * float64(awardedActorReputation) / float64(totalReputationsForPostHashWithSameVoteType))
+      rewards := int64(float64(fuelCost) * float64(awardedActorReputation) / float64(totalReputationsForPostHashWithSameVoteType))
 
       log.Printf("rewards %+v for actorAddress %s\n", rewards, actorAddress)
-      actorReputationsRecordExecutor.AddActorReputationsTx(actorAddress, feed_attributes.Reputation(rewards))
+      actorRewardsInfoRecordExecutor.AddActorReputationTx(actorAddress, feed_attributes.Reputation(rewards))
+      actorRewardsInfoRecordExecutor.AddActorMilestonePointsTx(actorAddress, feed_attributes.MilestonePoint(rewards))
+      postVotesRecordExecutor.AddPostVoteDeltaRewardsInfoTx(actorAddress, postHash, voteType, 0, int64(rewards), int64(rewards))
     }
   }
 
@@ -377,92 +376,80 @@ func QueryPostVotesInfo(
     postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
   var voteInfo feed_attributes.VoteInfo
 
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+  actor := postVotesRecord.Actor
+  postHash := postVotesRecord.PostHash
+
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
     *postgresFeedClient}
-  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
+  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresFeedClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
   postExecutor := post_config.PostExecutor{*postgresFeedClient}
   postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
 
   actorProfileRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
-  actorReputationsRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
+  actorRewardsInfoRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
   postExecutor.VerifyPostRecordExisting(postVotesRecord.PostHash)
 
-  // Current Actor Reputation
-  actorReputation := actorReputationsRecordExecutor.GetActorReputations(postVotesRecord.Actor)
-  voteInfo.Reputations = actorReputation
 
-  log.Printf("Current Actor Reputation: %+v\n", actorReputation)
+  // Current Actor MilestonePoints
+  actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
+  log.Printf("Current Actor RewardsInfo: %+v\n", actorRewardsInfo)
+  voteInfo.RewardsInfo = actorRewardsInfo
 
-  // Total Actor Reputations
-  totalActorReputations := actorReputationsRecordExecutor.GetTotalActorReputations()
+  // Total Actor Reputation
+  totalActorReputations := actorRewardsInfoRecordExecutor.GetTotalActorReputation()
 
-  log.Printf("Total Actor Reputations: %+v\n", totalActorReputations)
+  log.Printf("Total Actor Reputation: %+v\n", totalActorReputations)
 
-  // Total Actor Reputations for PostHash
-  totalReputationsForPostHash := postReputationsRecordExecutor.GetTotalReputationsByPostHash(postVotesRecord.PostHash)
+  postVotesCountersRecord := postVotesCountersRecordExecutor.GetPostVotesCountersRecordByPostHash(postHash)
 
-  log.Printf("Total Actor Reputations for PostHash: %+v\n", totalReputationsForPostHash)
+  // Total Actor Reputation for PostHash
+  totalReputationsForPostHash := actorVotesCountersRecordExecutor.GetTotalActorReputationByPostHash(postHash)
 
-  // Last Actor Reputation when doing vote
-  lastActorReputation := postReputationsRecordExecutor.GetReputationsByPostHashAndActor(
-    postVotesRecord.PostHash, postVotesRecord.Actor)
+  log.Printf("Total Actor Reputation for PostHash %s: %+v\n", postHash, totalReputationsForPostHash)
 
-  log.Printf("Last Actor Reputation when doing vote: %+v\n", lastActorReputation)
+  // Calculate FuelCost
+  var fuelCost feed_attributes.Fuel
+  if totalActorReputations > 0 {
+    fuelCost = feed_attributes.Fuel(math.Round(float64(feed_attributes.BetaMax) * (1.00 - float64(totalReputationsForPostHash)/(float64(totalActorReputations)))))
+  } else {
+    fuelCost = feed_attributes.BetaMax
+  }
+  voteInfo.FuelCost = feed_attributes.Fuel(fuelCost)
+  log.Printf("FuelCost for PostHash %s: %+v\n", postHash, voteInfo.FuelCost)
 
-  totalReputationsForPostHash = totalReputationsForPostHash - lastActorReputation + actorReputation
+  actorVotesCountersRecord := actorVotesCountersRecordExecutor.GetActorVotesCountersRecordByPostHashAndActor(
+    postHash, actor)
 
-  log.Printf("Updated  totalReputationsForPostHash: %+v\n", totalReputationsForPostHash)
-
-  log.Printf("totalActorReputations : %+v\n", totalActorReputations)
-
-  // Calculate Vote Cost
-  voteCost := post_votes_record_config.STACK_FRACTION * float64(actorReputation) *
-      (1.00 - float64(totalReputationsForPostHash)/float64(totalActorReputations))
-
-  log.Printf("voteCost: %+v\n", voteCost)
-
-  voteCount := postReputationsRecordExecutor.GetTotalVotesCountByPostHashAndActorType(
-    postVotesRecord.PostHash, postVotesRecord.Actor)
-
-  log.Printf("Vote Count: %+v\n", voteCount)
-
-  votePenalty := feed_attributes.PenaltyForVote(feed_attributes.Reputation(voteCost), voteCount)
-
-  log.Printf("vote Penalty : %+v\n", votePenalty)
-
-  postVotesCountersRecord := postVotesCountersRecordExecutor.GetPostVotesCountersRecordByPostHash(postVotesRecord.PostHash)
-  postReputationsRecord := postReputationsRecordExecutor.GetPostReputationsRecordByPostHashAndActor(
-    postVotesRecord.PostHash, postVotesRecord.Actor)
   voteInfo.PostHash = postVotesRecord.PostHash
   voteInfo.Actor = postVotesRecord.Actor
-  voteInfo.Cost = feed_attributes.Reputation(votePenalty)
   voteInfo.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
     UpVoteCount: postVotesCountersRecord.UpVoteCount,
     DownVoteCount: postVotesCountersRecord.DownVoteCount,
     TotalVoteCount: postVotesCountersRecord.TotalVoteCount,
   }
   voteInfo.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
-    UpVoteCount:  postReputationsRecord.UpVoteCount,
-    DownVoteCount:  postReputationsRecord.DownVoteCount,
-    TotalVoteCount:  postReputationsRecord.TotalVoteCount,
+    UpVoteCount:  actorVotesCountersRecord.UpVoteCount,
+    DownVoteCount:  actorVotesCountersRecord.DownVoteCount,
+    TotalVoteCount:  actorVotesCountersRecord.TotalVoteCount,
   }
 
   return &voteInfo
 }
 
 func ProcessPurchaseReputationsRecord(
-    purchaseReputationsRecord *purchase_reputations_record_config.PurchaseReputationsRecord,
+    purchaseMPsRecord *purchase_mps_record_config.PurchaseMPsRecord,
     postgresFeedClient *client_config.PostgresFeedClient) {
   postgresFeedClient.Begin()
 
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
     *postgresFeedClient}
-  purchaseReputationsRecordExecutor := purchase_reputations_record_config.PurchaseReputationsRecordExecutor{
+  purchaseMPsRecordExecutor := purchase_mps_record_config.PurchaseMPsRecordExecutor{
     *postgresFeedClient}
-  purchaseReputationsRecordExecutor.UpsertPurchaseReputationsRecordTx(purchaseReputationsRecord)
-  actorReputationsRecordExecutor.AddActorReputationsTx(
-    purchaseReputationsRecord.Purchaser, feed_attributes.Reputation(purchaseReputationsRecord.Reputations))
+  purchaseMPsRecordExecutor.UpsertPurchaseMPsRecordTx(purchaseMPsRecord)
+
+  actorRewardsInfoRecordExecutor.AddActorMilestonePointsTx(
+    purchaseMPsRecord.Purchaser, feed_attributes.MilestonePoint(purchaseMPsRecord.MPs))
 
   postgresFeedClient.Commit()
 }

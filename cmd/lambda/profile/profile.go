@@ -6,8 +6,8 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
-  "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
   "log"
+  "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
 )
 
 
@@ -45,15 +45,17 @@ func ProcessRequest(request Request, response *Response) {
   inserted := actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())
 
   if inserted {
-    actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+    actorReputationsRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
       *postgresFeedClient}
-    actorReputationsRecord := actor_reputations_record_config.ActorReputationsRecord{
-      Actor: request.Actor,
-      Reputations: 0,
+    actorReputationsRecord := actor_rewards_info_record_config.ActorRewardsInfoRecord{
+      Actor:           request.Actor,
+      Reputation:      feed_attributes.Reputation(feed_attributes.MuMinFuel.Value()),
+      Fuel:            feed_attributes.MuMinFuel,
+      MilestonePoints: 0,
     }
-    actorReputationsRecordExecutor.UpsertActorReputationsRecordTx(&actorReputationsRecord)
+    actorReputationsRecordExecutor.UpsertActorRewardsInfoRecordTx(&actorReputationsRecord)
 
-    log.Printf("Created Actor Reputations Account for actor %s", request.Actor)
+    log.Printf("Created Actor Fuel Account for actor %s", request.Actor)
   }
 
   postgresFeedClient.Commit()

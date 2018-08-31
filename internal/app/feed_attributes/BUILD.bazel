@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "activity.go",
         "actor.go",
+        "actor_profile_status.go",
         "actor_type.go",
         "block_timestamp.go",
         "content.go",
@@ -14,6 +15,7 @@ go_library(
         "object.go",
         "post_type.go",
         "reputation.go",
+        "rewards_info.go",
         "source.go",
         "verb.go",
         "vote_info.go",

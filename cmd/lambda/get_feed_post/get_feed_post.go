@@ -5,14 +5,14 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/post_config"
   "BigBang/internal/platform/postgres_config/client_config"
-  "BigBang/internal/platform/postgres_config/post_rewards_record_config"
   "BigBang/internal/platform/postgres_config/post_replies_record_config"
   "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
-  "BigBang/internal/platform/postgres_config/post_reputations_record_config"
   "BigBang/internal/pkg/error_config"
   "log"
-  "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
   "BigBang/internal/platform/postgres_config/actor_profile_record_config"
+  "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
+  "BigBang/internal/platform/postgres_config/post_rewards_record_config"
+  "BigBang/internal/platform/postgres_config/actor_votes_counters_record_config"
 )
 
 
@@ -28,7 +28,10 @@ type ResponseContent struct {
   PostHash string `json:"postHash"`
   PostType string `json:"postType"`
   Content *feed_attributes.Content `json:"content"`
-  Rewards int64 `json:"rewards"`
+  DeltaFuel int64 `json:"deltaFuel"`
+  DeltaReputation int64 `json:"deltaReputation"`
+  DeltaMilestonePoints int64 `json:"deltaMilestonePoints"`
+  WithdrawableMPs int64 `json:"withdrawableMPs"`
   RepliesLength int64 `json:"repliesLength"`
 }
 
@@ -70,21 +73,27 @@ func ProcessRequest(request Request, response *Response) {
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
   postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
   postVotesCounterRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
-  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*postgresFeedClient}
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{
+  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresFeedClient}
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
     *postgresFeedClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
 
   postExecutor.VerifyPostRecordExisting(postHash)
   if requestor != "" {
     actorProfileRecordExecutor.VerifyActorExisting(requestor)
-    actorReputationsRecordExecutor.VerifyActorExisting(requestor)
+    actorRewardsInfoRecordExecutor.VerifyActorExisting(requestor)
   }
 
   postRecordResult := postExecutor.GetPostRecord(postHash).ToPostRecordResult()
   response.Post = PostRecordResultToResponseContent(postRecordResult)
   response.Post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCount(postHash)
-  response.Post.Rewards = postRewardsRecordExecutor.GetPostRewards(postHash).Value()
+  postRewardsRecord := postRewardsRecordExecutor.GetPostRewardsRecordByPostHash(postHash)
+  response.Post.DeltaFuel = postRewardsRecord.DeltaFuel
+  response.Post.DeltaReputation = postRewardsRecord.DeltaReputation
+  response.Post.DeltaMilestonePoints = postRewardsRecord.DeltaMilestonePoints
+  response.Post.WithdrawableMPs = postRewardsRecord.WithdrawableMPs
+
+
 
   log.Printf("Post Content is loaded for postHash %s\n", postHash)
 
@@ -98,11 +107,11 @@ func ProcessRequest(request Request, response *Response) {
   log.Printf("PostVoteInfo is loaded for postHash %s\n", postHash)
 
   if requestor != "" {
-    postReputationsRecord := postReputationsRecordExecutor.GetPostReputationsRecordByPostHashAndActor(postHash, requestor)
+    actorVotesCountersRecord := actorVotesCountersRecordExecutor.GetActorVotesCountersRecordByPostHashAndActor(postHash, requestor)
     response.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
-      DownVoteCount:  postReputationsRecord.DownVoteCount,
-      UpVoteCount:    postReputationsRecord.UpVoteCount,
-      TotalVoteCount: postReputationsRecord.TotalVoteCount,
+      DownVoteCount:  actorVotesCountersRecord.DownVoteCount,
+      UpVoteCount:    actorVotesCountersRecord.UpVoteCount,
+      TotalVoteCount: actorVotesCountersRecord.TotalVoteCount,
     }
     log.Printf("RequestorVoteInfo is loaded for postHash %s\n", postHash)
   }

@@ -9,7 +9,7 @@ import (
 
 func main() {
   db := client_config.ConnectPostgresClient()
-  postReputationsRecordExecutor := post_reputations_record_config.PostReputationsRecordExecutor{*db}
+  postReputationsRecordExecutor := actor_vote_counter_record_config.PostReputationsRecordExecutor{*db}
   postReputationsRecordExecutor.LoadVoteTypeEnum()
   postReputationsRecordExecutor.DeletePostReputationsRecordTable()
   postReputationsRecordExecutor.CreatePostReputationsRecordTable()
@@ -20,35 +20,35 @@ func main() {
   postHashTwo := "0xpostHash002"
   postHashThree := "0xpostHash003"
 
-  postReputationsRecord1 := &post_reputations_record_config.PostReputationsRecord{
+  postReputationsRecord1 := &actor_vote_counter_record_config.PostReputationsRecord{
     Actor: actorOne,
     PostHash: postHashOne,
     Reputations: feed_attributes.Reputation(100),
     LatestVoteType: feed_attributes.DOWN_VOTE_TYPE,
   }
 
-  postReputationsRecord2 := &post_reputations_record_config.PostReputationsRecord{
+  postReputationsRecord2 := &actor_vote_counter_record_config.PostReputationsRecord{
     Actor: actorOne,
     PostHash: postHashTwo,
     Reputations: feed_attributes.Reputation(50),
     LatestVoteType: feed_attributes.DOWN_VOTE_TYPE,
   }
 
-  postReputationsRecord3 := &post_reputations_record_config.PostReputationsRecord{
+  postReputationsRecord3 := &actor_vote_counter_record_config.PostReputationsRecord{
     Actor: actorTwo,
     PostHash: postHashOne,
     Reputations: feed_attributes.Reputation(500),
     LatestVoteType: feed_attributes.UP_VOTE_TYPE,
   }
 
-  postReputationsRecord4 := &post_reputations_record_config.PostReputationsRecord{
+  postReputationsRecord4 := &actor_vote_counter_record_config.PostReputationsRecord{
     Actor: actorTwo,
     PostHash: postHashTwo,
     Reputations: feed_attributes.Reputation(400),
     LatestVoteType: feed_attributes.UP_VOTE_TYPE,
   }
 
-  postReputationsRecord5 := &post_reputations_record_config.PostReputationsRecord{
+  postReputationsRecord5 := &actor_vote_counter_record_config.PostReputationsRecord{
     Actor: actorTwo,
     PostHash: postHashTwo,
     Reputations: feed_attributes.Reputation(600),
