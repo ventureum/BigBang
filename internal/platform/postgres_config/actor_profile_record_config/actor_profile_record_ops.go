@@ -24,9 +24,10 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) DeleteActorProfile
 
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) UpsertActorProfileRecord(
     actorProfileRecord *ActorProfileRecord) bool {
-  var inserted bool
+  var inserted sql.NullBool
   rows, err := actorProfileRecordExecutor.C.NamedQuery(
     UPSERT_ACTOR_PROFILE_RECORD_COMMAND, actorProfileRecord)
+
   for rows.Next() {
     err = rows.Scan(&inserted)
   }
@@ -36,7 +37,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) UpsertActorProfile
     log.Panicln(errInfo.Marshal())
   }
   log.Printf("Sucessfully upserted profile record for actor %s\n", actorProfileRecord.Actor)
-  return inserted
+  return inserted.Bool
 }
 
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) DeleteActorProfileRecords(actor string) {
@@ -87,7 +88,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
       },
       ErrorLocation: error_config.ProfileAccountLocation,
     }
-    log.Printf("No Actor Reputations Acount for actor %s", actor)
+    log.Printf("No Actor Fuel Acount for actor %s", actor)
     log.Panicln(errorInfo.Marshal())
   }
 }
@@ -160,7 +161,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
       },
       ErrorLocation: error_config.ProfileAccountLocation,
     }
-    log.Printf("No Actor Reputations Acount for actor %s", actor)
+    log.Printf("No Actor Fuel Acount for actor %s", actor)
     log.Panicln(errorInfo.Marshal())
   }
 }

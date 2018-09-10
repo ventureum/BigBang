@@ -5,17 +5,24 @@ const UPSERT_POST_REWARDS_RECORD_COMMAND = `
 INSERT INTO post_rewards_records
 (
   post_hash,
-  rewards
+  actor,
+  post_type,
+  delta_fuel
 )
 VALUES 
 (
-  :post_hash, 
-  :rewards
+  :post_hash,
+  :actor,
+  :post_type,
+  :delta_fuel
 )
 ON CONFLICT (post_hash) 
 DO
  UPDATE
-    SET rewards = :rewards
+    SET  
+       actor = :actor,
+       post_type = :post_type,
+       delta_fuel = post_rewards_records.delta_fuel + :delta_fuel
     WHERE post_rewards_records.post_hash = :post_hash;
 `
 
@@ -24,28 +31,16 @@ DELETE FROM post_rewards_records
 WHERE post_hash = $1;
 `
 
-const QUERY_POST_REWARDS_COMMAND = `
-SELECT rewards FROM post_rewards_records
+const QUERY_POST_REWARDS_RECORD_COMMAND = `
+SELECT * FROM post_rewards_records
 WHERE post_hash = $1;
-`
-
-const ADD_POST_REWARDS_COMMAND = `
- UPDATE post_rewards_records
-    SET rewards = post_rewards_records.rewards + $2
-    WHERE post_hash = $1;
-`
-
-const SUB_POST_REWARDS_COMMAND = `
- UPDATE post_rewards_records
-    SET rewards = post_rewards_records.rewards - $2
-    WHERE post_hash = $1;
 `
 
 const UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND = `
 with updates as (
     SELECT
       post_hash,
-      0.001 * count(*) * percentile_cont(0.5) within group (order by signed_reputations) as median_reputations
+      0.001 * count(*) * percentile_cont(0.5) within group (order by signed_reputation) as delta_reputation
     FROM
       post_votes_records
     GROUP BY
@@ -53,11 +48,18 @@ with updates as (
 )
 
 INSERT INTO post_rewards_records
-SELECT post_hash,  GREATEST(median_reputations, 0), median_reputations From updates
+SELECT post_hash, delta_reputation From updates
 ON CONFLICT (post_hash)
   DO
   UPDATE
-       SET rewards = GREATEST(EXCLUDED.rewards,  post_rewards_records.rewards),
-           latest_median_reputations = EXCLUDED.latest_median_reputations,
-           withdrawable_rewards = post_rewards_records.withdrawable_rewards + GREATEST(EXCLUDED.rewards - post_rewards_records.rewards, 0);
+       SET 
+           post_type = post_rewards_records.post_type,
+           withdrawable_mps = post_rewards_records.withdrawable_mps + EXCLUDED.delta_reputation - post_rewards_records.delta_milestone_points,
+           delta_reputation = EXCLUDED.delta_reputation,
+           delta_milestone_points = EXCLUDED.delta_reputation;
+`
+
+const QUERY_RECENT_POST_REWARDS_RECORDS_BY_ACTOR_COMMAND = `
+SELECT * FROM post_rewards_records
+WHERE actor = $1 and post_type = $2 ORDER BY created_at DESC LIMIT $3;
 `

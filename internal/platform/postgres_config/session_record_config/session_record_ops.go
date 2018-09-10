@@ -54,7 +54,7 @@ func (sessionRecordExecutor *SessionRecordExecutor) GetSessionRecord(postHash st
   var sessionRecord SessionRecord
   err := sessionRecordExecutor.C.Get(&sessionRecord, QUERY_SESSION_RECORD_COMMAND, postHash)
   if err != nil  {
-    errInfo := error_config.MatchError(err, "postHash", sessionRecord.PostHash, error_config.SessionRecordLocation)
+    errInfo := error_config.MatchError(err, "postHash", postHash, error_config.SessionRecordLocation)
     log.Printf("Failed to get seesion record for postHash %s with error: %+v", postHash, err)
     log.Panicln(errInfo.Marshal())
   }
@@ -96,7 +96,7 @@ func (sessionRecordExecutor *SessionRecordExecutor) GetSessionRecordTx(postHash 
   var sessionRecord SessionRecord
   err := sessionRecordExecutor.Tx.Get(&sessionRecord, QUERY_SESSION_RECORD_COMMAND, postHash)
   if err != nil  {
-    errInfo := error_config.MatchError(err, "postHash", sessionRecord.PostHash, error_config.SessionRecordLocation)
+    errInfo := error_config.MatchError(err, "postHash", postHash, error_config.SessionRecordLocation)
     log.Printf("Failed to get seesion record for postHash %s with error: %+v", postHash, err)
     log.Panicln(errInfo.Marshal())
   }

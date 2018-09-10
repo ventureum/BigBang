@@ -6,7 +6,7 @@ import (
   "BigBang/internal/platform/postgres_config/post_config"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/post_votes_record_config"
-  "BigBang/internal/platform/postgres_config/purchase_reputations_record_config"
+  "BigBang/internal/platform/postgres_config/purchase_mps_record_config"
 )
 
 type Event interface{}
@@ -57,10 +57,10 @@ func (upvoteEventResult *UpvoteEventResult) ToPostVotesRecord() *post_votes_reco
   }
 }
 
-func (purchaseReputationsEventResult *PurchaseReputationsEventResult) ToPurchaseReputationsRecord() *purchase_reputations_record_config.PurchaseReputationsRecord {
-  return &purchase_reputations_record_config.PurchaseReputationsRecord{
+func (purchaseReputationsEventResult *PurchaseReputationsEventResult) ToPurchaseReputationsRecord() *purchase_mps_record_config.PurchaseMPsRecord {
+  return &purchase_mps_record_config.PurchaseMPsRecord{
     Purchaser:  purchaseReputationsEventResult.Purchaser.String(),
     VetX: purchaseReputationsEventResult.NumVetX.Int64(),
-    Reputations: purchaseReputationsEventResult.NumReputation.Int64(),
+    MPs: purchaseReputationsEventResult.NumReputation.Int64(),
   }
 }

@@ -46,6 +46,9 @@ func MatchError(err error, fieldName string, val interface{}, location ErrorLoca
     errorInfo.ErrorCode = General
     errorInfo.ErrorLocation = location
     errorInfo.ErrorMessage = ErrorMessage(errStr)
+    errorInfo.ErrorData = map[string]interface{}{
+      fieldName: val,
+    }
   }
   return &errorInfo
 }

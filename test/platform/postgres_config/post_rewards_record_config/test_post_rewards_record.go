@@ -10,21 +10,21 @@ import (
 
 func main() {
   db := client_config.ConnectPostgresClient()
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*db}
+  postRewardsRecordExecutor := post_mps_record_config.PostRewardsRecordExecutor{*db}
   postRewardsRecordExecutor.DeletePostRewardsRecordTable()
   postRewardsRecordExecutor.CreatePostRewardsRecordTable()
 
-  postRewardsRecord1 := &post_rewards_record_config.PostRewardsRecord{
+  postRewardsRecord1 := &post_mps_record_config.PostRewardsRecord{
    PostHash: "0xpostHash001",
     Rewards: feed_attributes.Reputation(4000000),
   }
 
-  postRewardsRecord2 := &post_rewards_record_config.PostRewardsRecord{
+  postRewardsRecord2 := &post_mps_record_config.PostRewardsRecord{
     PostHash: "0xpostHash002",
     Rewards: feed_attributes.Reputation(30),
   }
 
-  postRewardsRecord3 := &post_rewards_record_config.PostRewardsRecord{
+  postRewardsRecord3 := &post_mps_record_config.PostRewardsRecord{
     PostHash: "0xpostHash003",
     Rewards: feed_attributes.Reputation(20),
   }

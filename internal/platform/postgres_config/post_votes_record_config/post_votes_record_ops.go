@@ -5,6 +5,8 @@ import (
   "database/sql"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/app/feed_attributes"
+  "BigBang/internal/pkg/error_config"
+  "time"
 )
 
 
@@ -92,6 +94,67 @@ func (postVotesRecordExecutor *PostVotesRecordExecutor) GetActorListByPostHashAn
   return &actorList
 }
 
+func (postVotesRecordExecutor *PostVotesRecordExecutor) GetRecentPostVotesRecordsByActor(
+    actor string, limit int64) *[]PostVotesRecord {
+  var actorPostVoteRecords []PostVotesRecord
+  err := postVotesRecordExecutor.C.Select(
+    &actorPostVoteRecords, QUERY_RECENT_POST_VOTES_RECORDS_BY_ACTOR_COMMAND, actor, limit)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get recent %d post votes records for actor %s with error:\n %+v", limit, actor, err)
+  }
+  return &actorPostVoteRecords
+}
+
+func (postVotesRecordExecutor *PostVotesRecordExecutor) AddPostVoteDeltaRewardsInfo(
+    actor string,
+    postHash string,
+    voteType feed_attributes.VoteType,
+    deltaFuel int64,
+    deltaReputation int64,
+    deltaMilestonePoints int64) {
+  _, err := postVotesRecordExecutor.C.Exec(
+    ADD_POST_VOTE_DELTA_REWARDS_INFO_COMMAND, actor, postHash, voteType, deltaFuel, deltaReputation, deltaMilestonePoints)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.PostVotesRecordLocation)
+    errorInfo.ErrorData["postHash"] = postHash
+    errorInfo.ErrorData["voteType"] = voteType
+    log.Printf("Failed to add DeltaRewardsInfo for actor %s, posHash %s and voteType %s with error: %+v\n", actor, postHash, voteType, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added deltaFuel %d, deltaReputation %d and %d deltaMilestonePoints for actor %s, posHash %s and voteType %s",
+    deltaFuel, deltaReputation, deltaMilestonePoints, actor, postHash, voteType)
+}
+
+func (postVotesRecordExecutor *PostVotesRecordExecutor) GetTotalReputationByPostHashAndVoteType(
+    postHash string, voteType feed_attributes.VoteType) feed_attributes.Reputation {
+  var reputation sql.NullInt64
+  err := postVotesRecordExecutor.C.Get(&reputation, QUERY_TOTAL_REPUTATION_BY_POST_HASH_AND_VOTE_TYPE_COMMAND,
+    postHash, voteType)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get total reputation for postHash %s and voteType %s with error: %+v\n",
+      postHash, voteType, err)
+  }
+  return feed_attributes.Reputation(reputation.Int64)
+}
+
+func (postVotesRecordExecutor *PostVotesRecordExecutor) GetTotalReputationByPostHashAndVoteTypeWithTimeCutOff(
+    postHash string, voteType feed_attributes.VoteType, time time.Time) feed_attributes.Reputation {
+  var reputation sql.NullInt64
+  err := postVotesRecordExecutor.C.Get(&reputation, QUERY_TOTAL_REPUTATION_BY_POST_HASH_AND_VOTE_TYPE_WITH_TIME_CUTOFF_COMMAND,
+    postHash, voteType, time)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get reputation for postHash %s, voteType %s and cutOffTime %s with error: %+v\n",
+      postHash, voteType, time, err)
+  }
+  return feed_attributes.Reputation(reputation.Int64)
+}
+
+
 /*
  * Tx versions
  */
@@ -163,4 +226,64 @@ func (postVotesRecordExecutor *PostVotesRecordExecutor) GetActorListByPostHashAn
       "Failed to get actor list for postHash %s and voteType %s with error:\n %+v", postHash,  voteType, err)
   }
   return &actorList
+}
+
+func (postVotesRecordExecutor *PostVotesRecordExecutor) GetRecentPostVotesRecordsByActorTx(
+    actor string, limit int64) *[]PostVotesRecord {
+  var actorPostVoteRecords []PostVotesRecord
+  err := postVotesRecordExecutor.Tx.Select(
+    &actorPostVoteRecords, QUERY_RECENT_POST_VOTES_RECORDS_BY_ACTOR_COMMAND, actor, limit)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get recent %d post votes records for actor %s with error:\n %+v", limit, actor, err)
+  }
+  return &actorPostVoteRecords
+}
+
+func (postVotesRecordExecutor *PostVotesRecordExecutor) AddPostVoteDeltaRewardsInfoTx(
+    actor string,
+    postHash string,
+    voteType feed_attributes.VoteType,
+    deltaFuel int64,
+    deltaReputation int64,
+    deltaMilestonePoints int64) {
+  _, err := postVotesRecordExecutor.Tx.Exec(
+    ADD_POST_VOTE_DELTA_REWARDS_INFO_COMMAND, actor, postHash, voteType, deltaFuel, deltaReputation, deltaMilestonePoints)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.PostVotesRecordLocation)
+    errorInfo.ErrorData["postHash"] = postHash
+    errorInfo.ErrorData["voteType"] = voteType
+    log.Printf("Failed to add DeltaRewardsInfo for actor %s, posHash %s and voteType %s with error: %+v\n", actor, postHash, voteType, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added deltaFuel %d, deltaReputation %d and %d deltaMilestonePoints for actor %s, posHash %s and voteType %s",
+    deltaFuel, deltaReputation, deltaMilestonePoints, actor, postHash, voteType)
+}
+
+func (postVotesRecordExecutor *PostVotesRecordExecutor) GetTotalReputationByPostHashAndVoteTypeTx(
+    postHash string, voteType feed_attributes.VoteType) feed_attributes.Reputation {
+  var reputation sql.NullInt64
+  err := postVotesRecordExecutor.Tx.Get(&reputation, QUERY_TOTAL_REPUTATION_BY_POST_HASH_AND_VOTE_TYPE_COMMAND,
+    postHash, voteType)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get total reputation for postHash %s and voteType %s with error: %+v\n",
+      postHash, voteType, err)
+  }
+  return feed_attributes.Reputation(reputation.Int64)
+}
+
+func (postVotesRecordExecutor *PostVotesRecordExecutor) GetTotalReputationByPostHashAndVoteTypeWithTimeCutOffTx(
+    postHash string, voteType feed_attributes.VoteType, time time.Time) feed_attributes.Reputation {
+  var reputation sql.NullInt64
+  err := postVotesRecordExecutor.Tx.Get(&reputation, QUERY_TOTAL_REPUTATION_BY_POST_HASH_AND_VOTE_TYPE_WITH_TIME_CUTOFF_COMMAND,
+    postHash, voteType, time)
+  if err != nil && err != sql.ErrNoRows {
+    log.Panicf(
+      "Failed to get reputation for postHash %s, voteType %s and cutOffTime %s with error: %+v\n",
+      postHash, voteType, time, err)
+  }
+  return feed_attributes.Reputation(reputation.Int64)
 }

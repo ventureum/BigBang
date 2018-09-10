@@ -8,6 +8,7 @@ import (
 type ErrorCode string
 
 const InsufficientReputaionsAmount ErrorCode = "InsufficientReputaionsAmount"
+const InsufficientFuelsAmount ErrorCode = "InsufficientFuelsAmount"
 const NoActorExisting ErrorCode = "NoActorExisting"
 const NoPostHashExisting ErrorCode = "NoPostHashExisting"
 const ExceedingUpvoteLimit ErrorCode = "ExceedingUpvoteLimit"

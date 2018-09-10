@@ -3,8 +3,8 @@ package main
 import (
   "github.com/aws/aws-lambda-go/lambda"
   "BigBang/internal/platform/postgres_config/client_config"
-  "BigBang/internal/platform/postgres_config/post_rewards_record_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/internal/platform/postgres_config/post_rewards_record_config"
 )
 
 type Response struct {

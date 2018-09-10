@@ -9,10 +9,10 @@ type VoteCountInfo struct {
 }
 
 type VoteInfo struct {
-  Actor string `json:"actor"`
-  PostHash string `json:"postHash"`
-  Reputations Reputation `json:"reputations"`
-  Cost Reputation  `json:"cost"`
-  PostVoteCountInfo *VoteCountInfo `json:"postVoteCountInfo"`
+  Actor                  string         `json:"actor"`
+  PostHash               string         `json:"postHash"`
+  RewardsInfo            *RewardsInfo   `json:"rewardsInfo"`
+  FuelCost               Fuel           `json:"fuelCost"`
+  PostVoteCountInfo      *VoteCountInfo `json:"postVoteCountInfo"`
   RequestorVoteCountInfo *VoteCountInfo `json:"requestorVoteCountInfo"`
 }

@@ -4,9 +4,10 @@ import (
   "github.com/aws/aws-lambda-go/lambda"
   "BigBang/internal/platform/postgres_config/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
-  "BigBang/internal/platform/postgres_config/actor_reputations_record_config"
   "BigBang/internal/pkg/error_config"
   "log"
+  "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
+  "BigBang/internal/app/feed_attributes"
 )
 
 
@@ -16,8 +17,8 @@ type Request struct {
 
 type ResponseContent struct {
   Actor string `json:"actor"`
-  ActorType string `json:"userType"`
-  Reputations int64 `json:"reputations"`
+  ActorType string `json:"actorType"`
+  RewardsInfo *feed_attributes.RewardsInfo `json:"rewardsInfo"`
 }
 
 type Response struct {
@@ -47,16 +48,16 @@ func ProcessRequest(request Request, response *Response) {
   actor := request.Actor
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  actorReputationsRecordExecutor := actor_reputations_record_config.ActorReputationsRecordExecutor{*postgresFeedClient}
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresFeedClient}
 
   actorProfileRecordExecutor.VerifyActorExisting(actor)
-  actorReputationsRecordExecutor.VerifyActorExisting(actor)
+  actorRewardsInfoRecordExecutor.VerifyActorExisting(actor)
 
   actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(actor)
   response.Profile = ProfileRecordResultToResponseContent(actorProfileRecord)
   log.Printf("Loaded Profile content for actor %s\n", actor)
-  response.Profile.Reputations = actorReputationsRecordExecutor.GetActorReputations(actor).Value()
-  log.Printf("Loaded profile reputations for actor %s\n", actor)
+  response.Profile.RewardsInfo = actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
+  log.Printf("Loaded Rewards info for actor %s\n", actor)
 
   response.Ok = true
 }

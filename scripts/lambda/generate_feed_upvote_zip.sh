@@ -4,8 +4,17 @@ cd $GOPATH/src/BigBang/cmd/lambda/feed_upvote/
 GOOS=linux go build -o main
 zip feed_upvote.zip main
 
+#aws lambda create-function \
+#    --region ca-central-1 \
+#    --function-name feed_upvote_v3_test \
+#    --zip-file fileb://$GOPATH/src/BigBang/cmd/lambda/feed_upvote/feed_upvote.zip \
+#    --role arn:aws:iam::727151012682:role/lambda-vpc-execution-role \
+#    --handler main \
+#    --runtime go1.x \
+#    --environment Variables="{DB_HOST=feedsystest.cmtkgtusnicp.ca-central-1.rds.amazonaws.com,DB_NAME=feedsystest,DB_USER=root,DB_PASSWORD=root1234,STREAM_API_KEY=6jyjb65k5dxf,STREAM_API_SECRET=csyv2d62k5n6j7femujjb9m8s3md993r8q4tfrjmjvfmt782famuxnehnxuxrrrn}"
+
 aws lambda update-function-code \
-  --function-name feed_upvote_v2 \
+  --function-name feed_upvote_v3_test \
   --zip-file fileb://$GOPATH/src/BigBang/cmd/lambda/feed_upvote/feed_upvote.zip \
   --publish
 
