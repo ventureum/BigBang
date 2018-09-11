@@ -11,7 +11,7 @@ type ErrorInfo struct {
   ErrorCode ErrorCode `json:"errorCode,omitempty"`
   ErrorData ErrorData `json:"errorData,omitempty"`
   ErrorMessage ErrorMessage `json:"errorMessage,omitempty"`
-  ErrorLocation interface{} `json:"errorLocation,omitempty"`
+  ErrorLocation ErrorLocation `json:"errorLocation,omitempty"`
   ErrorUnknownType interface{} `json:"errorUnknownType,omitempty"`
 }
 
