@@ -13,7 +13,7 @@ const NoActorExisting ErrorCode = "NoActorExisting"
 const NoPostHashExisting ErrorCode = "NoPostHashExisting"
 const ExceedingUpvoteLimit ErrorCode = "ExceedingUpvoteLimit"
 const ExceedingDownvoteLimit ErrorCode = "ExceedingDownvoteLimit"
-const General ErrorCode = "Gerenal"
+const General ErrorCode = "General"
 
 func CreateNoExistingErrorCode(tag string) ErrorCode {
   errCodeStr := fmt.Sprintf("No%sExisting", strings.Title(tag))
