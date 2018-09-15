@@ -9,6 +9,7 @@ type PostVotesRecord struct {
   UUID             string                   `json:"uuid,required" db:"uuid"`
   Actor            string                   `json:"actor,required" db:"actor"`
   PostHash         string                   `json:"postHash,required" db:"post_hash"`
+  PostType         string                   `json:"postType,required" db:"post_type"`
   VoteType         feed_attributes.VoteType `json:"voteType,required" db:"vote_type"`
   DeltaFuel        int64                    `json:"deltaFuel,required" db:"delta_fuel"`
   DeltaReputation  int64                    `json:"deltaReputation,required" db:"delta_reputation"`

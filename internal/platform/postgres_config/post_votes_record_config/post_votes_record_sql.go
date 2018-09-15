@@ -5,6 +5,7 @@ INSERT INTO post_votes_records
 (
   actor,
   post_hash,
+  post_type,
   vote_type,
   delta_fuel,
   delta_reputation,
@@ -15,6 +16,7 @@ VALUES
 (
   :actor, 
   :post_hash,
+  :post_type,
   :vote_type,
   :delta_fuel,
   :delta_reputation,

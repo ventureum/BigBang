@@ -50,3 +50,8 @@ WHERE post_hash = $1;
 const VERIFY_POSTHASH_EXISTING_COMMAND = `
 select exists(select 1 from posts where post_hash =$1);
 `
+
+const QUERY_POST_TYPE_COMMAND = `
+SELECT post_type FROM posts
+WHERE post_hash = $1;
+`

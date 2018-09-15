@@ -36,7 +36,6 @@ echo "generating get_recent_posts zip"
 echo "generating get_recent_votes zip"
 .//generate_lambda_zip.sh get_recent_votes $1 $2
 
-
 echo "generating get_session zip"
 .//generate_lambda_zip.sh get_session $1 $2
 

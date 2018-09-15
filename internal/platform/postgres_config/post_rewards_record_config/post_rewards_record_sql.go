@@ -44,19 +44,14 @@ with updates as (
     FROM
       post_votes_records
     GROUP BY
-      post_hash
-)
+      post_hash)
 
-INSERT INTO post_rewards_records
-SELECT post_hash, delta_reputation From updates
-ON CONFLICT (post_hash)
-  DO
-  UPDATE
-       SET 
-           post_type = post_rewards_records.post_type,
-           withdrawable_mps = post_rewards_records.withdrawable_mps + EXCLUDED.delta_reputation - post_rewards_records.delta_milestone_points,
-           delta_reputation = EXCLUDED.delta_reputation,
-           delta_milestone_points = EXCLUDED.delta_reputation;
+UPDATE post_rewards_records
+  SET withdrawable_mps = post_rewards_records.withdrawable_mps +  updates.delta_reputation - post_rewards_records.delta_milestone_points,
+    delta_reputation =  updates.delta_reputation,
+    delta_milestone_points =  updates.delta_reputation
+FROM updates
+WHERE  post_rewards_records.post_hash = updates.post_hash;
 `
 
 const QUERY_RECENT_POST_REWARDS_RECORDS_BY_ACTOR_COMMAND = `

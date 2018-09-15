@@ -7,6 +7,7 @@ import (
 
 type ErrorCode string
 
+const InsufficientWaitingTimeToRefuel ErrorCode = "InsufficientWaitingTimeToRefuel"
 const InsufficientReputaionsAmount ErrorCode = "InsufficientReputaionsAmount"
 const InsufficientFuelsAmount ErrorCode = "InsufficientFuelsAmount"
 const NoActorExisting ErrorCode = "NoActorExisting"

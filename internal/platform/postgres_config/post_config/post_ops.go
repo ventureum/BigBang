@@ -6,6 +6,7 @@ import (
   "database/sql"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/internal/app/feed_attributes"
 )
 
 
@@ -93,6 +94,18 @@ func (postExecutor *PostExecutor) VerifyPostRecordExisting (postHash string) {
   }
 }
 
+func (postExecutor *PostExecutor) GetPostType(postHash string) feed_attributes.PostType {
+  var postType feed_attributes.PostType
+  err := postExecutor.C.Get(&postType, QUERY_POST_TYPE_COMMAND, postHash)
+
+  if err != nil {
+    errInfo := error_config.MatchError(err, "postHash", postHash, error_config.PostRecordLocation)
+    log.Printf("Failed to get post type for postHash %s with error: %+v\n", postHash, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return postType
+}
+
 /*
  * Tx versions
  */
@@ -167,14 +180,14 @@ func (postExecutor *PostExecutor) VerifyPostRecordExistingTx (postHash string) {
   }
 }
 
-//func (postExecutor *postExecutor) GetRecentPostVotesRecordsByActor(
-//    actor string, limit int64) *[]PostVotesRecord {
-//  var actorPostVoteRecords []PostVotesRecord
-//  err := postVotesRecordExecutor.C.Select(
-//    &actorPostVoteRecords, QUERY_RECENT_POST_VOTES_RECORDS_BY_ACTOR_COMMAND, actor, limit)
-//  if err != nil && err != sql.ErrNoRows {
-//    log.Panicf(
-//      "Failed to get recent %d post votes records for actor %s with error:\n %+v", limit, actor, err)
-//  }
-//  return &actorPostVoteRecords
-//}
+func (postExecutor *PostExecutor) GetPostTypeTx(postHash string) feed_attributes.PostType {
+  var postType feed_attributes.PostType
+  err := postExecutor.Tx.Get(&postType, QUERY_POST_TYPE_COMMAND, postHash)
+
+  if err != nil {
+    errInfo := error_config.MatchError(err, "postHash", postHash, error_config.PostRecordLocation)
+    log.Printf("Failed to get post type for postHash %s with error: %+v\n", postHash, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return postType
+}
