@@ -3,6 +3,8 @@ package refuel_record_config
 import (
   "log"
   "BigBang/internal/platform/postgres_config/client_config"
+  "time"
+  "BigBang/internal/pkg/error_config"
 )
 
 type RefuelRecordExecutor struct {
@@ -48,6 +50,23 @@ func (refuelRecordExecutor *RefuelRecordExecutor) GetRefuelRecord(
   return &refuelRecords
 }
 
+func (refuelRecordExecutor *RefuelRecordExecutor) GetLastRefuelTime(
+    actor string) time.Time {
+  res, err := refuelRecordExecutor.C.Queryx(QUERY_LATEST_REFUEL_TIME_COMMAND, actor)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.RefuelRecordLocation)
+    log.Printf("Failed to get lastRefuelTime for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  var lastRefuelTime time.Time
+  for res.Next() {
+    res.Scan(&lastRefuelTime)
+  }
+  return lastRefuelTime
+}
+
+
 /*
  * Tx versions
  */
@@ -77,4 +96,20 @@ func (refuelRecordExecutor *RefuelRecordExecutor) GetRefuelRecordTx(
     log.Panicf("Failed to get Refuel Records for actor %s with error: %+v\n", actor, err)
   }
   return &refuelRecords
+}
+
+func (refuelRecordExecutor *RefuelRecordExecutor) GetLastRefuelTimeTx(
+    actor string) time.Time {
+  res, err := refuelRecordExecutor.Tx.Queryx(QUERY_LATEST_REFUEL_TIME_COMMAND, actor)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.RefuelRecordLocation)
+    log.Printf("Failed to get lastRefuelTime for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  var lastRefuelTime time.Time
+  for res.Next() {
+    res.Scan(&lastRefuelTime)
+  }
+  return lastRefuelTime
 }

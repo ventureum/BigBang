@@ -9,19 +9,17 @@ import (
   "BigBang/internal/platform/postgres_config/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/refuel_record_config"
   "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
-  "strconv"
-  "os"
-  "time"
-  "math"
 )
 
 type Request struct {
   Actor string `json:"actor,required"`
+  Fuel int64 `json:"fuel,required"`
+  Reputation int64 `json:"reputation,required"`
+  MilestonePoints int64 `json:"milestonePoints,required"`
 }
 
 type Response struct {
   Ok      bool   `json:"ok"`
-  RefuelAmount int64 `json:"refuelAmount,omitempty"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
@@ -29,17 +27,23 @@ func ProcessRequest(request Request, response *Response) {
   postgresFeedClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.RefuelAmount = 0
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
       postgresFeedClient.RollBack()
     }
     postgresFeedClient.Close()
   }()
 
+  fuel := feed_attributes.Fuel(request.Fuel)
+  reputation := feed_attributes.Reputation(request.Reputation)
+  milestonePoints := feed_attributes.MilestonePoint(request.MilestonePoints)
   actor := request.Actor
 
-  refuelInterval, _ := strconv.ParseInt(os.Getenv("REFUEL_INTERVAL"), 10, 64)
-  refuelReplenishmentHourly, _ := strconv.ParseInt(os.Getenv("FUEL_REPLENISHMENT_HOURLY"), 10, 64)
+  refuelRecord := refuel_record_config.RefuelRecord{
+    Actor: actor,
+    Fuel: fuel,
+    Reputation: reputation,
+    MilestonePoints: milestonePoints,
+  }
 
   postgresFeedClient.Begin()
 
@@ -49,39 +53,23 @@ func ProcessRequest(request Request, response *Response) {
     *postgresFeedClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
 
+
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
   actorRewardsInfoRecordExecutor.VerifyActorExistingTx(actor)
 
-  lastRefuelTime := refuelRecordExecutor.GetLastRefuelTimeTx(actor)
-  deltaTime := time.Now().UTC().Unix() - lastRefuelTime.Unix()
-
-  if deltaTime < refuelInterval * 3600 {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.InsufficientWaitingTimeToRefuel,
-      ErrorData: map[string]interface{} {
-        "lastRefuelTimestamp": lastRefuelTime.Unix(),
-      },
-    }
-    log.Printf("Insufficient Waiting Time To Refuel for actor %s", actor)
-    log.Panicln(errorInfo.Marshal())
-  }
-
-  hoursSinceLastReplenishment := deltaTime / 3600
-
-  newFuelIncremental := feed_attributes.Fuel(math.Min(
-    float64(feed_attributes.MuMaxFuel),
-    float64(hoursSinceLastReplenishment * refuelReplenishmentHourly)))
-  actorRewardsInfoRecordExecutor.AddActorFuelTx(actor, newFuelIncremental)
-  refuelRecordExecutor.UpsertRefuelRecordTx(&refuel_record_config.RefuelRecord{
+  actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
+  refuelRecordExecutor.UpsertRefuelRecordTx(&refuelRecord)
+  actorRewardsInfoRecordExecutor.UpsertActorRewardsInfoRecordTx(&actor_rewards_info_record_config.ActorRewardsInfoRecord{
     Actor: actor,
-    Fuel: newFuelIncremental,
-    Reputation: 0,
-    MilestonePoints: 0,
+    Fuel: fuel.SubFuels(actorRewardsInfo.Fuel),
+    Reputation: reputation - actorRewardsInfo.Reputation,
+    MilestonePoints: milestonePoints - actorRewardsInfo.MilestonePoints,
   })
+
   postgresFeedClient.Commit()
 
-  log.Printf("Refuel %d fuel to actor %s", newFuelIncremental, actor)
-  response.RefuelAmount = int64(newFuelIncremental)
+  log.Printf("Reset %d fuel, %d reputation, and %d milestonePoints to actor %s", fuel, reputation, milestonePoints, actor)
+
   response.Ok = true
 }
 

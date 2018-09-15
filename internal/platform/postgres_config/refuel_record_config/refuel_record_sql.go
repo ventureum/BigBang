@@ -27,3 +27,8 @@ const QUERY_REFUEL_RECORDS_COMMAND = `
 SELECT * FROM refuel_records
 WHERE actor = $1;
 `
+
+const QUERY_LATEST_REFUEL_TIME_COMMAND = `
+SELECT max(created_at) FROM refuel_records
+WHERE actor = $1;
+`

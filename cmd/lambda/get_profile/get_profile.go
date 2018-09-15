@@ -8,6 +8,7 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
   "BigBang/internal/app/feed_attributes"
+  "math"
 )
 
 
@@ -18,6 +19,7 @@ type Request struct {
 type ResponseContent struct {
   Actor string `json:"actor"`
   ActorType string `json:"actorType"`
+  Level int64 `json:"level"`
   RewardsInfo *feed_attributes.RewardsInfo `json:"rewardsInfo"`
 }
 
@@ -56,9 +58,10 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(actor)
   response.Profile = ProfileRecordResultToResponseContent(actorProfileRecord)
   log.Printf("Loaded Profile content for actor %s\n", actor)
-  response.Profile.RewardsInfo = actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
+  rewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
   log.Printf("Loaded Rewards info for actor %s\n", actor)
-
+  response.Profile.RewardsInfo = rewardsInfo
+  response.Profile.Level = int64(math.Floor(math.Log10(1 + math.Max(float64(rewardsInfo.Reputation), 0))))
   response.Ok = true
 }
 

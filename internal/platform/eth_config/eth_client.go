@@ -324,6 +324,7 @@ func ProcessPostVotesRecord(
   postVotesRecord.DeltaReputation = 0
   postVotesRecord.DeltaMilestonePoints = 0
   postVotesRecord.SignedReputation = actorRewardsInfo.Reputation.Value() * postVotesRecord.VoteType.Value()
+  postVotesRecord.PostType = string(postExecutor.GetPostTypeTx(postHash))
   postVotesRecordExecutor.UpsertPostVotesRecordTx(postVotesRecord)
 
   newPostVotesCountersRecord := post_votes_counters_record_config.PostVotesCountersRecord{
@@ -333,7 +334,6 @@ func ProcessPostVotesRecord(
   }
   upsertPostVotesCountersRecord := postVotesCountersRecordExecutor.UpsertPostVotesCountersRecordTx(
     &newPostVotesCountersRecord)
-
 
   voteInfo.RewardsInfo = actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
 
