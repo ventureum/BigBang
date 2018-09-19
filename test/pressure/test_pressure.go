@@ -15,7 +15,8 @@ func RunJob(wg *sync.WaitGroup, index int) {
   defer wg.Done()
   CreateProfile(index)
   DevRefuel(index)
-  CreatePost(index)
+  UpsertPost(index)
+  FeedUpvote(index)
   FeedUpvote(index)
 }
 
@@ -35,9 +36,9 @@ func DevRefuel(index int) {
   actor := "testActor" +  strconv.Itoa(index)
   message := api.Message(map[string]interface{}{
     "actor": actor,
-    "fuel": 2000000000,
-    "reputation": 20000,
-    "milestonePoints": 2000,
+    "fuel": 10000,
+    "reputation": 10000,
+    "milestonePoints": 10000,
   })
   devRefuelURL := api.BuildEndingPoint(api.FeedSystemBaseURL, api.AlphaStage, api.DevRefuel)
   response := api.SendPost(message, devRefuelURL)
@@ -45,7 +46,7 @@ func DevRefuel(index int) {
 }
 
 
-func CreatePost(index int) {
+func UpsertPost(index int) {
   actor := "testActor" +  strconv.Itoa(index)
   postHash := "testHash" + strconv.Itoa(index)
   message := api.Message(map[string]interface{}{

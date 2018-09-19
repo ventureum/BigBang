@@ -40,7 +40,7 @@ const UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND = `
 with updates as (
     SELECT
       post_hash,
-      0.001 * count(*) * percentile_cont(0.5) within group (order by signed_reputation) as delta_reputation
+      0.01 * count(*) * percentile_cont(0.5) within group (order by signed_reputation) as delta_reputation
     FROM
       post_votes_records
     GROUP BY

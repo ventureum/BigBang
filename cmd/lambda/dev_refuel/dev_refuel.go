@@ -38,12 +38,7 @@ func ProcessRequest(request Request, response *Response) {
   milestonePoints := feed_attributes.MilestonePoint(request.MilestonePoints)
   actor := request.Actor
 
-  refuelRecord := refuel_record_config.RefuelRecord{
-    Actor: actor,
-    Fuel: fuel,
-    Reputation: reputation,
-    MilestonePoints: milestonePoints,
-  }
+
 
   postgresFeedClient.Begin()
 
@@ -58,12 +53,17 @@ func ProcessRequest(request Request, response *Response) {
   actorRewardsInfoRecordExecutor.VerifyActorExistingTx(actor)
 
   actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
-  refuelRecordExecutor.UpsertRefuelRecordTx(&refuelRecord)
-  actorRewardsInfoRecordExecutor.UpsertActorRewardsInfoRecordTx(&actor_rewards_info_record_config.ActorRewardsInfoRecord{
+  refuelRecordExecutor.UpsertRefuelRecordTx(&refuel_record_config.RefuelRecord{
     Actor: actor,
     Fuel: fuel.SubFuels(actorRewardsInfo.Fuel),
     Reputation: reputation - actorRewardsInfo.Reputation,
     MilestonePoints: milestonePoints - actorRewardsInfo.MilestonePoints,
+  })
+  actorRewardsInfoRecordExecutor.UpsertActorRewardsInfoRecordTx(&actor_rewards_info_record_config.ActorRewardsInfoRecord{
+    Actor: actor,
+    Fuel: fuel,
+    Reputation: reputation,
+    MilestonePoints: milestonePoints,
   })
 
   postgresFeedClient.Commit()
