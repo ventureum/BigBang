@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "api.go",
+        "message.go",
+        "resource.go",
+        "stage.go",
+        "url.go",
+    ],
+    importpath = "BigBang/internal/pkg/api",
+    visibility = ["//:__subpackages__"],
+)
