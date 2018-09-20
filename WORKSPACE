@@ -168,3 +168,21 @@ go_repository(
     commit = "0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849",
     importpath = "github.com/jmoiron/sqlx",
 )
+
+go_repository(
+    name = "com_github_davecgh_go_spew",
+    commit = "8991bc29aa16c548c550c7ff78260e27b9ab7c73",
+    importpath = "github.com/davecgh/go-spew",
+)
+
+go_repository(
+    name = "com_github_pmezard_go_difflib",
+    commit = "792786c7400a136282c1664665ae0a8db921c6c2",
+    importpath = "github.com/pmezard/go-difflib",
+)
+
+go_repository(
+    name = "com_github_stretchr_testify",
+    commit = "f35b8ab0b5a2cef36673838d662e249dd9c94686",
+    importpath = "github.com/stretchr/testify",
+)
