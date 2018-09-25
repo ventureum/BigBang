@@ -23,6 +23,8 @@ type Request struct {
 
 type ResponseContent struct {
   Actor string `json:"actor"`
+  Username string `json:"username,required"`
+  PhotoUrl string `json:"photoUrl,required"`
   BoardId string `json:"boardId"`
   ParentHash string `json:"parentHash"`
   PostHash string `json:"postHash"`
@@ -86,13 +88,15 @@ func ProcessRequest(request Request, response *Response) {
 
   postRecordResult := postExecutor.GetPostRecord(postHash).ToPostRecordResult()
   response.Post = PostRecordResultToResponseContent(postRecordResult)
+  actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(postRecordResult.Actor)
+  response.Post.Username = actorProfileRecord.Username
+  response.Post.PhotoUrl = actorProfileRecord.PhotoUrl
   response.Post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCount(postHash)
   postRewardsRecord := postRewardsRecordExecutor.GetPostRewardsRecordByPostHash(postHash)
   response.Post.DeltaFuel = postRewardsRecord.DeltaFuel
   response.Post.DeltaReputation = postRewardsRecord.DeltaReputation
   response.Post.DeltaMilestonePoints = postRewardsRecord.DeltaMilestonePoints
   response.Post.WithdrawableMPs = postRewardsRecord.WithdrawableMPs
-
 
 
   log.Printf("Post Content is loaded for postHash %s\n", postHash)
@@ -127,12 +131,5 @@ func Handler(request Request) (response Response, err error) {
 
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  // PostHash: "0x009",
-  //}
-  //response, _ := Handler(request)
-  //fmt.Printf("%+v", response)
-
   lambda.Start(Handler)
 }

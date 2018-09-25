@@ -17,10 +17,14 @@ type Request struct {
 }
 
 type ResponseContent struct {
-  Actor string `json:"actor"`
-  ActorType string `json:"actorType"`
-  Level int64 `json:"level"`
-  RewardsInfo *feed_attributes.RewardsInfo `json:"rewardsInfo"`
+  Actor string `json:"actor,required"`
+  ActorType string `json:"actorType,required"`
+  Username string `json:"username,required"`
+  PhotoUrl string `json:"photoUrl,required"`
+  TelegramId string `json:"telegramId,required"`
+  PhoneNumber string `json:"phoneNumber,required"`
+  Level int64 `json:"level,required"`
+  RewardsInfo *feed_attributes.RewardsInfo `json:"rewardsInfo,required"`
 }
 
 type Response struct {
@@ -33,6 +37,10 @@ func ProfileRecordResultToResponseContent(actorProfileRecord *actor_profile_reco
   return &ResponseContent{
     Actor: actorProfileRecord.Actor,
     ActorType: string(actorProfileRecord.ActorType),
+    Username: actorProfileRecord.Username,
+    PhotoUrl: actorProfileRecord.PhotoUrl,
+    TelegramId: actorProfileRecord.TelegramId,
+    PhoneNumber: actorProfileRecord.PhoneNumber,
   }
 }
 
