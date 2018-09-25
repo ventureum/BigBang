@@ -9,6 +9,7 @@ import (
   "BigBang/internal/platform/postgres_config/post_config"
   "BigBang/internal/platform/postgres_config/post_rewards_record_config"
   "BigBang/internal/platform/postgres_config/post_replies_record_config"
+  "BigBang/internal/platform/postgres_config/actor_profile_record_config"
 )
 
 
@@ -17,17 +18,19 @@ type Request struct {
 }
 
 type ResponseContent struct {
-  Actor string `json:"actor"`
-  BoardId string `json:"boardId"`
-  ParentHash string `json:"parentHash"`
-  PostHash string `json:"postHash"`
-  PostType string `json:"postType"`
-  Content *feed_attributes.Content `json:"content"`
-  DeltaFuel int64 `json:"deltaFuel"`
-  DeltaReputation int64 `json:"deltaReputation"`
-  DeltaMilestonePoints int64 `json:"deltaMilestonePoints"`
-  WithdrawableMPs int64 `json:"withdrawableMPs"`
-  RepliesLength int64 `json:"repliesLength"`
+  Actor string `json:"actor,required"`
+  Username string `json:"username,required"`
+  PhotoUrl string `json:"photoUrl,required"`
+  BoardId string `json:"boardId,required"`
+  ParentHash string `json:"parentHash,required"`
+  PostHash string `json:"postHash,required"`
+  PostType string `json:"postType,required"`
+  Content *feed_attributes.Content `json:"content,required"`
+  DeltaFuel int64 `json:"deltaFuel,required"`
+  DeltaReputation int64 `json:"deltaReputation,required"`
+  DeltaMilestonePoints int64 `json:"deltaMilestonePoints,required"`
+  WithdrawableMPs int64 `json:"withdrawableMPs,required"`
+  RepliesLength int64 `json:"repliesLength,required"`
 }
 
 type Response struct {
@@ -63,6 +66,7 @@ func ProcessRequest(request Request, response *Response) {
   postExecutor := post_config.PostExecutor{*postgresFeedClient}
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
   postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
 
   for _, postHash := range postHashes {
     postExecutor.VerifyPostRecordExisting(postHash)
@@ -72,6 +76,9 @@ func ProcessRequest(request Request, response *Response) {
     var post *ResponseContent
     postRecordResult := postExecutor.GetPostRecord(postHash).ToPostRecordResult()
     post = PostRecordResultToResponseContent(postRecordResult)
+    actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(postRecordResult.Actor)
+    post.Username = actorProfileRecord.Username
+    post.PhotoUrl = actorProfileRecord.PhotoUrl
     post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCount(postHash)
     postRewardsRecord := postRewardsRecordExecutor.GetPostRewardsRecordByPostHash(postHash)
     post.DeltaFuel = postRewardsRecord.DeltaFuel
@@ -95,12 +102,5 @@ func Handler(request Request) (response Response, err error) {
 
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  // Actor: "0x009",
-  //}
-  //response, _ := Handler(request)
-  //fmt.Printf("%+v", response)
-
   lambda.Start(Handler)
 }

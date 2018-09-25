@@ -11,7 +11,6 @@ import (
 
 type Request struct {
   Actor string `json:"actor,required"`
-  BoardId string `json:"boardId,required"`
   PostHash string `json:"postHash,required"`
   Value int64 `json:"value,required"`
 }

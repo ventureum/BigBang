@@ -5,17 +5,29 @@ const UPSERT_ACTOR_PROFILE_RECORD_COMMAND = `
 INSERT INTO actor_profile_records
 (
   actor,
-  actor_type
+  actor_type,
+  username,
+  photo_url,
+  telegram_id,
+  phone_number
 )
 VALUES 
 (
   :actor, 
-  :actor_type
+  :actor_type,
+  :username,
+  :photo_url,
+  :telegram_id,
+  :phone_number
 )
 ON CONFLICT (actor) 
 DO
  UPDATE
     SET actor_type = :actor_type,
+        username = :username,
+        photo_url = :photo_url,
+        telegram_id = :telegram_id,
+        phone_number = :phone_number,
         actor_profile_status = 'ACTIVATED'
     WHERE actor_profile_records.actor = :actor
 RETURNING (xmax = 0) AS inserted;

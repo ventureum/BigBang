@@ -18,6 +18,16 @@ type Request struct {
   Limit int64 `json:"limit,omitempty"`
 }
 
+type ResponseContent struct {
+  PostHash string `json:"postHash"`
+  Actor string `json:"actor"`
+  PostType string `json:"postType"`
+  DeltaFuel int64 `json:"deltaFuel"`
+  DeltaReputation int64 `json:"deltaReputation"`
+  DeltaMilestonePoints int64 `json:"deltaMilestonePoints"`
+  WithdrawableMPs int64 `json:"withdrawableMPs"`
+}
+
 type Response struct {
   RecentPosts *[]post_rewards_record_config.PostRewardsRecord `json:"recentPosts,omitempty"`
   Ok bool `json:"ok"`
@@ -65,12 +75,5 @@ func Handler(request Request) (response Response, err error) {
 
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  // Actor: "0x009",
-  //}
-  //response, _ := Handler(request)
-  //fmt.Printf("%+v", response)
-
   lambda.Start(Handler)
 }

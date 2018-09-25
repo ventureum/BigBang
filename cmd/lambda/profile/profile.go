@@ -14,6 +14,10 @@ import (
 type Request struct {
   Actor string `json:"actor,required"`
   UserType string `json:"userType,required"`
+  Username string `json:"username,required"`
+  PhotoUrl string `json:"photoUrl,omitempty"`
+  TelegramId string `json:"telegramId,omitempty"`
+  PhoneNumber string `json:"phoneNumber,omitempty"`
 }
 
 type Response struct {
@@ -25,6 +29,10 @@ func (request *Request) ToActorProfileRecord() (*actor_profile_record_config.Act
   return &actor_profile_record_config.ActorProfileRecord{
     Actor:      request.Actor,
     ActorType: feed_attributes.ActorType(request.UserType),
+    Username: request.Username,
+    PhotoUrl: request.PhotoUrl,
+    TelegramId: request.TelegramId,
+    PhoneNumber: request.PhoneNumber,
   }
 }
 

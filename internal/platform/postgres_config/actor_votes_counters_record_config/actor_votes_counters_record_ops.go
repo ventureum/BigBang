@@ -29,7 +29,7 @@ func (actorVotesCountersRecordExecutor *ActorVotesCountersRecordExecutor) Upsert
   res, err := actorVotesCountersRecordExecutor.C.NamedQuery(UPSERT_ACTOR_VOTES_COUNTERS_RECORD_COMMAND, postReputationsRecord)
 
   if err != nil {
-    errorInfo := error_config.MatchError(err, "Actor", postReputationsRecord.Actor, error_config.ActorVotesCountersRecordLocation)
+    errorInfo := error_config.MatchError(err, "actor", postReputationsRecord.Actor, error_config.ActorVotesCountersRecordLocation)
     errorInfo.ErrorData["postHash"] = postReputationsRecord.PostHash
     log.Printf("Failed to upsert actor votes counters record: %+v with error: %+v\n", postReputationsRecord, err)
     log.Panic(errorInfo.Marshal())
@@ -183,7 +183,7 @@ func (actorVotesCountersRecordExecutor *ActorVotesCountersRecordExecutor) Upsert
   res, err := actorVotesCountersRecordExecutor.Tx.NamedQuery(UPSERT_ACTOR_VOTES_COUNTERS_RECORD_COMMAND, postReputationsRecord)
 
   if err != nil {
-    errorInfo := error_config.MatchError(err, "Actor", postReputationsRecord.Actor, error_config.ActorVotesCountersRecordLocation)
+    errorInfo := error_config.MatchError(err, "actor", postReputationsRecord.Actor, error_config.ActorVotesCountersRecordLocation)
     errorInfo.ErrorData["postHash"] = postReputationsRecord.PostHash
     log.Printf("Failed to upsert actor votes counters record: %+v with error: %+v\n", postReputationsRecord, err)
     log.Panic(errorInfo.Marshal())

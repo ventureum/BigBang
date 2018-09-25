@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
-
-.//run_unit_test.sh  //cmd/lambda/profile:go_default_test
+bazel clean
+./run_unit_test.sh  //cmd/lambda/feed_events_table_creator:go_default_test
+./run_unit_test.sh  //cmd/lambda/profile:go_default_test
+./run_unit_test.sh  //cmd/lambda/get_profile:go_default_test
+./run_unit_test.sh  //cmd/lambda/feed_post:go_default_test
+./run_unit_test.sh  //cmd/lambda/get_feed_post:go_default_test
+./run_unit_test.sh  //cmd/lambda/get_batch_posts:go_default_test
+./run_unit_test.sh  //cmd/lambda/get_recent_posts:go_default_test
+./run_unit_test.sh  //cmd/lambda/feed_upvote:go_default_test
