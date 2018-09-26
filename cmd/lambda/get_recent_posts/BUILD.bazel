@@ -26,5 +26,8 @@ go_test(
     name = "go_default_test",
     srcs = ["get_recent_posts_test.go"],
     embed = [":go_default_library"],
-    deps = ["//vendor/github.com/stretchr/testify/assert:go_default_library"],
+    deps = [
+        "//internal/platform/postgres_config/post_rewards_record_config:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
 )

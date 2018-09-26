@@ -37,9 +37,5 @@ func Handler() (response Response, err error) {
 
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //response, _ := Handler()
-  //fmt.Println("%+v\n", response.Ok)
-
   lambda.Start(Handler)
 }

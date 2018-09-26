@@ -48,12 +48,5 @@ func Handler(request Request) (response Response, err error) {
 
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  //  PostHash: "0xpostHash001",
-  //}
-  //response, _ := Handler(request)
-  //fmt.Printf("%+v", response)
-
   lambda.Start(Handler)
 }

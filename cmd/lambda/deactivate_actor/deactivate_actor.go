@@ -50,12 +50,5 @@ func Handler(request Request) (response Response, err error) {
 
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  //  Actor: "0x001",
-  //}
-  //response, _ := Handler(request)
-  //fmt.Printf("%+v\n", response)
-
   lambda.Start(Handler)
 }
