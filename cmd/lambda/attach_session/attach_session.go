@@ -96,20 +96,5 @@ func Handler(request Request) (response Response, err error) {
 }
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //content := feed_attributes.Content{
-  //  Title: "titleSample1",
-  //  Text: "hello, world",
-  //}
-  //request := Request{
-  //  Actor:  "0x00999",
-  //  PostHash: "0x009",
-  //  StartTime: 1213444,
-  //  EndTime:   1213778,
-  //  Content: content,
-  //}
-  //reposnse, _ := Handler(request)
-  //log.Printf("%+v", reposnse)
-
   lambda.Start(Handler)
 }

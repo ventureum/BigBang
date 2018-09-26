@@ -38,6 +38,7 @@ func ProcessRequest(request Request, response *Response) {
 
   actor := request.Actor
 
+  debugMode, _ := strconv.ParseInt(os.Getenv("DEBUG_MODE"), 10, 64)
   refuelInterval, _ := strconv.ParseInt(os.Getenv("REFUEL_INTERVAL"), 10, 64)
   refuelReplenishmentHourly, _ := strconv.ParseInt(os.Getenv("FUEL_REPLENISHMENT_HOURLY"), 10, 64)
 
@@ -55,7 +56,10 @@ func ProcessRequest(request Request, response *Response) {
   lastRefuelTime := refuelRecordExecutor.GetLastRefuelTimeTx(actor)
   deltaTime := time.Now().UTC().Unix() - lastRefuelTime.Unix()
 
-  if deltaTime < refuelInterval * 3600 {
+  log.Printf("lastRefuelTime %+v", lastRefuelTime)
+  log.Printf("deltaTime %+v", deltaTime)
+
+  if deltaTime < refuelInterval * 3600 && debugMode != 1 {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.InsufficientWaitingTimeToRefuel,
       ErrorData: map[string]interface{} {
@@ -92,12 +96,5 @@ func Handler(request Request) (response Response, err error) {
 }
 
 func main() {
-  //TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  // UserAddress: "0x003",
-  // Fuel: 400000,
-  //}
-  //Handler(request)
-
   lambda.Start(Handler)
 }

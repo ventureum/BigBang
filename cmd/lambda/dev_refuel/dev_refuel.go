@@ -80,12 +80,5 @@ func Handler(request Request) (response Response, err error) {
 }
 
 func main() {
-  //TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  // UserAddress: "0x003",
-  // Fuel: 400000,
-  //}
-  //Handler(request)
-
   lambda.Start(Handler)
 }

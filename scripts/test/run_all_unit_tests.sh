@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 bazel clean
+bazel run //:gazelle
 ./run_unit_test.sh  //cmd/lambda/feed_events_table_creator:go_default_test
 ./run_unit_test.sh  //cmd/lambda/profile:go_default_test
 ./run_unit_test.sh  //cmd/lambda/get_profile:go_default_test
@@ -7,4 +8,12 @@ bazel clean
 ./run_unit_test.sh  //cmd/lambda/get_feed_post:go_default_test
 ./run_unit_test.sh  //cmd/lambda/get_batch_posts:go_default_test
 ./run_unit_test.sh  //cmd/lambda/get_recent_posts:go_default_test
+./run_unit_test.sh  //cmd/lambda/attach_session:go_default_test
+./run_unit_test.sh  //cmd/lambda/get_session:go_default_test
+./run_unit_test.sh  //cmd/lambda/refuel:go_default_test
+./run_unit_test.sh  //cmd/lambda/dev_refuel:go_default_test
+./run_unit_test.sh  //cmd/lambda/feed_update_post_rewards:go_default_test
 ./run_unit_test.sh  //cmd/lambda/feed_upvote:go_default_test
+./run_unit_test.sh  //cmd/lambda/get_recent_votes:go_default_test
+./run_unit_test.sh  //cmd/lambda/deactivate_actor:go_default_test
+./run_unit_test.sh  //cmd/lambda/feed_token_generator:go_default_test

@@ -8,6 +8,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
+  "BigBang/internal/platform/postgres_config/refuel_record_config"
 )
 
 
@@ -53,6 +54,7 @@ func ProcessRequest(request Request, response *Response) {
   inserted := actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())
 
   if inserted {
+    refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresFeedClient}
     actorReputationsRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
       *postgresFeedClient}
     actorReputationsRecord := actor_rewards_info_record_config.ActorRewardsInfoRecord{
@@ -62,6 +64,12 @@ func ProcessRequest(request Request, response *Response) {
       MilestonePoints: 0,
     }
     actorReputationsRecordExecutor.UpsertActorRewardsInfoRecordTx(&actorReputationsRecord)
+    refuelRecordExecutor.UpsertRefuelRecordTx(&refuel_record_config.RefuelRecord{
+      Actor: request.Actor,
+      Fuel: feed_attributes.MuMinFuel,
+      Reputation: feed_attributes.Reputation(feed_attributes.MuMinFuel),
+      MilestonePoints: 0,
+    })
 
     log.Printf("Created Actor Fuel Account for actor %s", request.Actor)
   }
@@ -84,13 +92,5 @@ func Handler(request Request) (response Response, err error) {
 }
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  // Actor:  "0x005",
-  // UserType: "KOL",
-  //}
-  //response, _ := Handler(request)
-  //log.Printf("%+v\n",  response)
-
   lambda.Start(Handler)
 }

@@ -56,14 +56,5 @@ func Handler(request Request) (response Response, err error) {
 }
 
 func main() {
-  // TODO(david.shao): remove example when deployed to production
-  //request := Request{
-  //  Actor:  "0x001",
-  //  BoardId: "0x02",
-  //  PostHash: "0x009",
-  //  Value: -1,
-  //}
-  //Handler(request)
-
   lambda.Start(Handler)
 }
