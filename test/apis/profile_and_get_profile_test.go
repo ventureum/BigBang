@@ -5,47 +5,55 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/pkg/api"
   "github.com/stretchr/testify/assert"
+  "BigBang/cmd/lambda/profile/config"
+  "github.com/mitchellh/mapstructure"
+  config2 "BigBang/cmd/lambda/get_profile/config"
 )
 
 func TestProfileAndGetProfile(t *testing.T) {
-  messageProfile := api.Message(map[string]interface{}{
-    "actor": Actor001,
-    "userType": feed_attributes.USER_ACTOR_TYPE,
-    "username": UserName001,
-    "photoUrl": PhotoUrl001,
-    "telegramId": TelegramId001,
-    "phoneNumber": PhoneNumber001,
-  })
+  requestProfile := config.Request{
+    Actor: Actor001,
+    UserType: string(feed_attributes.USER_ACTOR_TYPE),
+    Username: UserName001,
+    PhotoUrl: PhotoUrl001,
+    TelegramId: TelegramId001,
+    PhoneNumber: PhoneNumber001,
+  }
 
-  expectedResponseProfile :=  api.Message(map[string]interface{}{
-    "ok": true,
-  })
+  expectedResponseProfile := config.Response{
+    Ok: true,
+  }
 
-  responseProfile := api.SendPost(messageProfile, api.ProfileAlphaEndingPoint)
-  assert.Equal(t, responseProfile, &expectedResponseProfile)
+  responseMessageProfile := api.SendPost(requestProfile, api.ProfileAlphaEndingPoint)
 
-  messageGetProfile := api.Message(map[string]interface{}{
-    "actor": Actor001,
-  })
+  var responseProfile config.Response
+  mapstructure.Decode(*responseMessageProfile, &responseProfile)
+  assert.Equal(t, expectedResponseProfile, responseProfile)
 
-  expectedResponseGetProfile :=  api.Message(map[string]interface{}{
-    "ok": true,
-    "profile": map[string]interface{}{
-      "actor": Actor001,
-      "actorType": string(feed_attributes.USER_ACTOR_TYPE),
-      "username": UserName001,
-      "photoUrl": PhotoUrl001,
-      "telegramId": TelegramId001,
-      "phoneNumber": PhoneNumber001,
-      "level": float64(2),
-      "rewardsInfo": map[string]interface{}{
-        "fuel": float64(100),
-        "reputation": float64(100),
-        "milestonePoints": float64(0),
+  requestGetProfile := config2.Request{
+    Actor: Actor001,
+  }
+
+  expectedResponseGetProfile :=  config2.Response{
+    Ok: true,
+    Profile: &config2.ResponseContent{
+      Actor:       Actor001,
+      ActorType:   string(feed_attributes.USER_ACTOR_TYPE),
+      Username:    UserName001,
+      PhotoUrl:    PhotoUrl001,
+      TelegramId:  TelegramId001,
+      PhoneNumber: PhoneNumber001,
+      Level:       2,
+      RewardsInfo: &feed_attributes.RewardsInfo{
+        Fuel:            100,
+        Reputation:      100,
+        MilestonePoints: 0,
       },
     },
-  })
+  }
 
-  responseGetProfile := api.SendPost(messageGetProfile, api.GetProfileAlphaEndingPoint)
-  assert.Equal(t, responseGetProfile, &expectedResponseGetProfile)
+  responseMessageGetProfile := api.SendPost(requestGetProfile, api.GetProfileAlphaEndingPoint)
+  var responseGetProfile config2.Response
+  mapstructure.Decode(*responseMessageGetProfile, &responseGetProfile)
+  assert.Equal(t, responseGetProfile, expectedResponseGetProfile)
 }

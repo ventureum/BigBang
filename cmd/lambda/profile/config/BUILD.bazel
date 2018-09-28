@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["profile.go"],
+    importpath = "BigBang/cmd/lambda/profile/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/app/feed_attributes:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/actor_profile_record_config:go_default_library",
+        "//internal/platform/postgres_config/actor_rewards_info_record_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/refuel_record_config:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["profile_test.go"],
+    embed = [":go_default_library"],
+    deps = ["//vendor/github.com/stretchr/testify/assert:go_default_library"],
+)
