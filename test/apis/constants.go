@@ -24,3 +24,19 @@ const TelegramId003 string = "0xTelegramId003"
 const PhoneNumber001 string = "5197290001"
 const PhoneNumber002 string = "5197290002"
 const PhoneNumber003 string = "5197290003"
+
+const PostTypeHash string = "0x2fca5a5e"
+
+var Content1 = map[string]interface{}{
+  "title":    "Title1",
+  "text":     "Text1",
+  "image":    "Image1",
+  "subtitle": "Subtitle1",
+}
+
+var Content2 = map[string]interface{}{
+  "title":    "Title2",
+  "text":     "Text2",
+  "image":    "Image2",
+  "subtitle": "Subtitle2",
+}

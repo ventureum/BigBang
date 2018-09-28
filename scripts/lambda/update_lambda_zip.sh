@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd $GOPATH/src/BigBang/cmd/lambda/$1/
+cd $GOPATH/src/BigBang/cmd/lambda/$1/main/
 GOOS=linux go build -o main
 zip $1.zip main
 
@@ -14,7 +14,7 @@ aws lambda update-function-configuration \
 
 aws lambda update-function-code \
   --function-name $1_$2_$3 \
-  --zip-file fileb://$GOPATH/src/BigBang/cmd/lambda/$1/$1.zip \
+  --zip-file fileb://$GOPATH/src/BigBang/cmd/lambda/$1/main/$1.zip \
   --publish
 
 rm -rf main

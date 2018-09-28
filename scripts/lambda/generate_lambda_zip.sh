@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd $GOPATH/src/BigBang/cmd/lambda/$1/
+cd $GOPATH/src/BigBang/cmd/lambda/$1/main/
 GOOS=linux go build -o main
 zip $1.zip main
 
@@ -11,7 +11,7 @@ DB_HOST=$DB_NAME_PREFIX$2$DB_HOST_POSTFIX
 aws lambda create-function \
     --region ca-central-1 \
     --function-name $1_$2_$3 \
-    --zip-file fileb://$GOPATH/src/BigBang/cmd/lambda/$1/$1.zip \
+    --zip-file fileb://$GOPATH/src/BigBang/cmd/lambda/$1/main/$1.zip \
     --role arn:aws:iam::727151012682:role/lambda-vpc-execution-role \
     --handler main \
     --runtime go1.x \

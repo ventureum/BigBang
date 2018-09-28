@@ -11,6 +11,7 @@ type Content struct {
   Text string `json:"text,omitempty"`
   Subtitle string `json:"subtitle,omitempty"`
   Image string `json:"image,omitempty"`
+  Meta string `json:"meta,omitempty"`
 }
 
 func (content *Content) ToJsonText() types.JSONText {
