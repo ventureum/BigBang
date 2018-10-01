@@ -7,7 +7,7 @@ import (
 
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/session_record_config"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
@@ -41,13 +41,13 @@ func (request *Request) ToSessionRecord() (*session_record_config.SessionRecord)
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   var err error
@@ -65,10 +65,10 @@ func ProcessRequest(request Request, response *Response) {
   getStreamClient := &getstream_config.GetStreamClient{C: getStreamIOClient}
   sessionRecord := request.ToSessionRecord()
 
-  postgresFeedClient.Begin()
+  postgresBigBangClient.Begin()
 
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
+  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}
 
   postExecutor.VerifyPostRecordExistingTx(sessionRecord.PostHash)
 
@@ -82,7 +82,7 @@ func ProcessRequest(request Request, response *Response) {
   sessionRecord.EmbedSessionRecordToActivity(activity)
   getStreamClient.UpdateFeedActivityToGetStream(activity)
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
 
   response.Ok = true
 }

@@ -3,13 +3,13 @@ package session_record_config
 import (
   "log"
   "time"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
 )
 
 
 type SessionRecordExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (sessionRecordExecutor *SessionRecordExecutor) CreateSessionRecordTable() {

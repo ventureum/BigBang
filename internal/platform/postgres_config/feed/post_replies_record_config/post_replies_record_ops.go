@@ -3,13 +3,13 @@ package post_replies_record_config
 import (
   "log"
   "database/sql"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
 )
 
 
 type PostRepliesRecordExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (postRepliesRecordExecutor *PostRepliesRecordExecutor) CreatePostRepliesRecordTable() {

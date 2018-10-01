@@ -1,14 +1,14 @@
 package actor_rewards_info_record_config
 
 import (
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/app/feed_attributes"
 )
 
 type ActorRewardsInfoRecordExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) CreateActorRewardsInfoRecordTable() {

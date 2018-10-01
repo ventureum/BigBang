@@ -32,7 +32,7 @@ func TestHandler(t *testing.T) {
             Text: "Text1",
             Image: "Image1",
             Subtitle: "Subtitle1",
-            Meta: "[{offset: 0, length: 41, type: 'url' }]",
+            Meta: "[{offset: 0, length: 41, type: 'url'}]",
           },
           DeltaFuel: -50,
           DeltaReputation: 0,

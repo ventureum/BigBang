@@ -4,14 +4,14 @@ import (
   "log"
   "time"
   "database/sql"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/app/feed_attributes"
 )
 
 
 type PostExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (postExecutor *PostExecutor) CreatePostTable() {

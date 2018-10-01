@@ -9,7 +9,7 @@ go_library(
         "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/eth_config:go_default_library",
-        "//internal/platform/postgres_config/feed/client_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/post_votes_record_config:go_default_library",
     ],
 )

@@ -3,7 +3,7 @@ package config
 import (
   "log"
   "BigBang/internal/app/feed_attributes"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
@@ -23,13 +23,13 @@ type Response struct {
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   fuel := feed_attributes.Fuel(request.Fuel)
@@ -39,13 +39,13 @@ func ProcessRequest(request Request, response *Response) {
 
 
 
-  postgresFeedClient.Begin()
+  postgresBigBangClient.Begin()
 
   refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{
-    *postgresFeedClient}
+    *postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-    *postgresFeedClient}
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+    *postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
 
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
@@ -65,7 +65,7 @@ func ProcessRequest(request Request, response *Response) {
     MilestonePoints: milestonePoints,
   })
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
 
   log.Printf("Reset %d fuel, %d reputation, and %d milestonePoints to actor %s", fuel, reputation, milestonePoints, actor)
 

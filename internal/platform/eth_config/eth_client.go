@@ -15,7 +15,7 @@ import (
   "time"
   "errors"
   "BigBang/internal/app/feed_attributes"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
   "BigBang/internal/platform/postgres_config/feed/post_votes_record_config"
   "BigBang/internal/platform/postgres_config/feed/post_replies_record_config"
@@ -72,7 +72,7 @@ func createFilterQuery(forumAddressHex string) ethereum.FilterQuery {
 }
 
 func (client *EthClient) SubscribeFilterLogs(
-    forumAddressHex string, getStreamClient *getstream_config.GetStreamClient, postgresFeedClient *client_config.PostgresFeedClient) {
+    forumAddressHex string, getStreamClient *getstream_config.GetStreamClient, postgresBigBangClient *client_config.PostgresBigBangClient) {
   logs := make(chan types.Log)
   filterQuery := createFilterQuery(forumAddressHex)
   sub, err := client.c.SubscribeFilterLogs(context.Background(), filterQuery, logs)
@@ -85,7 +85,7 @@ func (client *EthClient) SubscribeFilterLogs(
       case err := <-sub.Err():
         log.Printf("SubscribeFilterLogs Error: %+v", err)
       case vLog := <-logs:
-         err := ProcessRequest(vLog, getStreamClient, postgresFeedClient)
+         err := ProcessRequest(vLog, getStreamClient, postgresBigBangClient)
          if err != nil {
            log.Printf("Failed to process Log %+v with error: %+v\n", vLog, err)
          }
@@ -96,7 +96,7 @@ func (client *EthClient) SubscribeFilterLogs(
 func ProcessRequest(
     vLog types.Log,
     getStreamClient *getstream_config.GetStreamClient,
-    postgresFeedClient *client_config.PostgresFeedClient) (err error) {
+    postgresBigBangClient *client_config.PostgresBigBangClient) (err error) {
   defer func() {
     if errStr := recover(); errStr != nil { //catch
       err = errors.New(errStr.(string))
@@ -107,7 +107,7 @@ func ProcessRequest(
     log.Panicf("Error to match event: %+v", err)
   }
   log.Printf("Processing Event: %+v\n", *event)
-  processEvent(event, getStreamClient, postgresFeedClient)
+  processEvent(event, getStreamClient, postgresBigBangClient)
   return err
 }
 
@@ -162,32 +162,32 @@ func matchEvent(topics []common.Hash, data []byte) (*Event, error) {
 func processEvent(
     event *Event,
     getStreamClient *getstream_config.GetStreamClient,
-    postgresFeedClient *client_config.PostgresFeedClient) {
+    postgresBigBangClient *client_config.PostgresBigBangClient) {
   switch reflect.TypeOf(*event) {
     case reflect.TypeOf(post_config.PostRecord{}):
       postRecord := (*event).(post_config.PostRecord)
-      ProcessPostRecord(&postRecord, getStreamClient, postgresFeedClient, feed_attributes.ON_CHAIN)
+      ProcessPostRecord(&postRecord, getStreamClient, postgresBigBangClient, feed_attributes.ON_CHAIN)
     case reflect.TypeOf(post_votes_record_config.PostVotesRecord{}):
       postVotesRecord := (*event).(post_votes_record_config.PostVotesRecord)
-      ProcessPostVotesRecord(&postVotesRecord, postgresFeedClient)
+      ProcessPostVotesRecord(&postVotesRecord, postgresBigBangClient)
     case reflect.TypeOf(purchase_mps_record_config.PurchaseMPsRecord{}):
       purchaseReputationsRecord := (*event).(purchase_mps_record_config.PurchaseMPsRecord)
-      ProcessPurchaseReputationsRecord(&purchaseReputationsRecord, postgresFeedClient)
+      ProcessPurchaseReputationsRecord(&purchaseReputationsRecord, postgresBigBangClient)
   }
 }
 
 func ProcessPostRecord(
     postRecord *post_config.PostRecord,
     getStreamClient *getstream_config.GetStreamClient,
-    postgresFeedClient *client_config.PostgresFeedClient,
+    postgresBigBangClient *client_config.PostgresBigBangClient,
     source feed_attributes.Source) {
-  postgresFeedClient.Begin()
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
+  postgresBigBangClient.Begin()
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-    *postgresFeedClient}
-  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
+    *postgresBigBangClient}
+  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
   actorRewardsInfoRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
 
@@ -229,14 +229,14 @@ func ProcessPostRecord(
     postRepliesRecordExecutor.UpsertPostRepliesRecordTx(&postRepliesRecord)
   }
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
 }
 
 func ProcessPostVotesRecord(
     postVotesRecord *post_votes_record_config.PostVotesRecord,
-    postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
+    postgresBigBangClient *client_config.PostgresBigBangClient) *feed_attributes.VoteInfo {
 
-  postgresFeedClient.Begin()
+  postgresBigBangClient.Begin()
 
   actor := postVotesRecord.Actor
   postHash := postVotesRecord.PostHash
@@ -247,12 +247,12 @@ func ProcessPostVotesRecord(
   voteInfo.PostHash = postVotesRecord.PostHash
 
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-    *postgresFeedClient}
-  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresFeedClient}
-  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
-  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
+    *postgresBigBangClient}
+  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresBigBangClient}
+  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresBigBangClient}
+  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
 
   actorProfileRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
   actorRewardsInfoRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
@@ -366,25 +366,25 @@ func ProcessPostVotesRecord(
     }
   }
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
 
   return &voteInfo
 }
 
 func QueryPostVotesInfo(
     postVotesRecord *post_votes_record_config.PostVotesRecord,
-    postgresFeedClient *client_config.PostgresFeedClient) *feed_attributes.VoteInfo {
+    postgresBigBangClient *client_config.PostgresBigBangClient) *feed_attributes.VoteInfo {
   var voteInfo feed_attributes.VoteInfo
 
   actor := postVotesRecord.Actor
   postHash := postVotesRecord.PostHash
 
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-    *postgresFeedClient}
-  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresFeedClient}
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
+    *postgresBigBangClient}
+  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
+  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresBigBangClient}
 
   actorProfileRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
   actorRewardsInfoRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
@@ -439,19 +439,19 @@ func QueryPostVotesInfo(
 
 func ProcessPurchaseReputationsRecord(
     purchaseMPsRecord *purchase_mps_record_config.PurchaseMPsRecord,
-    postgresFeedClient *client_config.PostgresFeedClient) {
-  postgresFeedClient.Begin()
+    postgresBigBangClient *client_config.PostgresBigBangClient) {
+  postgresBigBangClient.Begin()
 
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-    *postgresFeedClient}
+    *postgresBigBangClient}
   purchaseMPsRecordExecutor := purchase_mps_record_config.PurchaseMPsRecordExecutor{
-    *postgresFeedClient}
+    *postgresBigBangClient}
   purchaseMPsRecordExecutor.UpsertPurchaseMPsRecordTx(purchaseMPsRecord)
 
   actorRewardsInfoRecordExecutor.AddActorMilestonePointsTx(
     purchaseMPsRecord.Purchaser, feed_attributes.MilestonePoint(purchaseMPsRecord.MPs))
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
 }
 
 func ConvertPostRecordToActivity(

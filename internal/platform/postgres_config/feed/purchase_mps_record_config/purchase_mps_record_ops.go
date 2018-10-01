@@ -2,12 +2,12 @@ package purchase_mps_record_config
 
 import (
   "log"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
 )
 
 
 type PurchaseMPsRecordExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (purchaseMPsRecordExecutor *PurchaseMPsRecordExecutor) CreatePurchaseMPsRecordTable() {

@@ -8,12 +8,12 @@ import (
   "os"
 )
 
-type PostgresFeedClient struct {
+type PostgresBigBangClient struct {
   C *sqlx.DB
   Tx *sqlx.Tx
 }
 
-func ConnectPostgresClient() *PostgresFeedClient {
+func ConnectPostgresClient() *PostgresBigBangClient {
   dbUser := os.Getenv("DB_USER")
   dbPassword := os.Getenv("DB_PASSWORD")
   dbName := os.Getenv("DB_NAME")
@@ -25,40 +25,40 @@ func ConnectPostgresClient() *PostgresFeedClient {
     log.Panicf("Failed to connect postgres with error: %+v\n", err)
   }
   log.Println("Connected to Postgres Client")
-  return &PostgresFeedClient{C: db}
+  return &PostgresBigBangClient{C: db}
 }
 
-func (postgresFeedClient *PostgresFeedClient) Begin() {
-  tx, err := postgresFeedClient.C.Beginx()
+func (postgresBigBangClient *PostgresBigBangClient) Begin() {
+  tx, err := postgresBigBangClient.C.Beginx()
   if err != nil {
     log.Panicf("Failed to Begin TX with error: %+v\n", err)
   }
-  postgresFeedClient.Tx = tx
+  postgresBigBangClient.Tx = tx
 }
 
-func (postgresFeedClient *PostgresFeedClient) Commit() {
-  err := postgresFeedClient.Tx.Commit()
+func (postgresBigBangClient *PostgresBigBangClient) Commit() {
+  err := postgresBigBangClient.Tx.Commit()
   if err != nil {
     log.Panicf("Failed to Commit with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) RollBack() {
-  err := postgresFeedClient.Tx.Rollback()
+func (postgresBigBangClient *PostgresBigBangClient) RollBack() {
+  err := postgresBigBangClient.Tx.Rollback()
   if err != nil {
     log.Panicf("Failed to Rollback with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) Close() {
-  err := postgresFeedClient.C.Close()
+func (postgresBigBangClient *PostgresBigBangClient) Close() {
+  err := postgresBigBangClient.C.Close()
   if err != nil {
     log.Panicf("Failed to Close with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) CreateTable(schema string, tableName string) {
-  tx := postgresFeedClient.C.MustBegin()
+func (postgresBigBangClient *PostgresBigBangClient) CreateTable(schema string, tableName string) {
+  tx := postgresBigBangClient.C.MustBegin()
   _ , err := tx.Exec(schema)
   if err != nil {
     log.Panicf("Failed to execute creating Table %s with error: %+v\n", tableName, err)
@@ -67,9 +67,9 @@ func (postgresFeedClient *PostgresFeedClient) CreateTable(schema string, tableNa
   log.Printf("Table %s has been created\n", tableName)
 }
 
-func (postgresFeedClient *PostgresFeedClient) DeleteTable(tableName string) {
+func (postgresBigBangClient *PostgresBigBangClient) DeleteTable(tableName string) {
   command := fmt.Sprintf("DROP TABLE IF EXISTS %s cascade;", tableName)
-  tx := postgresFeedClient.C.MustBegin()
+  tx := postgresBigBangClient.C.MustBegin()
   res, err := tx.Exec(command)
   if err != nil {
     log.Panicf("Failed to execute deleting Table %s with error: %+v\n", tableName, err)
@@ -79,52 +79,52 @@ func (postgresFeedClient *PostgresFeedClient) DeleteTable(tableName string) {
   log.Printf("Table %s has been deleted with %v rows affected\n", tableName,  affected)
 }
 
-func (postgresFeedClient *PostgresFeedClient) CreateTimestampTrigger() {
-  _, err := postgresFeedClient.C.Exec(TRIGGER_SET_TIMESTAMP_COMMAND)
+func (postgresBigBangClient *PostgresBigBangClient) CreateTimestampTrigger() {
+  _, err := postgresBigBangClient.C.Exec(TRIGGER_SET_TIMESTAMP_COMMAND)
   if err != nil {
     log.Panicf("Failed to create timestamp trigger with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) RegisterTimestampTrigger(tableName string) {
+func (postgresBigBangClient *PostgresBigBangClient) RegisterTimestampTrigger(tableName string) {
   command := fmt.Sprintf(REGISTER_TIMESTAMP_TRIGGER_COMMAND, tableName)
-  _, err := postgresFeedClient.C.Exec(command)
+  _, err := postgresBigBangClient.C.Exec(command)
   if err != nil {
     log.Panicf("Failed to register timestamp trigger for Table %s with error: %+v\n", tableName, err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) LoadUuidExtension() {
-  _, err := postgresFeedClient.C.Exec(LOAD_UUID_EXTENSION)
+func (postgresBigBangClient *PostgresBigBangClient) LoadUuidExtension() {
+  _, err := postgresBigBangClient.C.Exec(LOAD_UUID_EXTENSION)
   if err != nil {
     log.Panicf("Failed to load uuid extension with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) LoadVoteTypeEnum() {
-  _, err := postgresFeedClient.C.Exec(LOAD_VOTE_TYPE_ENUM)
+func (postgresBigBangClient *PostgresBigBangClient) LoadVoteTypeEnum() {
+  _, err := postgresBigBangClient.C.Exec(LOAD_VOTE_TYPE_ENUM)
   if err != nil {
     log.Panicf("Failed to load vote type enum with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) LoadActorTypeEnum() {
-  _, err := postgresFeedClient.C.Exec(LOAD_ACTOR_TYPE_ENUM)
+func (postgresBigBangClient *PostgresBigBangClient) LoadActorTypeEnum() {
+  _, err := postgresBigBangClient.C.Exec(LOAD_ACTOR_TYPE_ENUM)
   if err != nil {
     log.Panicf("Failed to load actor type enum with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) LoadActorProfileStatusEnum() {
-  _, err := postgresFeedClient.C.Exec(LOAD_ACTOR_PROFILE_STATUS_ENUM)
+func (postgresBigBangClient *PostgresBigBangClient) LoadActorProfileStatusEnum() {
+  _, err := postgresBigBangClient.C.Exec(LOAD_ACTOR_PROFILE_STATUS_ENUM)
   if err != nil {
     log.Panicf("Failed to load actor profile status enum with error: %+v\n", err)
   }
 }
 
-func (postgresFeedClient *PostgresFeedClient) SetIdleInTransactionSessionTimeout(ms int64) {
+func (postgresBigBangClient *PostgresBigBangClient) SetIdleInTransactionSessionTimeout(ms int64) {
   command := fmt.Sprintf(SET_IDLE_IN_TX_SESSION_TIMEOUT, ms)
-  _, err := postgresFeedClient.C.Exec(command)
+  _, err := postgresBigBangClient.C.Exec(command)
   if err != nil {
     log.Panicf("Failed to Set Idle In Transaction Session Timeout: %+v\n", err)
   }

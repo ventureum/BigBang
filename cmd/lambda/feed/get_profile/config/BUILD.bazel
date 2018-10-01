@@ -8,9 +8,9 @@ go_library(
     deps = [
         "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_rewards_info_record_config:go_default_library",
-        "//internal/platform/postgres_config/feed/client_config:go_default_library",
     ],
 )
 

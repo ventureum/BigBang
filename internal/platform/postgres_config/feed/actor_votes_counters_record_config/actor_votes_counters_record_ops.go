@@ -4,14 +4,14 @@ import (
   "log"
   "database/sql"
   "time"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/pkg/error_config"
 )
 
 
 type ActorVotesCountersRecordExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (actorVotesCountersRecordExecutor *ActorVotesCountersRecordExecutor) CreateActorVotesCountersRecordTable( ) {

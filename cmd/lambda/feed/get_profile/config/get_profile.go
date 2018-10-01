@@ -2,7 +2,7 @@ package config
 
 import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
@@ -44,20 +44,20 @@ func ProfileRecordResultToResponseContent(actorProfileRecord *actor_profile_reco
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Profile = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
 
   actor := request.Actor
 
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresBigBangClient}
 
   actorProfileRecordExecutor.VerifyActorExisting(actor)
   actorRewardsInfoRecordExecutor.VerifyActorExisting(actor)

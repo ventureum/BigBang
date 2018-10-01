@@ -1,7 +1,7 @@
 package config
 
 import (
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_rewards_record_config"
 )
@@ -12,19 +12,19 @@ type Response struct {
 }
 
 func ProcessRequest(response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
-  postgresFeedClient.Begin()
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
+  postgresBigBangClient.Begin()
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
   postRewardsRecordExecutor.UpdatePostRewardsRecordsByAggregationsTx()
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 
