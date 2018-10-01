@@ -8,7 +8,7 @@ go_library(
     deps = [
         "//internal/platform/eth_config:go_default_library",
         "//internal/platform/getstream_config:go_default_library",
-        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/feed/client_config:go_default_library",
     ],
 )
 

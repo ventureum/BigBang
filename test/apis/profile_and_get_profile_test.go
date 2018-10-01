@@ -5,13 +5,13 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/pkg/api"
   "github.com/stretchr/testify/assert"
-  "BigBang/cmd/lambda/profile/config"
+  profileConfig "BigBang/cmd/feed/profile/config"
   "github.com/mitchellh/mapstructure"
-  config2 "BigBang/cmd/lambda/get_profile/config"
+  getProfileConfig "BigBang/cmd/feed/get_profile/config"
 )
 
 func TestProfileAndGetProfile(t *testing.T) {
-  requestProfile := config.Request{
+  requestProfile := profileConfig.Request{
     Actor: Actor001,
     UserType: string(feed_attributes.USER_ACTOR_TYPE),
     Username: UserName001,
@@ -20,23 +20,23 @@ func TestProfileAndGetProfile(t *testing.T) {
     PhoneNumber: PhoneNumber001,
   }
 
-  expectedResponseProfile := config.Response{
+  expectedResponseProfile := profileConfig.Response{
     Ok: true,
   }
 
   responseMessageProfile := api.SendPost(requestProfile, api.ProfileAlphaEndingPoint)
 
-  var responseProfile config.Response
+  var responseProfile profileConfig.Response
   mapstructure.Decode(*responseMessageProfile, &responseProfile)
   assert.Equal(t, expectedResponseProfile, responseProfile)
 
-  requestGetProfile := config2.Request{
+  requestGetProfile := getProfileConfig.Request{
     Actor: Actor001,
   }
 
-  expectedResponseGetProfile :=  config2.Response{
+  expectedResponseGetProfile :=  getProfileConfig.Response{
     Ok: true,
-    Profile: &config2.ResponseContent{
+    Profile: &getProfileConfig.ResponseContent{
       Actor:       Actor001,
       ActorType:   string(feed_attributes.USER_ACTOR_TYPE),
       Username:    UserName001,
@@ -53,7 +53,7 @@ func TestProfileAndGetProfile(t *testing.T) {
   }
 
   responseMessageGetProfile := api.SendPost(requestGetProfile, api.GetProfileAlphaEndingPoint)
-  var responseGetProfile config2.Response
+  var responseGetProfile getProfileConfig.Response
   mapstructure.Decode(*responseMessageGetProfile, &responseGetProfile)
   assert.Equal(t, responseGetProfile, expectedResponseGetProfile)
 }

@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "post_ops.go",
+        "post_record.go",
+        "post_schema.go",
+        "post_sql.go",
+    ],
+    importpath = "BigBang/internal/platform/postgres_config/feed/post_config",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/app/feed_attributes:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/feed/client_config:go_default_library",
+        "//vendor/github.com/jmoiron/sqlx/types:go_default_library",
+    ],
+)

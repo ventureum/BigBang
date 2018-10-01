@@ -3,7 +3,7 @@ package main
 import (
   "os"
   "log"
-  "BigBang/internal/platform/postgres_config/client_config"
+  "BigBang/internal/platform/postgres_config/feed/client_config"
   "BigBang/internal/platform/eth_config"
   "BigBang/internal/platform/getstream_config"
 )
