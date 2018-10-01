@@ -7,9 +7,9 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_rewards_info_record_config:go_default_library",
-        "//internal/platform/postgres_config/feed/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/fuels_refuel_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/post_config:go_default_library",
         "//internal/platform/postgres_config/feed/post_mps_record_config:go_default_library",

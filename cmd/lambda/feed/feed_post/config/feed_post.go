@@ -5,7 +5,7 @@ import (
   "gopkg.in/GetStream/stream-go2.v1"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/post_config"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/platform/eth_config"
   "BigBang/internal/pkg/error_config"
@@ -40,13 +40,13 @@ func (request *Request) ToPostRecord() (*post_config.PostRecord) {
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   var err error
@@ -67,7 +67,7 @@ func ProcessRequest(request Request, response *Response) {
   eth_config.ProcessPostRecord(
     postRecord,
     getStreamClient,
-    postgresFeedClient,
+    postgresBigBangClient,
     feed_attributes.OFF_CHAIN)
   response.Ok = true
 }

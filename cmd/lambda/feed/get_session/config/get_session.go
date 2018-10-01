@@ -2,7 +2,7 @@ package config
 
 import (
   "BigBang/internal/platform/postgres_config/feed/session_record_config"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
 )
@@ -18,19 +18,19 @@ type Response struct {
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Session = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   postHash := request.PostHash
 
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
+  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}
 
   postExecutor.VerifyPostRecordExisting(postHash)
 

@@ -3,7 +3,7 @@ package config
 import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/app/feed_attributes"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
@@ -37,25 +37,25 @@ func (request *Request) ToActorProfileRecord() (*actor_profile_record_config.Act
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
-  postgresFeedClient.Begin()
+  postgresBigBangClient.Begin()
 
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
   inserted := actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())
 
   if inserted {
-    refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresFeedClient}
+    refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresBigBangClient}
     actorReputationsRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-      *postgresFeedClient}
+      *postgresBigBangClient}
     actorReputationsRecord := actor_rewards_info_record_config.ActorRewardsInfoRecord{
       Actor:           request.Actor,
       Reputation:      feed_attributes.Reputation(feed_attributes.MuMinFuel.Value()),
@@ -73,7 +73,7 @@ func ProcessRequest(request Request, response *Response) {
     log.Printf("Created Actor Fuel Account for actor %s", request.Actor)
   }
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
 
   if inserted {
     log.Printf("Created Profile for actor %s", request.Actor)

@@ -1,7 +1,7 @@
 package config
 
 import (
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/app/feed_attributes"
@@ -50,22 +50,22 @@ func PostRecordResultToResponseContent(result *post_config.PostRecordResult) *Re
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Posts = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   postHashes := request.PostHashes
 
 
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
-  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
+  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
   for _, postHash := range postHashes {
     postExecutor.VerifyPostRecordExisting(postHash)

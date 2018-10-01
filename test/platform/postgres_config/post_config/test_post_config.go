@@ -2,7 +2,7 @@ package main
 
 import (
   "log"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
   "BigBang/internal/app/feed_attributes"
 )

@@ -6,7 +6,7 @@ go_library(
         "client.go",
         "sql.go",
     ],
-    importpath = "BigBang/internal/platform/postgres_config/feed/client_config",
+    importpath = "BigBang/internal/platform/postgres_config/client_config",
     visibility = ["//:__subpackages__"],
     deps = [
         "//vendor/github.com/jmoiron/sqlx:go_default_library",

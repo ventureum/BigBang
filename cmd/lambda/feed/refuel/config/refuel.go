@@ -3,7 +3,7 @@ package config
 import (
   "log"
   "BigBang/internal/app/feed_attributes"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
@@ -25,14 +25,14 @@ type Response struct {
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.RefuelAmount = 0
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   actor := request.Actor
@@ -41,13 +41,13 @@ func ProcessRequest(request Request, response *Response) {
   refuelInterval, _ := strconv.ParseInt(os.Getenv("REFUEL_INTERVAL"), 10, 64)
   refuelReplenishmentHourly, _ := strconv.ParseInt(os.Getenv("FUEL_REPLENISHMENT_HOURLY"), 10, 64)
 
-  postgresFeedClient.Begin()
+  postgresBigBangClient.Begin()
 
   refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{
-    *postgresFeedClient}
+    *postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-    *postgresFeedClient}
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+    *postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
   actorRewardsInfoRecordExecutor.VerifyActorExistingTx(actor)
@@ -81,7 +81,7 @@ func ProcessRequest(request Request, response *Response) {
     Reputation: 0,
     MilestonePoints: 0,
   })
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
 
   log.Printf("Refuel %d fuel to actor %s", newFuelIncremental, actor)
   response.RefuelAmount = int64(newFuelIncremental)

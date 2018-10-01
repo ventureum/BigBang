@@ -2,13 +2,13 @@ package actor_profile_record_config
 
 import (
   "log"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "database/sql"
 )
 
 type ActorProfileRecordExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CreateActorProfileRecordTable() {

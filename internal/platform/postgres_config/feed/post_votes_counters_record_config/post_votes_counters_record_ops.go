@@ -2,13 +2,13 @@ package post_votes_counters_record_config
 
 import (
   "log"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "database/sql"
 )
 
 
 type PostVotesCountersRecordExecutor struct {
-  client_config.PostgresFeedClient
+  client_config.PostgresBigBangClient
 }
 
 func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) CreatePostVotesCountersRecordTable( ) {

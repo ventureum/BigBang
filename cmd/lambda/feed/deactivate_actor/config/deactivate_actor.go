@@ -2,7 +2,7 @@ package config
 
 import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
 )
@@ -18,26 +18,26 @@ type Response struct {
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
 
   actor := request.Actor
 
-  postgresFeedClient.Begin()
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+  postgresBigBangClient.Begin()
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
 
   actorProfileRecordExecutor.DeactivateActorProfileRecordsTx(actor)
   log.Printf("Deactivated Profile Account for actor %s\n", actor)
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

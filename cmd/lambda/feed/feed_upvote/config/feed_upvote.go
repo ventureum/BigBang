@@ -1,7 +1,7 @@
 package config
 
 import (
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/feed/post_votes_record_config"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/eth_config"
@@ -21,16 +21,16 @@ type Response struct {
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.VoteInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
       if feed_attributes.CreateVoteTypeFromValue(request.Value) != feed_attributes.LOOKUP_VOTE_TYPE {
-        postgresFeedClient.RollBack()
+        postgresBigBangClient.RollBack()
       }
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   postVotesRecord := post_votes_record_config.PostVotesRecord {
@@ -40,9 +40,9 @@ func ProcessRequest(request Request, response *Response) {
   }
 
   if postVotesRecord.VoteType == feed_attributes.LOOKUP_VOTE_TYPE {
-    response.VoteInfo =  eth_config.QueryPostVotesInfo(&postVotesRecord, postgresFeedClient)
+    response.VoteInfo =  eth_config.QueryPostVotesInfo(&postVotesRecord, postgresBigBangClient)
   } else {
-    response.VoteInfo = eth_config.ProcessPostVotesRecord(&postVotesRecord, postgresFeedClient)
+    response.VoteInfo = eth_config.ProcessPostVotesRecord(&postVotesRecord, postgresBigBangClient)
   }
 
   response.Ok = true

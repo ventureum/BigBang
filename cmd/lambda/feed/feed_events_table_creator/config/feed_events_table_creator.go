@@ -1,7 +1,7 @@
 package config
 
 import (
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
@@ -22,33 +22,33 @@ type Response struct {
 }
 
 func ProcessRequest(response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresFeedClient.RollBack()
+      postgresBigBangClient.RollBack()
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
-  postgresFeedClient.Begin()
-  postgresFeedClient.LoadUuidExtension()
-  postgresFeedClient.LoadVoteTypeEnum()
-  postgresFeedClient.LoadActorTypeEnum()
-  postgresFeedClient.LoadActorProfileStatusEnum()
-  postgresFeedClient.SetIdleInTransactionSessionTimeout(60000)
+  postgresBigBangClient.Begin()
+  postgresBigBangClient.LoadUuidExtension()
+  postgresBigBangClient.LoadVoteTypeEnum()
+  postgresBigBangClient.LoadActorTypeEnum()
+  postgresBigBangClient.LoadActorProfileStatusEnum()
+  postgresBigBangClient.SetIdleInTransactionSessionTimeout(60000)
 
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
-  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresFeedClient}
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
-  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresFeedClient}
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
-  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
-  purchaseMPsRecordExecutor := purchase_mps_record_config.PurchaseMPsRecordExecutor{*postgresFeedClient}
-  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresFeedClient}
-  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresFeedClient}
-  refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresFeedClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresBigBangClient}
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
+  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresBigBangClient}
+  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresBigBangClient}
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
+  postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresBigBangClient}
+  purchaseMPsRecordExecutor := purchase_mps_record_config.PurchaseMPsRecordExecutor{*postgresBigBangClient}
+  postVotesRecordExecutor := post_votes_record_config.PostVotesRecordExecutor{*postgresBigBangClient}
+  sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}
+  refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresBigBangClient}
 
   sessionRecordExecutor.DeleteSessionRecordTable()
   postVotesRecordExecutor.DeletePostVotesRecordTable()
@@ -74,7 +74,7 @@ func ProcessRequest(response *Response) {
   refuelRecordExecutor.CreateRefuelRecordTable()
   sessionRecordExecutor.CreateSessionRecordTable()
 
-  postgresFeedClient.Commit()
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

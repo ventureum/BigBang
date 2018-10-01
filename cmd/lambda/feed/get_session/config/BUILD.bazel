@@ -7,7 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//internal/pkg/error_config:go_default_library",
-        "//internal/platform/postgres_config/feed/client_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/post_config:go_default_library",
         "//internal/platform/postgres_config/feed/session_record_config:go_default_library",
     ],

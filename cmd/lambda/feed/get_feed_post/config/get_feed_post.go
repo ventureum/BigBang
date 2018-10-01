@@ -3,7 +3,7 @@ package config
 import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/post_config"
-  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/postgres_config/feed/post_replies_record_config"
   "BigBang/internal/platform/postgres_config/feed/post_votes_counters_record_config"
   "BigBang/internal/pkg/error_config"
@@ -56,7 +56,7 @@ func PostRecordResultToResponseContent(result *post_config.PostRecordResult) *Re
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresFeedClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Post = nil
@@ -64,20 +64,20 @@ func ProcessRequest(request Request, response *Response) {
       response.RequestorVoteCountInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
-    postgresFeedClient.Close()
+    postgresBigBangClient.Close()
   }()
 
   postHash := request.PostHash
   requestor := request.Requestor
 
-  postExecutor := post_config.PostExecutor{*postgresFeedClient}
-  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresFeedClient}
-  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresFeedClient}
-  postVotesCounterRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresFeedClient}
-  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresFeedClient}
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
+  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresBigBangClient}
+  postVotesCounterRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{*postgresBigBangClient}
+  actorVotesCountersRecordExecutor := actor_votes_counters_record_config.ActorVotesCountersRecordExecutor{*postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
-    *postgresFeedClient}
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresFeedClient}
+    *postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
   postExecutor.VerifyPostRecordExisting(postHash)
   if requestor != "" {
