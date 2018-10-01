@@ -3,10 +3,10 @@ package eth_config
 import (
   "github.com/ethereum/go-ethereum/common"
   "math/big"
-  "BigBang/internal/platform/postgres_config/post_config"
+  "BigBang/internal/platform/postgres_config/feed/post_config"
   "BigBang/internal/app/feed_attributes"
-  "BigBang/internal/platform/postgres_config/post_votes_record_config"
-  "BigBang/internal/platform/postgres_config/purchase_mps_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_votes_record_config"
+  "BigBang/internal/platform/postgres_config/feed/purchase_mps_record_config"
 )
 
 type Event interface{}

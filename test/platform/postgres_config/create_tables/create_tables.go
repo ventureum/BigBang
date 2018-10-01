@@ -2,19 +2,19 @@ package main
 
 import (
   "BigBang/internal/pkg/error_config"
-  "BigBang/internal/platform/postgres_config/client_config"
-  "BigBang/internal/platform/postgres_config/actor_profile_record_config"
-  "BigBang/internal/platform/postgres_config/post_config"
-  "BigBang/internal/platform/postgres_config/post_replies_record_config"
-  "BigBang/internal/platform/postgres_config/post_reputations_record_config"
-  "BigBang/internal/platform/postgres_config/post_votes_counters_record_config"
-  "BigBang/internal/platform/postgres_config/post_votes_record_config"
-  "BigBang/internal/platform/postgres_config/session_record_config"
+  "BigBang/internal/platform/postgres_config/feed/client_config"
+  "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_config"
+  "BigBang/internal/platform/postgres_config/feed/post_replies_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_reputations_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_votes_counters_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_votes_record_config"
+  "BigBang/internal/platform/postgres_config/feed/session_record_config"
   "log"
-  "BigBang/internal/platform/postgres_config/fuels_refuel_record_config"
-  "BigBang/internal/platform/postgres_config/actor_rewards_info_record_config"
-  "BigBang/internal/platform/postgres_config/post_mps_record_config"
-  "BigBang/internal/platform/postgres_config/purchase_mps_record_config"
+  "BigBang/internal/platform/postgres_config/feed/fuels_refuel_record_config"
+  "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_mps_record_config"
+  "BigBang/internal/platform/postgres_config/feed/purchase_mps_record_config"
 )
 
 
