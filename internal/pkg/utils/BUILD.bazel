@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "aws.go",
         "crypto.go",
+        "mapstruct.go",
     ],
     importpath = "BigBang/internal/pkg/utils",
     visibility = ["//:__subpackages__"],

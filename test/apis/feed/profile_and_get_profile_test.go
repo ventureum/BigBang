@@ -1,13 +1,13 @@
-package apis
+package TCR
 
 import (
   "testing"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/pkg/api"
   "github.com/stretchr/testify/assert"
-  profileConfig "BigBang/cmd/feed/profile/config"
+  profileConfig "BigBang/cmd/lambda/feed/profile/config"
   "github.com/mitchellh/mapstructure"
-  getProfileConfig "BigBang/cmd/feed/get_profile/config"
+  getProfileConfig "BigBang/cmd/lambda/feed/get_profile/config"
 )
 
 func TestProfileAndGetProfile(t *testing.T) {

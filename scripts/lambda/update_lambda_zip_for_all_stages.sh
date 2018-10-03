@@ -7,4 +7,4 @@ echo "updating staging"
 .//update_lambda_zip.sh $1 $2 staging
 
 echo "updating production"
-.//update_lambda_zip.sh $1 $2 staging
+.//update_lambda_zip.sh $1 $2 producction

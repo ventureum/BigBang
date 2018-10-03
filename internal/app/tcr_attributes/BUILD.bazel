@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["milestone_info.go"],
+    importpath = "BigBang/internal/app/tcr_attributes",
+    visibility = ["//:__subpackages__"],
+    deps = ["//vendor/github.com/jmoiron/sqlx/types:go_default_library"],
+)
