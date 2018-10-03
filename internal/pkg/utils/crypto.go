@@ -7,6 +7,8 @@ import (
   "encoding/base64"
   "github.com/ethereum/go-ethereum/common"
   "github.com/ethereum/go-ethereum/crypto/sha3"
+  "strconv"
+  "log"
 )
 
 
@@ -33,4 +35,22 @@ func Keccak256Hash(data ...[]byte) (h common.Hash) {
   }
   d.Sum(h[:0])
   return h
+}
+
+func Base64EncodeInt64(num int64) string {
+  encoded := base64.StdEncoding.EncodeToString([]byte(strconv.FormatInt(num, 10)))
+  return encoded
+}
+
+func Base64DecodeToInt64(encoded string) int64 {
+  decoded, err := base64.StdEncoding.DecodeString(encoded)
+  if err != nil {
+    log.Panicf("decode error: %+v\n", err)
+  }
+
+  i, err := strconv.ParseInt(string(decoded), 10, 64)
+  if err != nil {
+    log.Panicf("parsing error: %+v\n", err)
+  }
+  return i
 }
