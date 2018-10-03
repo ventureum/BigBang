@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "proxy_ops.go",
+        "proxy_record.go",
+        "proxy_schema.go",
+        "proxy_sql.go",
+    ],
+    importpath = "BigBang/internal/platform/postgres_config/TCR/proxy_config",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["proxy_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//vendor/github.com/stretchr/testify/suite:go_default_library",
+    ],
+)

@@ -20,6 +20,7 @@ const General ErrorCode = "General"
 
 // For TCR
 const NoProjectIdExisting ErrorCode = "NoProjectIdExisting"
+const NoProxyUUIDExisting ErrorCode = "NoProxyUUIDExisting"
 
 func CreateNoExistingErrorCode(tag string) ErrorCode {
   errCodeStr := fmt.Sprintf("No%sExisting", strings.Title(tag))

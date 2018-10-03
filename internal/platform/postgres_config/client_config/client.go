@@ -79,6 +79,18 @@ func (postgresBigBangClient *PostgresBigBangClient) DeleteTable(tableName string
   log.Printf("Table %s has been deleted with %v rows affected\n", tableName,  affected)
 }
 
+func (postgresBigBangClient *PostgresBigBangClient) ClearTable(tableName string) {
+  command := fmt.Sprintf("DELETE FROM %s;", tableName)
+  tx := postgresBigBangClient.C.MustBegin()
+  res, err := tx.Exec(command)
+  if err != nil {
+    log.Panicf("Failed to execute clear Table %s with error: %+v\n", tableName, err)
+  }
+  tx.Commit()
+  affected, _ := res.RowsAffected()
+  log.Printf("Table %s has been cleared with %v rows affected\n", tableName,  affected)
+}
+
 func (postgresBigBangClient *PostgresBigBangClient) CreateTimestampTrigger() {
   _, err := postgresBigBangClient.C.Exec(TRIGGER_SET_TIMESTAMP_COMMAND)
   if err != nil {
