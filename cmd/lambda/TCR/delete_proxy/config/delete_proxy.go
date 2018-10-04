@@ -3,16 +3,21 @@ package config
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
-  "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
+  "log"
 )
+
+
+type Request struct {
+  Proxy   string  `json:"proxy,required"`
+}
 
 type Response struct {
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
-func ProcessRequest(response *Response) {
+func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
@@ -21,25 +26,29 @@ func ProcessRequest(response *Response) {
     }
     postgresBigBangClient.Close()
   }()
-
   postgresBigBangClient.Begin()
-  postgresBigBangClient.SetIdleInTransactionSessionTimeout(60000)
 
-  projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
-
-  projectExecutor.DeleteProjectTable()
-  proxyExecutor.DeleteProxyTable()
-
-  projectExecutor.CreateProjectTable()
-  proxyExecutor.CreateProxyTable()
+  existing := proxyExecutor.VerifyProxyRecordExisting(request.Proxy)
+  if !existing {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoProxyUUIDExisting,
+      ErrorData: map[string]interface{} {
+        "uuid": request.Proxy,
+      },
+      ErrorLocation: error_config.ProxyRecordLocation,
+    }
+    log.Printf("No proxy record for uuid %s", request.Proxy)
+    log.Panicln(errorInfo.Marshal())
+  }
+  proxyExecutor.DeleteProxyRecord(request.Proxy)
 
   postgresBigBangClient.Commit()
   response.Ok = true
 }
 
-func Handler() (response Response, err error) {
+func Handler(request Request) (response Response, err error) {
   response.Ok = false
-  ProcessRequest(&response)
+  ProcessRequest(request, &response)
   return response, nil
 }

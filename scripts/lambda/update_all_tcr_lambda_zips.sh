@@ -11,3 +11,12 @@ echo "updating get_project zip"
 
 echo "updating get_project_list zip"
 .//update_lambda_zip.sh TCR get_project_list $1 $2
+
+echo "updating add_proxy zip"
+.//update_lambda_zip.sh TCR add_proxy $1 $2
+
+echo "updating delete_proxy zip"
+.//update_lambda_zip.sh TCR delete_proxy $1 $2
+
+echo "updating get_proxy_list zip"
+.//update_lambda_zip.sh TCR get_proxy_list $1 $2
