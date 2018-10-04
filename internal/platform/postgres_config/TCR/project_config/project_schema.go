@@ -6,7 +6,7 @@ CREATE TABLE projects (
     id BIGSERIAL,
     project_id TEXT NOT NULL,
     content TEXT NOT NULL,
-    avg_rating INT NOT NULL DEFAULT 0,
+    avg_rating BIGINT NOT NULL DEFAULT 0,
     milestone_info JSONB NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
