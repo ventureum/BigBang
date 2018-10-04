@@ -57,6 +57,18 @@ func (projectExecutor *ProjectExecutor) GetProjectRecord(projectId string) *Proj
     log.Printf("Failed to get project record for projectId %s with error: %+v\n", projectId, err)
     log.Panicln(errInfo.Marshal())
   }
+
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoProjectIdExisting,
+      ErrorData: map[string]interface{} {
+        "projectId": projectId,
+      },
+      ErrorLocation: error_config.ProjectRecordLocation,
+    }
+    log.Printf("No project record for projectId %s", projectId)
+    log.Panicln(errorInfo.Marshal())
+  }
   return &projectRecord
 }
 
@@ -135,6 +147,17 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordTx(projectId string) *Pr
     errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
     log.Printf("Failed to get project record for projectId %s with error: %+v\n", projectId, err)
     log.Panicln(errInfo.Marshal())
+  }
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoProjectIdExisting,
+      ErrorData: map[string]interface{} {
+        "projectId": projectId,
+      },
+      ErrorLocation: error_config.ProjectRecordLocation,
+    }
+    log.Printf("No project record for projectId %s", projectId)
+    log.Panicln(errorInfo.Marshal())
   }
   return &projectRecord
 }

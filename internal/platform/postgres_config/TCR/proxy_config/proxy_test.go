@@ -11,6 +11,9 @@ const UUID1 = "uuid1"
 const UUID2 = "uuid2"
 const UUID3 = "uuid3"
 
+var ProxyRecord1 = ProxyRecord{UUID: UUID1}
+var ProxyRecord2 = ProxyRecord{UUID: UUID2}
+
 type ProxyTestSuite struct {
   suite.Suite
   ProxyExecutor ProxyExecutor
@@ -42,17 +45,30 @@ func (suite *ProxyTestSuite) TestUpsertProxyRecord() {
     errPanic := recover();
     suite.Nil(errPanic)
   }()
-  proxyRecord1 := ProxyRecord{UUID: UUID1}
-  proxyRecord2 := ProxyRecord{UUID: UUID2}
-  suite.ProxyExecutor.UpsertProxyRecord(&proxyRecord1)
-  suite.ProxyExecutor.UpsertProxyRecord(&proxyRecord2)
+
+  suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord1)
+  suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord2)
+}
+
+func (suite *ProxyTestSuite) TestEmptyQueryForGetProxyRecord() {
+  defer func() {
+    if errPanic := recover(); errPanic != nil { //catch
+      message := error_config.CreatedErrorInfoFromString(errPanic)
+      suite.Equal(error_config.NoProxyUUIDExisting, message.ErrorCode)
+    }
+  }()
+  suite.ProxyExecutor.GetProxyRecord(UUID1)
+}
+
+func (suite *ProxyTestSuite) TestNonEmptyQueryForGetProxyRecord() {
+  suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord1)
+  proxyRecord := suite.ProxyExecutor.GetProxyRecord(UUID1)
+  suite.Equal(ProxyRecord1, *proxyRecord)
 }
 
 func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyUUIDs() {
-  proxyRecord1 := ProxyRecord{UUID: UUID1}
-  proxyRecord2 := ProxyRecord{UUID: UUID2}
-  suite.ProxyExecutor.UpsertProxyRecord(&proxyRecord1)
-  suite.ProxyExecutor.UpsertProxyRecord(&proxyRecord2)
+  suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord1)
+  suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord2)
   expectedListProxyUUDs := []string {UUID1, UUID2,}
   listProxyUUDs := suite.ProxyExecutor.GetListOfProxyUUIDs()
   suite.Equal(expectedListProxyUUDs, *listProxyUUDs)
@@ -75,8 +91,7 @@ func (suite *ProxyTestSuite) TestDeleteProxyRecord() {
       suite.Equal(error_config.NoProxyUUIDExisting, message.ErrorCode)
     }
   }()
-  proxyRecord1 := ProxyRecord{UUID: UUID1}
-  suite.ProxyExecutor.UpsertProxyRecord(&proxyRecord1)
+  suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord1)
   suite.ProxyExecutor.DeleteProxyRecord(UUID1)
   suite.ProxyExecutor.VerifyProxyRecordExisting(UUID1)
 }
