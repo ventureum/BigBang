@@ -56,11 +56,24 @@ func (proxyExecutor *ProxyExecutor) DeleteProxyRecord(uuid string) {
 func (proxyExecutor *ProxyExecutor) GetProxyRecord(uuid string) *ProxyRecord {
   var proxyRecord ProxyRecord
   err := proxyExecutor.C.Get(&proxyRecord, QUERY_PROXY_COMMAND, uuid)
-  if err != nil {
+  if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "uuid", uuid, error_config.ProxyRecordLocation)
     log.Printf("Failed to get proxy record for uuid %s with error: %+v\n", uuid, err)
     log.Panicln(errInfo.Marshal())
   }
+
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoProxyUUIDExisting,
+      ErrorData: map[string]interface{} {
+        "uuid": uuid,
+      },
+      ErrorLocation: error_config.ProxyRecordLocation,
+    }
+    log.Printf("No proxy record for uuid %s", uuid)
+    log.Panicln(errorInfo.Marshal())
+  }
+
   return &proxyRecord
 }
 
@@ -128,10 +141,22 @@ func (proxyExecutor *ProxyExecutor) DeleteProxyRecordTx(uuid string) {
 func (proxyExecutor *ProxyExecutor) GetProxyRecordTx(uuid string) *ProxyRecord {
   var proxyRecord ProxyRecord
   err := proxyExecutor.Tx.Get(&proxyRecord, QUERY_PROXY_COMMAND, uuid)
-  if err != nil {
+  if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "uuid", uuid, error_config.ProxyRecordLocation)
     log.Printf("Failed to get proxy record for uuid %s with error: %+v\n", uuid, err)
     log.Panicln(errInfo.Marshal())
+  }
+
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoProxyUUIDExisting,
+      ErrorData: map[string]interface{} {
+        "uuid": uuid,
+      },
+      ErrorLocation: error_config.ProxyRecordLocation,
+    }
+    log.Printf("No proxy record for uuid %s", uuid)
+    log.Panicln(errorInfo.Marshal())
   }
   return &proxyRecord
 }

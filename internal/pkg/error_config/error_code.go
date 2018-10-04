@@ -20,6 +20,7 @@ const General ErrorCode = "General"
 
 // For TCR
 const NoProjectIdExisting ErrorCode = "NoProjectIdExisting"
+const NoObjectiveIdExisting ErrorCode = "NoObjectiveIdExisting"
 const NoProxyUUIDExisting ErrorCode = "NoProxyUUIDExisting"
 
 func CreateNoExistingErrorCode(tag string) ErrorCode {
