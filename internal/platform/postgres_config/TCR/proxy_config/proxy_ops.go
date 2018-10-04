@@ -77,7 +77,7 @@ func (proxyExecutor *ProxyExecutor) GetProxyRecord(uuid string) *ProxyRecord {
   return &proxyRecord
 }
 
-func (proxyExecutor *ProxyExecutor) VerifyProxyRecordExisting (uuid string) {
+func (proxyExecutor *ProxyExecutor) VerifyProxyRecordExisting (uuid string) bool {
   var existing bool
   err := proxyExecutor.C.Get(&existing, VERIFY_PROXY_EXISTING_COMMAND, uuid)
   if err != nil {
@@ -85,27 +85,23 @@ func (proxyExecutor *ProxyExecutor) VerifyProxyRecordExisting (uuid string) {
     log.Printf("Failed to verify proxy record existing for uuid %s with error: %+v\n", uuid, err)
     log.Panicln(errInfo.Marshal())
   }
-  if !existing {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.NoProxyUUIDExisting,
-      ErrorData: map[string]interface{} {
-        "uuid": uuid,
-      },
-      ErrorLocation: error_config.ProxyRecordLocation,
-    }
-    log.Printf("No proxy record for uuid %s", uuid)
-    log.Panicln(errorInfo.Marshal())
-  }
+
+  return existing
 }
 
-func (proxyExecutor *ProxyExecutor) GetListOfProxyUUIDs() *[]string {
-  var proxyUUIDs []string
-  err := proxyExecutor.C.Select(&proxyUUIDs, QUERY_LIST_OF_PROXY_UUIDS_COMMAND)
+func (proxyExecutor *ProxyExecutor) GetListOfProxyByCursor(cursor int64, limit int64) *[]ProxyRecord {
+  var proxyList []ProxyRecord
+  var err error
+  if cursor > 0 {
+    err = proxyExecutor.C.Select(&proxyList, PAGINATION_QUERY_LIST_OF_PROXY_COMMAND, cursor, limit)
+  } else {
+    err = proxyExecutor.C.Select(&proxyList, QUERY_LIST_OF_PROXY_COMMAND, limit)
+  }
 
   if err != nil && err != sql.ErrNoRows {
-    log.Panicf("Failed to get list of proxy UUIDs with error: %+v\n", err)
+    log.Panicf("Failed to get list of proxy for cursor %d and limit %d with error: %+v\n", cursor, limit, err)
   }
-  return &proxyUUIDs
+  return &proxyList
 }
 
 /*
@@ -161,7 +157,7 @@ func (proxyExecutor *ProxyExecutor) GetProxyRecordTx(uuid string) *ProxyRecord {
   return &proxyRecord
 }
 
-func (proxyExecutor *ProxyExecutor) VerifyProxyRecordExistingTx (uuid string) {
+func (proxyExecutor *ProxyExecutor) VerifyProxyRecordExistingTx (uuid string) bool {
   var existing bool
   err := proxyExecutor.Tx.Get(&existing, VERIFY_PROXY_EXISTING_COMMAND, uuid)
   if err != nil {
@@ -169,25 +165,20 @@ func (proxyExecutor *ProxyExecutor) VerifyProxyRecordExistingTx (uuid string) {
     log.Printf("Failed to verify proxy record existing for uuid %s with error: %+v\n", uuid, err)
     log.Panicln(errInfo.Marshal())
   }
-  if !existing {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.NoProxyUUIDExisting,
-      ErrorData: map[string]interface{} {
-        "uuid": uuid,
-      },
-      ErrorLocation: error_config.ProxyRecordLocation,
-    }
-    log.Printf("No proxy record for uuid %s", uuid)
-    log.Panicln(errorInfo.Marshal())
-  }
+  return existing
 }
 
-func (proxyExecutor *ProxyExecutor) GetListOfProxyUUIDsTx() *[]string {
-  var proxyUUIDs []string
-  err := proxyExecutor.Tx.Select(&proxyUUIDs, QUERY_LIST_OF_PROXY_UUIDS_COMMAND)
+func (proxyExecutor *ProxyExecutor) GetListOfProxyByCursorTx(cursor int64, limit int64) *[]ProxyRecord {
+  var proxyList []ProxyRecord
+  var err error
+  if cursor > 0 {
+    err = proxyExecutor.Tx.Select(&proxyList, PAGINATION_QUERY_LIST_OF_PROXY_COMMAND, cursor, limit)
+  } else {
+    err = proxyExecutor.Tx.Select(&proxyList, QUERY_LIST_OF_PROXY_COMMAND, limit)
+  }
 
   if err != nil && err != sql.ErrNoRows {
-    log.Panicf("Failed to get list of proxy UUIDs with error: %+v\n", err)
+    log.Panicf("Failed to get list of proxy for cursor %d and limit %d with error: %+v\n", cursor, limit, err)
   }
-  return &proxyUUIDs
+  return &proxyList
 }

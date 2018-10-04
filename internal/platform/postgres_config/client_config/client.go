@@ -80,7 +80,7 @@ func (postgresBigBangClient *PostgresBigBangClient) DeleteTable(tableName string
 }
 
 func (postgresBigBangClient *PostgresBigBangClient) ClearTable(tableName string) {
-  command := fmt.Sprintf("DELETE FROM %s;", tableName)
+  command := fmt.Sprintf("TRUNCATE TABLE %s RESTART identity;", tableName)
   tx := postgresBigBangClient.C.MustBegin()
   res, err := tx.Exec(command)
   if err != nil {
