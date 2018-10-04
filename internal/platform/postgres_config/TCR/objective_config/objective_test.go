@@ -73,8 +73,8 @@ func (suite *ObjectiveTestSuite) TestNonEmptyQueryForGetObjectiveRecordByIDs() {
 }
 
 func (suite *ObjectiveTestSuite) TestEmptyQueryForGetObjectiveRecordsByProjectIdAndMilestoneId() {
-  listObjectiveUUDs := suite.ObjectiveExecutor.GetObjectivesRecordsByProjectIdAndMilestoneId(ProjectId1, MilestoneId1)
-  suite.Equal(0, len(*listObjectiveUUDs))
+  objectiveRecords := suite.ObjectiveExecutor.GetObjectiveRecordsByProjectIdAndMilestoneId(ProjectId1, MilestoneId1)
+  suite.Equal(0, len(*objectiveRecords))
 }
 
 func (suite *ObjectiveTestSuite) TestUpsertObjectiveRecord() {
@@ -90,7 +90,7 @@ func (suite *ObjectiveTestSuite) TestNonEmptyQueryForGetObjectiveRecordsByProjec
   suite.ObjectiveExecutor.UpsertObjectiveRecord(&ObjectRecord1)
   suite.ObjectiveExecutor.UpsertObjectiveRecord(&ObjectRecord2)
   expectedObjectiveRecords := []ObjectiveRecord {ObjectRecord1, ObjectRecord2}
-  objectiveRecords:= suite.ObjectiveExecutor.GetObjectivesRecordsByProjectIdAndMilestoneId(ProjectId1, MilestoneId1)
+  objectiveRecords:= suite.ObjectiveExecutor.GetObjectiveRecordsByProjectIdAndMilestoneId(ProjectId1, MilestoneId1)
   suite.Equal(len(expectedObjectiveRecords), len(*objectiveRecords))
   for index, objectiveRecord := range *objectiveRecords {
     suite.Equal(expectedObjectiveRecords[index].ProjectId, objectiveRecord.ProjectId)
@@ -102,7 +102,7 @@ func (suite *ObjectiveTestSuite) TestNonEmptyQueryForGetObjectiveRecordsByProjec
   }
 }
 
-func (suite *ObjectiveTestSuite) TestVerifyNonExitingObjectiveUUID() {
+func (suite *ObjectiveTestSuite) TestVerifyNonExitingObjectiveId() {
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
        message := error_config.CreatedErrorInfoFromString(errPanic)
@@ -129,7 +129,7 @@ func (suite *ObjectiveTestSuite) TestDeleteObjectiveRecordByProjectIdAndMileston
   suite.ObjectiveExecutor.UpsertObjectiveRecord(&ObjectRecord1)
   suite.ObjectiveExecutor.UpsertObjectiveRecord(&ObjectRecord2)
   suite.ObjectiveExecutor.DeleteObjectiveRecordsByProjectIdAndMilestoneId(ProjectId1, MilestoneId1)
-  objectivesRecords := suite.ObjectiveExecutor.GetObjectivesRecordsByProjectIdAndMilestoneId(ProjectId1, MilestoneId1)
+  objectivesRecords := suite.ObjectiveExecutor.GetObjectiveRecordsByProjectIdAndMilestoneId(ProjectId1, MilestoneId1)
   suite.Equal(0, len(*objectivesRecords))
 }
 

@@ -30,6 +30,7 @@ func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecord(milestoneRecor
   res, err := milestoneExecutor.C.NamedQuery(UPSERT_MILESTONE_COMMAND, milestoneRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "milestoneId", milestoneRecord.MilestoneId, error_config.MilestoneRecordLocation)
+    errInfo.ErrorData["projectId"] = milestoneRecord.ProjectId
     log.Printf("Failed to upsert milestone record: %+v with error:\n %+v", milestoneRecord, err)
     log.Panicln(errInfo.Marshal())
   }
@@ -141,6 +142,7 @@ func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecordTx(milestoneRec
   res, err := milestoneExecutor.Tx.NamedQuery(UPSERT_MILESTONE_COMMAND, milestoneRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "milestoneId", milestoneRecord.MilestoneId, error_config.MilestoneRecordLocation)
+    errInfo.ErrorData["projectId"] = milestoneRecord.ProjectId
     log.Printf("Failed to upsert milestone record: %+v with error:\n %+v", milestoneRecord, err)
     log.Panicln(errInfo.Marshal())
   }

@@ -22,6 +22,7 @@ const General ErrorCode = "General"
 const NoProjectIdExisting ErrorCode = "NoProjectIdExisting"
 const NoObjectiveIdExisting ErrorCode = "NoObjectiveIdExisting"
 const NoMilestoneIdExisting ErrorCode = "NoMilestoneIdExisting"
+const NoRatingVoteVoterExisting ErrorCode = "NoRatingVoteVoterExisting"
 const NoProxyUUIDExisting ErrorCode = "NoProxyUUIDExisting"
 
 func CreateNoExistingErrorCode(tag string) ErrorCode {

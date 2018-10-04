@@ -30,6 +30,8 @@ func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecord(objectiveRecor
   res, err := objectiveExecutor.C.NamedQuery(UPSERT_OBJECTIVE_COMMAND, objectiveRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "objectiveId", objectiveRecord.ObjectiveId, error_config.ObjectiveRecordLocation)
+    errInfo.ErrorData["milestoneId"] = objectiveRecord.MilestoneId
+    errInfo.ErrorData["projectId"] = objectiveRecord.ProjectId
     log.Printf("Failed to upsert objective record: %+v with error:\n %+v", objectiveRecord, err)
     log.Panicln(errInfo.Marshal())
   }
@@ -102,7 +104,7 @@ func (objectiveExecutor *ObjectiveExecutor) GetObjectiveRecordByIDs(
   return &objectiveRecord
 }
 
-func (objectiveExecutor *ObjectiveExecutor) GetObjectivesRecordsByProjectIdAndMilestoneId(
+func (objectiveExecutor *ObjectiveExecutor) GetObjectiveRecordsByProjectIdAndMilestoneId(
     projectId string, milestoneId int64) *[]ObjectiveRecord {
   var objectiveRecords []ObjectiveRecord
   err := objectiveExecutor.C.Select(&objectiveRecords, QUERY_OBJECTIVES_BY_PROJECT_ID_AND_MILESTONE_ID_COMMAND,
@@ -112,7 +114,6 @@ func (objectiveExecutor *ObjectiveExecutor) GetObjectivesRecordsByProjectIdAndMi
     log.Printf("Failed to get objective records for projectId %s and milestoneId %d with error: %+v\n",
       projectId, milestoneId, err)
     errInfo.ErrorData["milestoneId"] = milestoneId
-    errInfo.ErrorData["projectId"] = projectId
 
     log.Panicln(errInfo.Marshal())
   }
@@ -154,6 +155,8 @@ func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecordTx(objectiveRec
   res, err := objectiveExecutor.Tx.NamedQuery(UPSERT_OBJECTIVE_COMMAND, objectiveRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "objectiveId", objectiveRecord.ObjectiveId, error_config.ObjectiveRecordLocation)
+    errInfo.ErrorData["milestoneId"] = objectiveRecord.MilestoneId
+    errInfo.ErrorData["projectId"] = objectiveRecord.ProjectId
     log.Printf("Failed to upsert objective record: %+v with error:\n %+v", objectiveRecord, err)
     log.Panicln(errInfo.Marshal())
   }
@@ -226,7 +229,7 @@ func (objectiveExecutor *ObjectiveExecutor) GetObjectiveRecordByIDsTx(
   return &objectiveRecord
 }
 
-func (objectiveExecutor *ObjectiveExecutor) GetObjectivesRecordsByProjectIdAndMilestoneIdTx(
+func (objectiveExecutor *ObjectiveExecutor) GetObjectiveRecordsByProjectIdAndMilestoneIdTx(
     projectId string, milestoneId int64) *[]ObjectiveRecord {
   var objectiveRecords []ObjectiveRecord
   err := objectiveExecutor.Tx.Select(&objectiveRecords, QUERY_OBJECTIVES_BY_PROJECT_ID_AND_MILESTONE_ID_COMMAND,
@@ -236,7 +239,6 @@ func (objectiveExecutor *ObjectiveExecutor) GetObjectivesRecordsByProjectIdAndMi
     log.Printf("Failed to get objective records for projectId %s and milestoneId %d with error: %+v\n",
       projectId, milestoneId, err)
     errInfo.ErrorData["milestoneId"] = milestoneId
-    errInfo.ErrorData["projectId"] = projectId
 
     log.Panicln(errInfo.Marshal())
   }
