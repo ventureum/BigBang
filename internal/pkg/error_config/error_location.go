@@ -15,5 +15,6 @@ const RefuelRecordLocation ErrorLocation = "RefuelRecordLocation"
 
 // For TCR
 const ProjectRecordLocation ErrorLocation = "ProjectRecordLocation"
+const MilestoneRecordLocation ErrorLocation = "MilestoneRecordLocation"
 const ObjectiveRecordLocation ErrorLocation = "ObjectiveRecordLocation"
 const ProxyRecordLocation ErrorLocation = "ProxyRecordLocation"
