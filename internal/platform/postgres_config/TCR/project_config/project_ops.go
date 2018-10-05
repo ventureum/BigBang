@@ -19,7 +19,11 @@ func (projectExecutor *ProjectExecutor) CreateProjectTable() {
 }
 
 func (projectExecutor *ProjectExecutor) DeleteProjectTable() {
-   projectExecutor.DeleteTable(TABLE_NAME_FOR_PROJECT)
+  projectExecutor.DeleteTable(TABLE_NAME_FOR_PROJECT)
+}
+
+func (projectExecutor *ProjectExecutor) ClearProjectTable() {
+  projectExecutor.ClearTable(TABLE_NAME_FOR_PROJECT)
 }
 
 func (projectExecutor *ProjectExecutor) UpsertProjectRecord(projectRecord *ProjectRecord) time.Time {
@@ -52,7 +56,7 @@ func (projectExecutor *ProjectExecutor) DeleteProjectRecord(projectId string) {
 func (projectExecutor *ProjectExecutor) GetProjectRecord(projectId string) *ProjectRecord {
   var projectRecord ProjectRecord
   err := projectExecutor.C.Get(&projectRecord, QUERY_PROJECT_COMMAND, projectId)
-  if err != nil {
+  if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
     log.Printf("Failed to get project record for projectId %s with error: %+v\n", projectId, err)
     log.Panicln(errInfo.Marshal())
@@ -143,7 +147,7 @@ func (projectExecutor *ProjectExecutor) DeleteProjectRecordTx(projectId string) 
 func (projectExecutor *ProjectExecutor) GetProjectRecordTx(projectId string) *ProjectRecord {
   var projectRecord ProjectRecord
   err := projectExecutor.Tx.Get(&projectRecord, QUERY_PROJECT_COMMAND, projectId)
-  if err != nil {
+  if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
     log.Printf("Failed to get project record for projectId %s with error: %+v\n", projectId, err)
     log.Panicln(errInfo.Marshal())
