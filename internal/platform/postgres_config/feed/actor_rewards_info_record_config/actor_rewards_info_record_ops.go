@@ -166,7 +166,7 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) SubActorFu
 
   if diff > 0 {
     errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.InsufficientFuelsAmount,
+      ErrorCode: error_config.InsufficientFuelAmount,
       ErrorData: map[string]interface{} {
         "diff": diff,
       },
@@ -178,6 +178,15 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) SubActorFu
   log.Printf("Successfully substracted fuel %d from actor %s", fuelToSub, actor)
 }
 
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) ResetAllActorFuel(maxFuel feed_attributes.Fuel) {
+  _, err := actorRewardsInfoRecordExecutor.C.Exec(RESET_ALL_ACTOR_FUEL_COMMAND, maxFuel)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "maxFuel", maxFuel, error_config.ActorRewardsInfoRecordLocation)
+    log.Panicf("Failed to reset all actor fuel to be %d with error: %+v\n", maxFuel, err)
+    log.Panicln(errorInfo.Marshal())
+  }
+}
 
 /*
  * Tx Versions
@@ -326,7 +335,7 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) SubActorFu
 
   if diff > 0 {
     errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.InsufficientFuelsAmount,
+      ErrorCode: error_config.InsufficientFuelAmount,
       ErrorData: map[string]interface{} {
         "diff": diff,
       },
@@ -336,4 +345,14 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) SubActorFu
   }
 
   log.Printf("Successfully substracted fuel %d from actor %s", fuelToSub, actor)
+}
+
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) ResetAllActorFuelTx(maxFuel feed_attributes.Fuel) {
+  _, err := actorRewardsInfoRecordExecutor.Tx.Exec(RESET_ALL_ACTOR_FUEL_COMMAND, maxFuel)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "maxFuel", maxFuel, error_config.ActorRewardsInfoRecordLocation)
+    log.Panicf("Failed to reset all actor fuel to be %d with error: %+v\n", maxFuel, err)
+    log.Panicln(errorInfo.Marshal())
+  }
 }

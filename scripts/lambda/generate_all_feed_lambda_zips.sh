@@ -44,3 +44,6 @@ echo "generating profile zip"
 
 echo "generating refuel zip"
 .//generate_lambda_zip.sh feed refuel $1 $2
+
+echo "generating reset_actor_refuel zip"
+.//generate_lambda_zip.sh feed reset_actor_refuel $1 $2

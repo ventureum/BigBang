@@ -56,17 +56,21 @@ func ProcessRequest(request Request, response *Response) {
     refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresBigBangClient}
     actorReputationsRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
       *postgresBigBangClient}
+
+    initFuel := feed_attributes.MaxFuelForFuelUpdateInterval
+    initReputation := feed_attributes.Reputation(initFuel)
+
     actorReputationsRecord := actor_rewards_info_record_config.ActorRewardsInfoRecord{
       Actor:           request.Actor,
-      Reputation:      feed_attributes.Reputation(feed_attributes.MuMinFuel.Value()),
-      Fuel:            feed_attributes.MuMinFuel,
+      Reputation:      initReputation,
+      Fuel:            initFuel,
       MilestonePoints: 0,
     }
     actorReputationsRecordExecutor.UpsertActorRewardsInfoRecordTx(&actorReputationsRecord)
     refuelRecordExecutor.UpsertRefuelRecordTx(&refuel_record_config.RefuelRecord{
       Actor: request.Actor,
-      Fuel: feed_attributes.MuMinFuel,
-      Reputation: feed_attributes.Reputation(feed_attributes.MuMinFuel),
+      Fuel: initFuel,
+      Reputation: initReputation,
       MilestonePoints: 0,
     })
 
