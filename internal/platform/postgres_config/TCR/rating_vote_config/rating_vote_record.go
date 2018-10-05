@@ -6,6 +6,7 @@ import (
 
 
 type RatingVoteRecord struct {
+  ID            int64          `json:"id" db:"id"`
   ProjectId     string         `json:"projectId" db:"project_id"`
   MilestoneId   int64          `json:"milestoneId" db:"milestone_id"`
   ObjectiveId   int64          `json:"objId" db:"objective_id"`

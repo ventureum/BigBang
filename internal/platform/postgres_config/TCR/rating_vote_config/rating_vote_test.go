@@ -12,6 +12,10 @@ const MilestoneId1 = 1
 const ObjectiveId1 = 1
 const Voter1 = "Voter1"
 const Voter2 = "Voter2"
+const Voter3 = "Voter3"
+const Voter4 = "Voter4"
+const Voter5 = "Voter5"
+
 
 var RatingVoteRecord1 = RatingVoteRecord {
   ProjectId: ProjectId1,
@@ -27,6 +31,35 @@ var RatingVoteRecord2 = RatingVoteRecord {
   MilestoneId: MilestoneId1,
   ObjectiveId: ObjectiveId1,
   Voter: Voter2,
+  Rating: 10,
+  Weight: 10,
+}
+
+var RatingVoteRecord3 = RatingVoteRecord {
+  ID: 1,
+  ProjectId: ProjectId1,
+  MilestoneId: MilestoneId1,
+  ObjectiveId: ObjectiveId1,
+  Voter: Voter3,
+  Rating: 10,
+  Weight: 10,
+}
+
+var RatingVoteRecord4 = RatingVoteRecord {
+  ID: 2,
+  ProjectId: ProjectId1,
+  MilestoneId: MilestoneId1,
+  ObjectiveId: ObjectiveId1,
+  Voter: Voter4,
+  Rating: 10,
+  Weight: 10,
+}
+
+var RatingVoteRecord5 = RatingVoteRecord {
+  ProjectId: ProjectId1,
+  MilestoneId: MilestoneId1,
+  ObjectiveId: ObjectiveId1,
+  Voter: Voter5,
   Rating: 10,
   Weight: 10,
 }
@@ -133,6 +166,70 @@ func (suite *RatingVoteTestSuite) TestDeleteRatingVoteRecordByIDs() {
   objectivesRecords := suite.RatingVoteExecutor.GetRatingVoteRecordsByIDs(ProjectId1, MilestoneId1, ObjectiveId1)
   suite.Equal(0, len(*objectivesRecords))
 }
+
+func (suite *RatingVoteTestSuite) TestNonEmptyQueryForGetRatingVoteRecordsByCursorFirstQuery() {
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord1)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord2)
+
+  expectedRatingVoteRecords := []RatingVoteRecord {RatingVoteRecord2, RatingVoteRecord1}
+  ratingVoteRecords := suite.RatingVoteExecutor.GetRatingVoteRecordsByCursor(
+    ProjectId1, MilestoneId1, ObjectiveId1,0, 100)
+
+  suite.Equal(len(expectedRatingVoteRecords), len(*ratingVoteRecords))
+  for index, ratingVoteRecord:= range *ratingVoteRecords {
+    suite.Equal(expectedRatingVoteRecords[index].ProjectId, ratingVoteRecord.ProjectId)
+    suite.Equal(expectedRatingVoteRecords[index].MilestoneId, ratingVoteRecord.MilestoneId)
+    suite.Equal(expectedRatingVoteRecords[index].ObjectiveId, ratingVoteRecord.ObjectiveId)
+    suite.Equal(expectedRatingVoteRecords[index].Voter, ratingVoteRecord.Voter)
+    suite.Equal(expectedRatingVoteRecords[index].Rating, ratingVoteRecord.Rating)
+    suite.Equal(expectedRatingVoteRecords[index].Weight, ratingVoteRecord.Weight)
+  }
+}
+
+func (suite *RatingVoteTestSuite) TestNonEmptyQueryForGetRatingVoteRecordsByCursorInterQuery() {
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord1)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord2)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord3)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord4)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord5)
+
+  expectedRatingVoteRecords := []RatingVoteRecord {RatingVoteRecord4, RatingVoteRecord3}
+  ratingVoteRecords := suite.RatingVoteExecutor.GetRatingVoteRecordsByCursor(
+    ProjectId1, MilestoneId1, ObjectiveId1,4, 2)
+
+  suite.Equal(len(expectedRatingVoteRecords), len(*ratingVoteRecords))
+  for index, ratingVoteRecord:= range *ratingVoteRecords {
+    suite.Equal(expectedRatingVoteRecords[index].ProjectId, ratingVoteRecord.ProjectId)
+    suite.Equal(expectedRatingVoteRecords[index].MilestoneId, ratingVoteRecord.MilestoneId)
+    suite.Equal(expectedRatingVoteRecords[index].ObjectiveId, ratingVoteRecord.ObjectiveId)
+    suite.Equal(expectedRatingVoteRecords[index].Voter, ratingVoteRecord.Voter)
+    suite.Equal(expectedRatingVoteRecords[index].Rating, ratingVoteRecord.Rating)
+    suite.Equal(expectedRatingVoteRecords[index].Weight, ratingVoteRecord.Weight)
+  }
+}
+
+func (suite *RatingVoteTestSuite) TestNonEmptyQueryForGetRatingVoteRecordsByCursorFinalQuery() {
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord1)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord2)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord3)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord4)
+  suite.RatingVoteExecutor.UpsertRatingVoteRecord(&RatingVoteRecord5)
+
+  expectedRatingVoteRecords := []RatingVoteRecord {RatingVoteRecord3, RatingVoteRecord2, RatingVoteRecord1}
+  ratingVoteRecords := suite.RatingVoteExecutor.GetRatingVoteRecordsByCursor(
+    ProjectId1, MilestoneId1, ObjectiveId1,3, 6)
+
+  suite.Equal(len(expectedRatingVoteRecords), len(*ratingVoteRecords))
+  for index, ratingVoteRecord := range *ratingVoteRecords {
+   suite.Equal(expectedRatingVoteRecords[index].ProjectId, ratingVoteRecord.ProjectId)
+   suite.Equal(expectedRatingVoteRecords[index].MilestoneId, ratingVoteRecord.MilestoneId)
+   suite.Equal(expectedRatingVoteRecords[index].ObjectiveId, ratingVoteRecord.ObjectiveId)
+   suite.Equal(expectedRatingVoteRecords[index].Voter, ratingVoteRecord.Voter)
+   suite.Equal(expectedRatingVoteRecords[index].Rating, ratingVoteRecord.Rating)
+   suite.Equal(expectedRatingVoteRecords[index].Weight, ratingVoteRecord.Weight)
+  }
+}
+
 
 func TestRatingVoteTestSuite(t *testing.T) {
   suite.Run(t, new(RatingVoteTestSuite))

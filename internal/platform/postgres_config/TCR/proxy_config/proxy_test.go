@@ -71,7 +71,7 @@ func (suite *ProxyTestSuite) TestNonEmptyQueryForGetProxyRecord() {
   suite.Equal(UUID1, proxyRecord.UUID)
 }
 
-func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyUUIDsFirstQuery() {
+func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyByCursorFirstQuery() {
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord1)
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord2)
   expectedListProxy := []ProxyRecord {ProxyRecord2, ProxyRecord1}
@@ -79,7 +79,7 @@ func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyUUIDsFirstQuery()
   suite.Equal(expectedListProxy, *listProxyUUDs)
 }
 
-func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyUUIDsInterQuery() {
+func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyByCursorInterQuery() {
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord1)
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord2)
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord3)
@@ -91,7 +91,7 @@ func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyUUIDsInterQuery()
   suite.Equal(expectedListProxy, *listProxyUUDs)
 }
 
-func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyUUIDsFinalQuery() {
+func (suite *ProxyTestSuite) TestNonEmptyQueryForGetListOfProxyByCursorFinalQuery() {
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord1)
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord2)
   suite.ProxyExecutor.UpsertProxyRecord(&ProxyRecord3)

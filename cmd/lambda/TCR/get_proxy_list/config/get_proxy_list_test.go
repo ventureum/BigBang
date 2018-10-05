@@ -61,6 +61,7 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
   }
+
   for _, test := range tests {
     result, err := Handler(test.request)
     assert.IsType(t, test.err, err)
