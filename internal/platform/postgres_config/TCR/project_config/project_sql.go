@@ -4,24 +4,33 @@ const UPSERT_PROJECT_COMMAND = `
 INSERT INTO projects 
 (
   project_id,
+  admin,
   content,
   avg_rating,
-  milestone_info
+  current_milestone,
+  num_milestones,
+  num_milestones_completed
 )
 VALUES 
 (
   :project_id,
+  :admin,
   :content,
   :avg_rating,
-  :milestone_info
+  :current_milestone,
+  :num_milestones,
+  :num_milestones_completed
 )
 ON CONFLICT (project_id) 
 DO
  UPDATE
     SET
+        admin = :admin,
         content = :content,
         avg_rating = :avg_rating,
-        milestone_info = :milestone_info
+        current_milestone = :current_milestone,
+        num_milestones = :num_milestones,
+        num_milestones_completed = :num_milestones_completed
     WHERE projects.project_id = :project_id
 RETURNING created_at;
 `
