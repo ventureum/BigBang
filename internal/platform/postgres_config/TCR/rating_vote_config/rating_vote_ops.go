@@ -37,7 +37,8 @@ func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecord(ratingVoteR
     log.Panicln(errInfo.Marshal())
   }
 
-  log.Printf("Sucessfully upserted rating vote Record for objectiveId %s\n", ratingVoteRecord.ObjectiveId)
+  log.Printf("Sucessfully upserted rating vote Record for projectId %s, milestoneId %d, objectiveId %d and voter %s\n",
+    ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId, ratingVoteRecord.Voter)
 
   var createdTime time.Time
   for res.Next() {
@@ -156,6 +157,35 @@ func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExisting (
   }
 }
 
+func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursor(
+    projectId string, milestoneId int64, objectiveId int64, cursor int64, limit int64) *[]RatingVoteRecord {
+  var ratingVoteRecords []RatingVoteRecord
+  var err error
+  if cursor > 0 {
+    err = ratingVoteExecutor.C.Select(
+      &ratingVoteRecords,
+      PAGINATION_QUERY_RATING_VOTE_LIST_COMMAND,
+      projectId, milestoneId, objectiveId, cursor, limit)
+  } else {
+    err = ratingVoteExecutor.C.Select(
+      &ratingVoteRecords,
+      QUERY_RATING_VOTE_LIST_COMMAND,
+      projectId, milestoneId, objectiveId, limit)
+  }
+
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.RatingVoteRecordLocation)
+    log.Printf("Failed to get rating vote Records by cursor %d and limit %d for projectId %s, milestoneId and %d objectiveId %d with error: %+v\n",
+      cursor, limit, projectId, milestoneId, objectiveId, err)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["objectiveId"] = objectiveId
+    errInfo.ErrorData["cursor"] = cursor
+    errInfo.ErrorData["limit"] = limit
+    log.Panicln(errInfo.Marshal())
+  }
+  return &ratingVoteRecords
+}
+
 /*
  * Tx versions
  */
@@ -170,7 +200,8 @@ func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecordTx(ratingVot
     log.Panicln(errInfo.Marshal())
   }
 
-  log.Printf("Sucessfully upserted rating vote Record for objectiveId %s\n", ratingVoteRecord.ObjectiveId)
+  log.Printf("Sucessfully upserted rating vote Record for projectId %s, milestoneId %d, objectiveId %d and voter %s\n",
+    ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId, ratingVoteRecord.Voter)
 
   var createdTime time.Time
   for res.Next() {
@@ -287,4 +318,33 @@ func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExistingTx (
       projectId, milestoneId, objectiveId, voter)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursorTx(
+    projectId string, milestoneId int64, objectiveId int64, cursor int64, limit int64) *[]RatingVoteRecord {
+  var ratingVoteRecords []RatingVoteRecord
+  var err error
+  if cursor > 0 {
+    err = ratingVoteExecutor.Tx.Select(
+      &ratingVoteRecords,
+      PAGINATION_QUERY_RATING_VOTE_LIST_COMMAND,
+      projectId, milestoneId, objectiveId, cursor, limit)
+  } else {
+    err = ratingVoteExecutor.Tx.Select(
+      &ratingVoteRecords,
+      QUERY_RATING_VOTE_LIST_COMMAND,
+      projectId, milestoneId, objectiveId, limit)
+  }
+
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.RatingVoteRecordLocation)
+    log.Printf("Failed to get rating vote Records by cursor %d and limit %d for projectId %s, milestoneId and %d objectiveId %d with error: %+v\n",
+      cursor, limit, projectId, milestoneId, objectiveId, err)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["objectiveId"] = objectiveId
+    errInfo.ErrorData["cursor"] = cursor
+    errInfo.ErrorData["limit"] = limit
+    log.Panicln(errInfo.Marshal())
+  }
+  return &ratingVoteRecords
 }

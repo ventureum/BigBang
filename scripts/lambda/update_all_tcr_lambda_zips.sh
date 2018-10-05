@@ -20,3 +20,9 @@ echo "updating delete_proxy zip"
 
 echo "updating get_proxy_list zip"
 .//update_lambda_zip.sh TCR get_proxy_list $1 $2
+
+echo "updating rating_vote zip"
+.//update_lambda_zip.sh TCR rating_vote $1 $2
+
+echo "updating get_rating_vote_list zip"
+.//update_lambda_zip.sh TCR get_rating_vote_list $1 $2

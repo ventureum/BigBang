@@ -8,3 +8,5 @@ bazel run //:gazelle
 ./run_unit_test.sh  //cmd/lambda/TCR/add_proxy/config:go_default_test
 ./run_unit_test.sh  //cmd/lambda/TCR/get_proxy_list/config:go_default_test
 ./run_unit_test.sh  //cmd/lambda/TCR/delete_proxy/config:go_default_test
+./run_unit_test.sh  //cmd/lambda/TCR/rating_vote/config:go_default_test
+./run_unit_test.sh  //cmd/lambda/TCR/get_rating_vote_list/config:go_default_test

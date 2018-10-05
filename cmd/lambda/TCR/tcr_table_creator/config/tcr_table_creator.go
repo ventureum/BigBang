@@ -5,6 +5,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
+  "BigBang/internal/platform/postgres_config/TCR/rating_vote_config"
 )
 
 type Response struct {
@@ -27,12 +28,15 @@ func ProcessRequest(response *Response) {
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
+  ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
 
   projectExecutor.DeleteProjectTable()
   proxyExecutor.DeleteProxyTable()
+  ratingVoteExecutor.DeleteRatingVoteTable()
 
   projectExecutor.CreateProjectTable()
   proxyExecutor.CreateProxyTable()
+  ratingVoteExecutor.CreateRatingVoteTable()
 
   postgresBigBangClient.Commit()
   response.Ok = true

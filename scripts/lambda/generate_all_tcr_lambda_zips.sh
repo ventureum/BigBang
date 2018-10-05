@@ -23,3 +23,9 @@ echo "generating delete_proxy zip"
 
 echo "generating get_proxy_list zip"
 .//generate_lambda_zip.sh TCR get_proxy_list $1 $2
+
+echo "generating rating_vote zip"
+.//generate_lambda_zip.sh TCR rating_vote $1 $2
+
+echo "generating get_rating_vote_list zip"
+.//generate_lambda_zip.sh TCR get_rating_vote_list $1 $2

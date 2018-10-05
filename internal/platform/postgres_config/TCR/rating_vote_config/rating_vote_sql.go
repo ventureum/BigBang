@@ -55,3 +55,17 @@ WHERE project_id = $1 and milestone_id = $2 and objective_id = $3;
 const VERIFY_RATING_VOTE_EXISTING_COMMAND = `
 select exists(select 1 from rating_votes where project_id = $1 and milestone_id = $2 and objective_id = $3 and voter = $4);
 `
+
+const PAGINATION_QUERY_RATING_VOTE_LIST_COMMAND = `
+SELECT * FROM rating_votes
+WHERE id <= $4 and project_id = $1 and milestone_id = $2 and objective_id = $3
+ORDER BY id DESC
+LIMIT $5;
+`
+
+const QUERY_RATING_VOTE_LIST_COMMAND = `
+SELECT * FROM rating_votes
+WHERE project_id = $1 and milestone_id = $2 and objective_id = $3
+ORDER BY id DESC
+LIMIT $4;
+`
