@@ -14,6 +14,7 @@ var PostFuelCost Fuel = loadEnv("PostFuelCost")
 var ReplyFuelCost Fuel = loadEnv("ReplyFuelCost")
 var AuditFuelCost Fuel = loadEnv("AuditFuelCost")
 var BetaMax Fuel = loadEnv("BetaMax")
+var MaxFuelForFuelUpdateInterval Fuel = loadEnv("MAX_FUEL_FOR_FUEL_UPDATE_INTERVAL")
 
 func loadEnv(key string) Fuel {
   val, _ := strconv.Atoi(os.Getenv(key))

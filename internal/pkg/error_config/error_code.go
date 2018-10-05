@@ -11,7 +11,7 @@ type ErrorCode string
 const GetStreamClientConnectionError ErrorCode = "GetStreamClientConnectionError"
 const InsufficientWaitingTimeToRefuel ErrorCode = "InsufficientWaitingTimeToRefuel"
 const InsufficientReputaionsAmount ErrorCode = "InsufficientReputaionsAmount"
-const InsufficientFuelsAmount ErrorCode = "InsufficientFuelsAmount"
+const InsufficientFuelAmount ErrorCode = "InsufficientFuelAmount"
 const NoActorExisting ErrorCode = "NoActorExisting"
 const NoPostHashExisting ErrorCode = "NoPostHashExisting"
 const ExceedingUpvoteLimit ErrorCode = "ExceedingUpvoteLimit"

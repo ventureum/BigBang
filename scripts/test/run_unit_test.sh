@@ -16,4 +16,5 @@ bazel test \
     --action_env="BetaMax" \
     --action_env="REFUEL_INTERVAL" \
     --action_env="FUEL_REPLENISHMENT_HOURLY" \
+    --action_env="MAX_FUEL_FOR_FUEL_UPDATE_INTERVAL" \
     $1

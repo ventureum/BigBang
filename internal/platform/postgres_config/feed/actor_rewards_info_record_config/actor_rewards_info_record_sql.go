@@ -80,3 +80,8 @@ SELECT COALESCE(sum(reputation), 0) FROM actor_rewards_info_records;
 const VERIFY_ACTOR_EXISTING_COMMAND = `
 select exists(select 1 from actor_rewards_info_records where actor =$1);
 `
+
+const RESET_ALL_ACTOR_FUEL_COMMAND = `
+UPDATE actor_rewards_info_records
+  SET fuel = $1;
+`

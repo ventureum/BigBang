@@ -17,3 +17,4 @@ bazel run //:gazelle
 ./run_unit_test.sh  //cmd/lambda/feed/get_recent_votes/config:go_default_test
 ./run_unit_test.sh  //cmd/lambda/feed/deactivate_actor/config:go_default_test
 ./run_unit_test.sh  //cmd/lambda/feed/feed_token_generator/config:go_default_test
+./run_unit_test.sh  //cmd/lambda/feed/reset_actor_fuel/config:go_default_test
