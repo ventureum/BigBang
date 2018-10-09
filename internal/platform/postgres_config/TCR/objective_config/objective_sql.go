@@ -7,8 +7,7 @@ INSERT INTO objectives
   milestone_id,
   objective_id,
   content,
-  total_rating,
-  total_weight
+  block_timestamp
 )
 VALUES 
 (
@@ -16,16 +15,13 @@ VALUES
   :milestone_id,
   :objective_id,
   :content,
-  :total_rating,
-  :total_weight
+  :block_timestamp
 )
 ON CONFLICT (project_id, milestone_id, objective_id) 
 DO
  UPDATE
     SET
-        content = :content,
-        total_rating = :total_rating,
-        total_weight = :total_weight
+        content = :content
     WHERE  objectives.objective_id = :objective_id and 
            objectives.project_id = :project_id and objectives.milestone_id = :milestone_id
 RETURNING created_at;

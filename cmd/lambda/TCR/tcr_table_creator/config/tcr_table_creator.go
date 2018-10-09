@@ -6,6 +6,7 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
   "BigBang/internal/platform/postgres_config/TCR/rating_vote_config"
+  "BigBang/internal/platform/postgres_config/TCR/objective_config"
 )
 
 type Response struct {
@@ -27,14 +28,18 @@ func ProcessRequest(response *Response) {
   postgresBigBangClient.SetIdleInTransactionSessionTimeout(60000)
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
+  objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
 
+
+  objectiveExecutor.DeleteObjectiveTable()
   projectExecutor.DeleteProjectTable()
   proxyExecutor.DeleteProxyTable()
   ratingVoteExecutor.DeleteRatingVoteTable()
 
   projectExecutor.CreateProjectTable()
+  objectiveExecutor.CreateObjectiveTable()
   proxyExecutor.CreateProxyTable()
   ratingVoteExecutor.CreateRatingVoteTable()
 

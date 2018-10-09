@@ -16,9 +16,9 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_project_config.Request {
         ProjectId: test_constants.ProjectId1,
-        Admin: test_constants.Admin1,
+        Admin: test_constants.ProjectAdmin1,
         Content: test_constants.ProjectContent1,
-        BlockTimestamp: test_constants.BlockTimestamp1,
+        BlockTimestamp: test_constants.ProjectBlockTimestamp1,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -28,9 +28,9 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_project_config.Request {
         ProjectId: test_constants.ProjectId2,
-        Admin: test_constants.Admin1,
+        Admin: test_constants.ProjectAdmin1,
         Content: test_constants.ProjectContent1,
-        BlockTimestamp: test_constants.BlockTimestamp2,
+        BlockTimestamp: test_constants.ProjectBlockTimestamp2,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -40,9 +40,9 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_project_config.Request {
         ProjectId: test_constants.ProjectId3,
-        Admin: test_constants.Admin1,
+        Admin: test_constants.ProjectAdmin1,
         Content: test_constants.ProjectContent1,
-        BlockTimestamp: test_constants.BlockTimestamp3,
+        BlockTimestamp: test_constants.ProjectBlockTimestamp3,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -52,9 +52,9 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_project_config.Request {
         ProjectId: test_constants.ProjectId4,
-        Admin: test_constants.Admin1,
+        Admin: test_constants.ProjectAdmin1,
         Content: test_constants.ProjectContent1,
-        BlockTimestamp: test_constants.BlockTimestamp4,
+        BlockTimestamp: test_constants.ProjectBlockTimestamp4,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -64,9 +64,9 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_project_config.Request {
         ProjectId: test_constants.ProjectId5,
-        Admin: test_constants.Admin1,
+        Admin: test_constants.ProjectAdmin1,
         Content: test_constants.ProjectContent1,
-        BlockTimestamp: test_constants.BlockTimestamp5,
+        BlockTimestamp: test_constants.ProjectBlockTimestamp5,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -76,9 +76,9 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_project_config.Request {
         ProjectId: test_constants.ProjectId6,
-        Admin: test_constants.Admin1,
+        Admin: test_constants.ProjectAdmin1,
         Content: test_constants.ProjectContent1,
-        BlockTimestamp: test_constants.BlockTimestamp5,
+        BlockTimestamp: test_constants.ProjectBlockTimestamp5,
       },
       response: lambda_project_config.Response {
         Ok: true,
