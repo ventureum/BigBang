@@ -4,6 +4,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
+  "BigBang/internal/pkg/utils"
 )
 
 
@@ -11,6 +12,7 @@ type Request struct {
   ProjectId   string  `json:"projectId,required"`
   Admin       string  `json:"admin,required"`
   Content     string  `json:"content,required"`
+  BlockTimestamp  int64 `json:"blockTimestamp,required"`
 }
 
 type Response struct {
@@ -19,11 +21,14 @@ type Response struct {
 }
 
 func (request *Request) ToProjectRecord() (record *project_config.ProjectRecord) {
-  return &project_config.ProjectRecord{
+  pojectRecord := &project_config.ProjectRecord{
+    ID: utils.GenerateIdByInt64AndStr(request.BlockTimestamp, request.ProjectId),
     ProjectId:     request.ProjectId,
     Admin:         request.Admin,
     Content:       request.Content,
+    BlockTimestamp: request.BlockTimestamp,
   }
+  return pojectRecord
 }
 
 func ProcessRequest(request Request, response *Response) {

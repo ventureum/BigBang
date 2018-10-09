@@ -36,9 +36,9 @@ func ProcessRequest(request Request, response *Response) {
   limit := request.Limit
   cursorStr := request.Cursor
 
-  var cursor int64
+  var cursor string
   if cursorStr != "" {
-    cursor = utils.Base64DecodeToInt64(cursorStr)
+    cursor = utils.Base64DecodeToString(cursorStr)
   }
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
@@ -54,11 +54,12 @@ func ProcessRequest(request Request, response *Response) {
         ProjectId: projectRecord.ProjectId,
         Admin: projectRecord.Admin,
         Content: projectRecord.Content,
+        BlockTimestamp: projectRecord.BlockTimestamp,
         AvgRating: projectRecord.AvgRating,
       }
       projects = append(projects, *project)
     } else {
-      response.NextCursor = utils.Base64EncodeInt64(projectRecord.ID)
+      response.NextCursor = utils.Base64EncodeStr(projectRecord.ID)
     }
   }
 

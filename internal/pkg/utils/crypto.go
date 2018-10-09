@@ -54,3 +54,27 @@ func Base64DecodeToInt64(encoded string) int64 {
   }
   return i
 }
+
+func Base64EncodeStr(str string) string {
+  encoded := base64.StdEncoding.EncodeToString([]byte(str))
+  return encoded
+}
+
+func Base64DecodeToString(encoded string) string {
+  if encoded == "" {
+    return ""
+  }
+  decoded, err := base64.StdEncoding.DecodeString(encoded)
+  if err != nil {
+    log.Panicf("decode error: %+v\n", err)
+  }
+  return string(decoded)
+}
+
+func GenerateIdByInt64AndStr(firstField int64, secondField string) string {
+   return strconv.FormatInt(firstField, 10) + ":" + secondField
+}
+
+func Base64EncodeIdByInt64AndStr(firstField int64, secondField string) string {
+  return Base64EncodeStr(GenerateIdByInt64AndStr(firstField, secondField))
+}

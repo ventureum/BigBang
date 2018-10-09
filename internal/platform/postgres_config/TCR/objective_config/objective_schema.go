@@ -7,6 +7,7 @@ CREATE TABLE objectives (
     milestone_id BIGINT NOT NULL,
     objective_id BIGINT NOT NULL,
     content TEXT NOT NULL,
+    block_timestamp BIGINT NOT NULL,
     total_rating BIGINT NOT NULL DEFAULT 0,
     total_weight BIGINT NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

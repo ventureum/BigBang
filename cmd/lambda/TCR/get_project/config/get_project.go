@@ -41,6 +41,7 @@ func ProcessRequest(request Request, response *Response) {
     Admin: projectRecord.Admin,
     Content: projectRecord.Content,
     AvgRating: projectRecord.AvgRating,
+    BlockTimestamp: projectRecord.BlockTimestamp,
   }
 
   response.Project = project

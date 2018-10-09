@@ -5,7 +5,7 @@ import (
   "testing"
   "BigBang/internal/app/tcr_attributes"
   "BigBang/cmd/lambda/TCR/get_project/config"
-  "BigBang/test/contants"
+  "BigBang/test/constants"
 )
 
 func TestHandler(t *testing.T) {
@@ -16,13 +16,14 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_get_project_config.Request {
-        ProjectId: test_contants.ProjectId1,
+        ProjectId: test_constants.ProjectId1,
       },
       response: lambda_get_project_config.Response {
         Project: &tcr_attributes.Project{
-          ProjectId: test_contants.ProjectId1,
-          Admin: test_contants.Admin1,
-          Content:   test_contants.ProjectContent1,
+          ProjectId: test_constants.ProjectId1,
+          Admin: test_constants.Admin1,
+          Content:   test_constants.ProjectContent1,
+          BlockTimestamp: test_constants.BlockTimestamp1,
         },
         Ok: true,
       },
@@ -36,5 +37,6 @@ func TestHandler(t *testing.T) {
     assert.Equal(t, test.response.Project.ProjectId, result.Project.ProjectId)
     assert.Equal(t, test.response.Project.Admin, result.Project.Admin)
     assert.Equal(t, test.response.Project.Content, result.Project.Content)
+    assert.Equal(t, test.response.Project.BlockTimestamp, result.Project.BlockTimestamp)
   }
 }
