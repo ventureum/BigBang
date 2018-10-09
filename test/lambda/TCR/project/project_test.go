@@ -4,7 +4,7 @@ import (
   "github.com/stretchr/testify/assert"
   "testing"
   "BigBang/cmd/lambda/TCR/project/config"
-  "BigBang/test/contants"
+  "BigBang/test/constants"
 )
 
 func TestHandler(t *testing.T) {
@@ -15,9 +15,10 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_project_config.Request {
-        ProjectId: test_contants.ProjectId1,
-        Admin: test_contants.Admin1,
-        Content: test_contants.ProjectContent1,
+        ProjectId: test_constants.ProjectId1,
+        Admin: test_constants.Admin1,
+        Content: test_constants.ProjectContent1,
+        BlockTimestamp: test_constants.BlockTimestamp1,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -26,9 +27,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_project_config.Request {
-        ProjectId: test_contants.ProjectId2,
-        Admin: test_contants.Admin1,
-        Content: test_contants.ProjectContent1,
+        ProjectId: test_constants.ProjectId2,
+        Admin: test_constants.Admin1,
+        Content: test_constants.ProjectContent1,
+        BlockTimestamp: test_constants.BlockTimestamp2,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -37,9 +39,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_project_config.Request {
-        ProjectId: test_contants.ProjectId3,
-        Admin: test_contants.Admin1,
-        Content: test_contants.ProjectContent1,
+        ProjectId: test_constants.ProjectId3,
+        Admin: test_constants.Admin1,
+        Content: test_constants.ProjectContent1,
+        BlockTimestamp: test_constants.BlockTimestamp3,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -48,9 +51,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_project_config.Request {
-        ProjectId: test_contants.ProjectId4,
-        Admin: test_contants.Admin1,
-        Content: test_contants.ProjectContent1,
+        ProjectId: test_constants.ProjectId4,
+        Admin: test_constants.Admin1,
+        Content: test_constants.ProjectContent1,
+        BlockTimestamp: test_constants.BlockTimestamp4,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -59,9 +63,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_project_config.Request {
-        ProjectId: test_contants.ProjectId5,
-        Admin: test_contants.Admin1,
-        Content: test_contants.ProjectContent1,
+        ProjectId: test_constants.ProjectId5,
+        Admin: test_constants.Admin1,
+        Content: test_constants.ProjectContent1,
+        BlockTimestamp: test_constants.BlockTimestamp5,
       },
       response: lambda_project_config.Response {
         Ok: true,
@@ -70,9 +75,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_project_config.Request {
-        ProjectId: test_contants.ProjectId6,
-        Admin: test_contants.Admin1,
-        Content: test_contants.ProjectContent1,
+        ProjectId: test_constants.ProjectId6,
+        Admin: test_constants.Admin1,
+        Content: test_constants.ProjectContent1,
+        BlockTimestamp: test_constants.BlockTimestamp5,
       },
       response: lambda_project_config.Response {
         Ok: true,

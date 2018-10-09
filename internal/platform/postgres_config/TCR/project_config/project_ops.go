@@ -104,10 +104,10 @@ func (projectExecutor *ProjectExecutor) VerifyProjectRecordExisting (projectId s
   }
 }
 
-func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursor(cursor int64, limit int64) *[]ProjectRecord {
+func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursor(cursor string, limit int64) *[]ProjectRecord {
   var projectRecords []ProjectRecord
   var err error
-  if cursor > 0 {
+  if cursor !=  "" {
     err = projectExecutor.C.Select(
       &projectRecords, PAGINATION_QUERY_PROJECT_LIST_COMMAND, cursor, limit)
   } else {
@@ -116,7 +116,7 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursor(cursor int64, 
   }
 
   if err != nil && err != sql.ErrNoRows {
-    log.Panicf("Failed to get project records by cursor %d and limit %d with error: %+v\n", cursor, limit, err)
+    log.Panicf("Failed to get project records by cursor %s and limit %d with error: %+v\n", cursor, limit, err)
   }
   return &projectRecords
 }
@@ -251,10 +251,10 @@ func (projectExecutor *ProjectExecutor) VerifyProjectRecordExistingTx (projectId
   }
 }
 
-func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursorTx(cursor int64, limit int64) *[]ProjectRecord {
+func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursorTx(cursor string, limit int64) *[]ProjectRecord {
   var projectRecords []ProjectRecord
   var err error
-  if cursor > 0 {
+  if cursor != "" {
     err = projectExecutor.Tx.Select(
       &projectRecords, PAGINATION_QUERY_PROJECT_LIST_COMMAND, cursor, limit)
   } else {
@@ -263,7 +263,7 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursorTx(cursor int64
   }
 
   if err != nil && err != sql.ErrNoRows {
-    log.Panicf("Failed to get project records by cursor %d and limit %d with error: %+v\n", cursor, limit, err)
+    log.Panicf("Failed to get project records by cursor %s and limit %d with error: %+v\n", cursor, limit, err)
   }
   return &projectRecords
 }

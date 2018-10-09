@@ -5,7 +5,7 @@ go_test(
     srcs = ["project_test.go"],
     deps = [
         "//cmd/lambda/TCR/project/config:go_default_library",
-        "//test/contants:go_default_library",
+        "//test/constants:go_default_library",
         "//vendor/github.com/stretchr/testify/assert:go_default_library",
     ],
 )

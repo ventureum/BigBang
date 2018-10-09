@@ -2,16 +2,20 @@ package project_config
 
 const INSERT_PROJECT_COMMAND = `
 INSERT INTO projects 
-(
+( 
+  id,
   project_id,
   admin,
-  content
+  content,
+  block_timestamp
 )
 VALUES 
 (
+  :id,
   :project_id,
   :admin,
-  :content
+  :content,
+  :block_timestamp
 );
 `
 
