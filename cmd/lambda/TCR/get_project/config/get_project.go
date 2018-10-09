@@ -1,10 +1,11 @@
-package config
+package lambda_get_project_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
+  "BigBang/internal/app/tcr_attributes"
 )
 
 
@@ -13,7 +14,7 @@ type Request struct {
 }
 
 type Response struct {
-  Project *project_config.ProjectRecordResult `json:"project,omitempty"`
+  Project *tcr_attributes.Project `json:"project,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
@@ -34,7 +35,15 @@ func ProcessRequest(request Request, response *Response) {
 
   projectExecutor.VerifyProjectRecordExisting(projectId)
 
-  response.Project = projectExecutor.GetProjectRecord(projectId).ToProjectRecordResult()
+  projectRecord := projectExecutor.GetProjectRecord(projectId)
+  project := &tcr_attributes.Project{
+    ProjectId: projectRecord.ProjectId,
+    Admin: projectRecord.Admin,
+    Content: projectRecord.Content,
+    AvgRating: projectRecord.AvgRating,
+  }
+
+  response.Project = project
 
   log.Printf("Project Content is loaded for projectId %s\n", projectId)
 

@@ -11,6 +11,8 @@ type ProjectRecord struct {
   Admin         string         `json:"admin" db:"admin"`
   Content       string         `json:"content" db:"content"`
   AvgRating     int64          `json:"avgRating" db:"avg_rating"`
+  TotalRating   int64          `json:"totalRating" db:"total_rating"`
+  TotalWeight   int64          `json:"totalWeight" db:"total_weight"`
   CurrentMilestone int64       `json:"currentMilestone" db:"current_milestone"`
   NumMilestones int64          `json:"numMilestones" db:"num_milestones"`
   NumMilestonesCompleted int64 `json:"numMilestonesCompleted" db:"num_milestones_completed"`

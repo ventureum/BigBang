@@ -28,50 +28,30 @@ var ProjectRecord1 = ProjectRecord {
   ProjectId: ProjectId1,
   Admin: Admin1,
   Content: Content1,
-  AvgRating: 20,
-  CurrentMilestone: 3,
-  NumMilestones: 5,
-  NumMilestonesCompleted: 2,
 }
 
 var ProjectRecord2 = ProjectRecord {
   ProjectId: ProjectId2,
   Admin: Admin1,
   Content: Content1,
-  AvgRating: 20,
-  CurrentMilestone: 3,
-  NumMilestones: 5,
-  NumMilestonesCompleted: 2,
 }
 
 var ProjectRecord3 = ProjectRecord {
   ProjectId: ProjectId3,
   Admin: Admin1,
   Content: Content1,
-  AvgRating: 20,
-  CurrentMilestone: 3,
-  NumMilestones: 5,
-  NumMilestonesCompleted: 2,
 }
 
 var ProjectRecord4 = ProjectRecord {
   ProjectId: ProjectId4,
   Admin: Admin1,
   Content: Content1,
-  AvgRating: 20,
-  CurrentMilestone: 3,
-  NumMilestones: 5,
-  NumMilestonesCompleted: 2,
 }
 
 var ProjectRecord5 = ProjectRecord {
   ProjectId: ProjectId5,
   Admin: Admin1,
   Content: Content1,
-  AvgRating: 20,
-  CurrentMilestone: 3,
-  NumMilestones: 5,
-  NumMilestonesCompleted: 2,
 }
 
 type ProjectTestSuite struct {
@@ -112,6 +92,8 @@ func (suite *ProjectTestSuite) TestNonEmptyQueryForGetProjectRecord() {
   suite.Equal(ProjectRecord1.Admin, projectRecord.Admin)
   suite.Equal(ProjectRecord1.AvgRating, projectRecord.AvgRating)
   suite.Equal(ProjectRecord1.Content, projectRecord.Content)
+  suite.Equal(ProjectRecord1.TotalWeight, projectRecord.TotalWeight)
+  suite.Equal(ProjectRecord1.TotalRating, projectRecord.TotalRating)
   suite.Equal(ProjectRecord1.CurrentMilestone, projectRecord.CurrentMilestone)
   suite.Equal(ProjectRecord1.NumMilestones, projectRecord.NumMilestones)
   suite.Equal(ProjectRecord1.NumMilestonesCompleted, projectRecord.NumMilestonesCompleted)
@@ -162,6 +144,8 @@ func (suite *ProjectTestSuite) TestNonEmptyQueryForGetProjectRecordsByCursorFirs
     suite.Equal(expectedProjectRecords[index].Admin, projectRecord.Admin)
     suite.Equal(expectedProjectRecords[index].AvgRating, projectRecord.AvgRating)
     suite.Equal(expectedProjectRecords[index].Content, projectRecord.Content)
+    suite.Equal(expectedProjectRecords[index].TotalWeight, projectRecord.TotalWeight)
+    suite.Equal(expectedProjectRecords[index].TotalRating, projectRecord.TotalRating)
     suite.Equal(expectedProjectRecords[index].CurrentMilestone, projectRecord.CurrentMilestone)
     suite.Equal(expectedProjectRecords[index].NumMilestones, projectRecord.NumMilestones)
     suite.Equal(expectedProjectRecords[index].NumMilestonesCompleted, projectRecord.NumMilestonesCompleted)
@@ -184,6 +168,8 @@ func (suite *ProjectTestSuite) TestNonEmptyQueryForGetProjectRecordsByCursorInte
     suite.Equal(expectedProjectRecords[index].Admin, projectRecord.Admin)
     suite.Equal(expectedProjectRecords[index].AvgRating, projectRecord.AvgRating)
     suite.Equal(expectedProjectRecords[index].Content, projectRecord.Content)
+    suite.Equal(ProjectRecord1.TotalWeight, projectRecord.TotalWeight)
+    suite.Equal(ProjectRecord1.TotalRating, projectRecord.TotalRating)
     suite.Equal(expectedProjectRecords[index].CurrentMilestone, projectRecord.CurrentMilestone)
     suite.Equal(expectedProjectRecords[index].NumMilestones, projectRecord.NumMilestones)
     suite.Equal(expectedProjectRecords[index].NumMilestonesCompleted, projectRecord.NumMilestonesCompleted)
@@ -206,12 +192,89 @@ func (suite *ProjectTestSuite) TestNonEmptyQueryForGetProjectRecordsByCursorFina
     suite.Equal(expectedProjectRecords[index].Admin, projectRecord.Admin)
     suite.Equal(expectedProjectRecords[index].AvgRating, projectRecord.AvgRating)
     suite.Equal(expectedProjectRecords[index].Content, projectRecord.Content)
+    suite.Equal(expectedProjectRecords[index].TotalWeight, projectRecord.TotalWeight)
+    suite.Equal(expectedProjectRecords[index].TotalRating, projectRecord.TotalRating)
     suite.Equal(expectedProjectRecords[index].CurrentMilestone, projectRecord.CurrentMilestone)
     suite.Equal(expectedProjectRecords[index].NumMilestones, projectRecord.NumMilestones)
     suite.Equal(expectedProjectRecords[index].NumMilestonesCompleted, projectRecord.NumMilestonesCompleted)
   }
 }
 
+func (suite *ProjectTestSuite) TestMilestoneInfo() {
+  suite.ProjectExecutor.UpsertProjectRecord(&ProjectRecord1)
+
+  projectRecord := suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(0) , projectRecord.NumMilestones)
+  suite.Equal(int64(0), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(0), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.IncreaseNumMilestones(ProjectId1)
+  suite.ProjectExecutor.IncreaseNumMilestones(ProjectId1)
+  suite.ProjectExecutor.IncreaseNumMilestones(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(0), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(0), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.SetCurrentMilestone(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(0), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(1), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.IncreaseNumMilestonesCompleted(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(1), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(0), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.SetCurrentMilestone(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(1), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(2), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.IncreaseNumMilestonesCompleted(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(2), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(0), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.SetCurrentMilestone(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(2), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(3), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.IncreaseNumMilestonesCompleted(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(3), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(0), projectRecord.CurrentMilestone)
+
+  suite.ProjectExecutor.IncreaseNumMilestonesCompleted(ProjectId1)
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(3), projectRecord.NumMilestones)
+  suite.Equal(int64(3), projectRecord.NumMilestonesCompleted)
+  suite.Equal(int64(0), projectRecord.CurrentMilestone)
+}
+
+func (suite *ProjectTestSuite) TestAddRatingAndWeight() {
+  suite.ProjectExecutor.UpsertProjectRecord(&ProjectRecord1)
+
+  projectRecord := suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(0) , projectRecord.AvgRating)
+  suite.Equal(int64(0), projectRecord.TotalRating)
+  suite.Equal(int64(0), projectRecord.TotalWeight)
+
+  delatRating := 30
+  deltaWeight := 20
+  suite.ProjectExecutor.AddRatingAndWeight(ProjectId1, int64(delatRating), int64(deltaWeight))
+  projectRecord = suite.ProjectExecutor.GetProjectRecord(ProjectId1)
+  suite.Equal(int64(delatRating/deltaWeight) , projectRecord.AvgRating)
+  suite.Equal(int64(delatRating) , projectRecord.TotalRating)
+  suite.Equal(int64(deltaWeight), projectRecord.TotalWeight)
+}
 
 func TestProjectTestSuite(t *testing.T) {
   suite.Run(t, new(ProjectTestSuite))

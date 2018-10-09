@@ -8,6 +8,8 @@ CREATE TABLE projects (
     admin Text NOT NULL,
     content TEXT NOT NULL,
     avg_rating BIGINT NOT NULL DEFAULT 0,
+    total_rating BIGINT NOT NULL DEFAULT 0,
+    total_weight BIGINT NOT NULL DEFAULT 0,
     current_milestone BIGINT NOT NULL DEFAULT 0,
     num_milestones BIGINT NOT NULL DEFAULT 0,
     num_milestones_completed BIGINT NOT NULL DEFAULT 0,

@@ -18,7 +18,7 @@ func TestProjectAndGetProjectAlpha(t *testing.T) {
     ProjectId: ProjectId001,
     Content: "123",
     AvgRating: 20,
-    MilestoneInfo: tcr_attributes.MilestoneInfo{
+    MilestoneInfo: tcr_attributes.MilestonesInfo{
       NumMilestones: 5,
       NumMilestonesCompleted: 8,
     },
@@ -45,7 +45,7 @@ func TestProjectAndGetProjectAlpha(t *testing.T) {
       ProjectId: ProjectId001,
       Content:   "123",
       AvgRating: 20,
-      MilestoneInfo: &tcr_attributes.MilestoneInfo{
+      MilestoneInfo: &tcr_attributes.MilestonesInfo{
         NumMilestones:          5,
         NumMilestonesCompleted: 8,
       },
@@ -74,7 +74,7 @@ func TestProjectAndGetProjectAlpha(t *testing.T) {
   assert.Equal(t, responseGetProject.Project.ProjectId, expectedResponseGetProject.Project.ProjectId)
   assert.Equal(t, responseGetProject.Project.Content, expectedResponseGetProject.Project.Content)
   assert.Equal(t, responseGetProject.Project.AvgRating, expectedResponseGetProject.Project.AvgRating)
-  assert.Equal(t, responseGetProject.Project.MilestoneInfo, expectedResponseGetProject.Project.MilestoneInfo)
+  assert.Equal(t, responseGetProject.Project.MilestonesInfo, expectedResponseGetProject.Project.MilestonesInfo)
 }
 
 func TestProjectAndGetProjectBeta(t *testing.T) {
@@ -82,7 +82,7 @@ func TestProjectAndGetProjectBeta(t *testing.T) {
     ProjectId: ProjectId001,
     Content: "123",
     AvgRating: 20,
-    MilestoneInfo: tcr_attributes.MilestoneInfo{
+    MilestoneInfo: tcr_attributes.MilestonesInfo{
       NumMilestones: 5,
       NumMilestonesCompleted: 8,
     },
@@ -109,7 +109,7 @@ func TestProjectAndGetProjectBeta(t *testing.T) {
       ProjectId: ProjectId001,
       Content:   "123",
       AvgRating: 20,
-      MilestoneInfo: &tcr_attributes.MilestoneInfo{
+      MilestoneInfo: &tcr_attributes.MilestonesInfo{
         NumMilestones:          5,
         NumMilestonesCompleted: 8,
       },
@@ -138,5 +138,5 @@ func TestProjectAndGetProjectBeta(t *testing.T) {
   assert.Equal(t, responseGetProject.Project.ProjectId, expectedResponseGetProject.Project.ProjectId)
   assert.Equal(t, responseGetProject.Project.Content, expectedResponseGetProject.Project.Content)
   assert.Equal(t, responseGetProject.Project.AvgRating, expectedResponseGetProject.Project.AvgRating)
-  assert.Equal(t, responseGetProject.Project.MilestoneInfo, expectedResponseGetProject.Project.MilestoneInfo)
+  assert.Equal(t, responseGetProject.Project.MilestonesInfo, expectedResponseGetProject.Project.MilestonesInfo)
 }

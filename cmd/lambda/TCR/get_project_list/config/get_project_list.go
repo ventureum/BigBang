@@ -1,4 +1,4 @@
-package config
+package lambda_get_project_list_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
@@ -6,6 +6,7 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/pkg/utils"
+  "BigBang/internal/app/tcr_attributes"
 )
 
 
@@ -15,7 +16,7 @@ type Request struct {
 }
 
 type Response struct {
-  Projects *[]project_config.ProjectRecordResult `json:"projects,omitempty"`
+  Projects *[]tcr_attributes.Project`json:"projects,omitempty"`
   NextCursor string `json:"nextCursor,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
@@ -46,10 +47,16 @@ func ProcessRequest(request Request, response *Response) {
 
   response.NextCursor = ""
 
-  var projects []project_config.ProjectRecordResult
+  var projects []tcr_attributes.Project
   for index, projectRecord := range *projectRecords {
     if index < int(limit) {
-      projects = append(projects, *projectRecord.ToProjectRecordResult())
+      project := &tcr_attributes.Project{
+        ProjectId: projectRecord.ProjectId,
+        Admin: projectRecord.Admin,
+        Content: projectRecord.Content,
+        AvgRating: projectRecord.AvgRating,
+      }
+      projects = append(projects, *project)
     } else {
       response.NextCursor = utils.Base64EncodeInt64(projectRecord.ID)
     }

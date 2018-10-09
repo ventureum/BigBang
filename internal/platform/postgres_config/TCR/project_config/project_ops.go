@@ -2,7 +2,6 @@ package project_config
 
 import (
   "log"
-  "time"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "database/sql"
@@ -26,21 +25,29 @@ func (projectExecutor *ProjectExecutor) ClearProjectTable() {
   projectExecutor.ClearTable(TABLE_NAME_FOR_PROJECT)
 }
 
-func (projectExecutor *ProjectExecutor) UpsertProjectRecord(projectRecord *ProjectRecord) time.Time {
-  res, err := projectExecutor.C.NamedQuery(UPSERT_PROJECT_COMMAND, projectRecord)
+func (projectExecutor *ProjectExecutor) UpsertProjectRecord(projectRecord *ProjectRecord) {
+
+  res, err := projectExecutor.C.NamedExec(UPDATE_PROJECT_COMMAND, projectRecord)
+
   if err != nil {
     errInfo := error_config.MatchError(err, "projectId", projectRecord.ProjectId, error_config.ProjectRecordLocation)
-    log.Printf("Failed to upsert project record: %+v with error:\n %+v", projectRecord, err)
+    log.Printf("Failed to update project record: %+v with error:\n %+v", projectRecord, err)
     log.Panicln(errInfo.Marshal())
   }
 
-  log.Printf("Sucessfully upserted project record for projectId %s\n", projectRecord.ProjectId)
+  count, err := res.RowsAffected()
 
-  var createdTime time.Time
-  for res.Next() {
-    res.Scan(&createdTime)
+  if count == 0 {
+    _, err = projectExecutor.C.NamedExec(INSERT_PROJECT_COMMAND, projectRecord)
+
+    if err != nil {
+      errInfo := error_config.MatchError(err, "projectId", projectRecord.ProjectId, error_config.ProjectRecordLocation)
+      log.Printf("Failed to insert project record: %+v with error:\n %+v", projectRecord, err)
+      log.Panicln(errInfo.Marshal())
+    }
   }
-  return createdTime
+
+  log.Printf("Sucessfully upserted project record for projectId %s\n", projectRecord.ProjectId)
 }
 
 func (projectExecutor *ProjectExecutor) DeleteProjectRecord(projectId string) {
@@ -114,24 +121,81 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursor(cursor int64, 
   return &projectRecords
 }
 
+func (projectExecutor *ProjectExecutor) AddRatingAndWeight(projectId string, deltaRating int64, deltaWeight int64) {
+  _, err := projectExecutor.C.Exec(ADD_RATING_AND_WEIGHT_COMMAND, projectId, deltaRating, deltaWeight)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to add rating and weight for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added rating and weight for projectId %s\n", projectId)
+}
+
+func (projectExecutor *ProjectExecutor) IncreaseNumMilestones(projectId string) {
+  _, err := projectExecutor.C.Exec(INCREASE_NUM_MILESTONES_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to increase numMilestones for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully increased numMilestones for projectId %s\n", projectId)
+}
+
+func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesCompleted(projectId string) {
+  _, err := projectExecutor.C.Exec(INCREASE_NUM_MILESTONES_COMPLETED_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to increase numMilestonesCompleted for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully increased numMilestonesCompleted for projectId %s\n", projectId)
+}
+
+func (projectExecutor *ProjectExecutor) SetCurrentMilestone(projectId string) {
+  _, err := projectExecutor.C.Exec(SET_CURRENT_MILESTONE_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to set current milestone for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully set current milestone for projectId %s\n", projectId)
+}
+
 /*
  * Tx versions
  */
-func (projectExecutor *ProjectExecutor) UpsertProjectRecordTx(projectRecord *ProjectRecord) time.Time {
-  res, err := projectExecutor.Tx.NamedQuery(UPSERT_PROJECT_COMMAND, projectRecord)
+
+func (projectExecutor *ProjectExecutor) UpsertProjectRecordTx(projectRecord *ProjectRecord) {
+
+  res, err := projectExecutor.Tx.NamedExec(UPDATE_PROJECT_COMMAND, projectRecord)
+
   if err != nil {
     errInfo := error_config.MatchError(err, "projectId", projectRecord.ProjectId, error_config.ProjectRecordLocation)
-    log.Printf("Failed to upsert project record: %+v with error:\n %+v", projectRecord, err)
+    log.Printf("Failed to update project record: %+v with error:\n %+v", projectRecord, err)
     log.Panicln(errInfo.Marshal())
   }
 
-  log.Printf("Sucessfully upserted project record for projectId %s\n", projectRecord.ProjectId)
+  count, err := res.RowsAffected()
 
-  var createdTime time.Time
-  for res.Next() {
-    res.Scan(&createdTime)
+  if count == 0 {
+    _, err = projectExecutor.Tx.NamedExec(INSERT_PROJECT_COMMAND, projectRecord)
+
+    if err != nil {
+      errInfo := error_config.MatchError(err, "projectId", projectRecord.ProjectId, error_config.ProjectRecordLocation)
+      log.Printf("Failed to insert project record: %+v with error:\n %+v", projectRecord, err)
+      log.Panicln(errInfo.Marshal())
+    }
   }
-  return createdTime
+
+  log.Printf("Sucessfully upserted project record for projectId %s\n", projectRecord.ProjectId)
 }
 
 func (projectExecutor *ProjectExecutor) DeleteProjectRecordTx(projectId string) {
@@ -202,4 +266,52 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursorTx(cursor int64
     log.Panicf("Failed to get project records by cursor %d and limit %d with error: %+v\n", cursor, limit, err)
   }
   return &projectRecords
+}
+
+func (projectExecutor *ProjectExecutor) AddRatingAndWeightTx(projectId string, deltaRating int64, deltaWeight int64) {
+  _, err := projectExecutor.Tx.Exec(ADD_RATING_AND_WEIGHT_COMMAND, projectId, deltaRating, deltaWeight)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to add rating and weight for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added rating and weight for projectId %s\n", projectId)
+}
+
+func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesTx(projectId string) {
+  _, err := projectExecutor.Tx.Exec(INCREASE_NUM_MILESTONES_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to increase numMilestones for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully increased numMilestones for projectId %s\n", projectId)
+}
+
+func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesCompletedTx(projectId string) {
+  _, err := projectExecutor.Tx.Exec(INCREASE_NUM_MILESTONES_COMPLETED_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to increase numMilestonesCompleted for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully increased numMilestonesCompleted for projectId %s\n", projectId)
+}
+
+func (projectExecutor *ProjectExecutor) SetCurrentMilestoneTX(projectId string) {
+  _, err := projectExecutor.Tx.Exec(SET_CURRENT_MILESTONE_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to set current milestone for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully set current milestone for projectId %s\n", projectId)
 }
