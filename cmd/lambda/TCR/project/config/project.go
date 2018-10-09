@@ -1,18 +1,16 @@
-package config
+package lambda_project_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
-  "BigBang/internal/app/tcr_attributes"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
 )
 
 
 type Request struct {
   ProjectId   string  `json:"projectId,required"`
+  Admin       string  `json:"admin,required"`
   Content     string  `json:"content,required"`
-  AvgRating   int64   `json:"avgRating,required"`
-  MilestoneInfo tcr_attributes.MilestoneInfo `json:"milestoneInfo,required"`
 }
 
 type Response struct {
@@ -23,9 +21,8 @@ type Response struct {
 func (request *Request) ToProjectRecord() (record *project_config.ProjectRecord) {
   return &project_config.ProjectRecord{
     ProjectId:     request.ProjectId,
+    Admin:         request.Admin,
     Content:       request.Content,
-    AvgRating:     request.AvgRating,
-    MilestoneInfo: request.MilestoneInfo.ToJsonText(),
   }
 }
 

@@ -3,8 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "milestone.go",
         "milestone_info.go",
         "obj_vote_info.go",
+        "objective.go",
+        "project.go",
         "rating_vote.go",
     ],
     importpath = "BigBang/internal/app/tcr_attributes",

@@ -1,24 +1,13 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["new_project.go"],
-    importpath = "BigBang/cmd/lambda/TCR/new_project/config",
+    srcs = ["project.go"],
+    importpath = "BigBang/cmd/lambda/TCR/project/config",
     visibility = ["//visibility:public"],
     deps = [
-        "//internal/app/tcr_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/TCR/project_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
-    ],
-)
-
-go_test(
-    name = "go_default_test",
-    srcs = ["new_project_test.go"],
-    embed = [":go_default_library"],
-    deps = [
-        "//internal/app/tcr_attributes:go_default_library",
-        "//vendor/github.com/stretchr/testify/assert:go_default_library",
     ],
 )

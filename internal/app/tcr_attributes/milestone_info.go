@@ -6,26 +6,28 @@ import (
   "encoding/json"
 )
 
-type MilestoneInfo struct {
+type MilestonesInfo struct {
+  CurrentMilestone int64 `json:"currentMilestone,required"`
   NumMilestones int64 `json:"numMilestones,required"`
   NumMilestonesCompleted int64 `json:"numMilestonesCompleted,required"`
+  Milestones *[]Milestone `json:"milestones,omitempty"`
 }
 
-func (milestoneInfo *MilestoneInfo) ToJsonText() types.JSONText {
-  marshaled, err := json.Marshal(milestoneInfo)
+func (milestonesInfo *MilestonesInfo) ToJsonText() types.JSONText {
+  marshaled, err := json.Marshal(milestonesInfo)
   if err != nil {
-    log.Panicf("Failed to marshal MilestoneInfo %+v with error: %+v\n", milestoneInfo, err)
+    log.Panicf("Failed to marshal MilestonesInfo %+v with error: %+v\n", milestonesInfo, err)
   }
   return types.JSONText(string(marshaled))
 }
 
 
-func CreatedMilestoneInfoFromJsonText(jsonText types.JSONText) *MilestoneInfo {
-  var milestoneInfo MilestoneInfo
-  err := jsonText.Unmarshal(&milestoneInfo)
+func CreatedMilestoneInfoFromJsonText(jsonText types.JSONText) *MilestonesInfo {
+  var milestonesInfo MilestonesInfo
+  err := jsonText.Unmarshal(&milestonesInfo)
   if err != nil {
     log.Panicf("Failed to unmarshal jsonText %+v with error: %+v\n", jsonText, err)
   }
-  return &milestoneInfo
+  return &milestonesInfo
 }
 
