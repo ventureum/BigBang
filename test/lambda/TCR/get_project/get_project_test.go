@@ -21,9 +21,9 @@ func TestHandler(t *testing.T) {
       response: lambda_get_project_config.Response {
         Project: &tcr_attributes.Project{
           ProjectId: test_constants.ProjectId1,
-          Admin: test_constants.Admin1,
+          Admin: test_constants.ProjectAdmin1,
           Content:   test_constants.ProjectContent1,
-          BlockTimestamp: test_constants.BlockTimestamp1,
+          BlockTimestamp: test_constants.ProjectBlockTimestamp1,
         },
         Ok: true,
       },

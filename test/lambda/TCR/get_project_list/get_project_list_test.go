@@ -21,7 +21,7 @@ func TestHandler(t *testing.T) {
       },
       response: lambda_get_project_list_config.Response {
         Projects: &[]tcr_attributes.Project{},
-        NextCursor: utils.Base64EncodeIdByInt64AndStr(test_constants.BlockTimestamp5, test_constants.ProjectId6),
+        NextCursor: utils.Base64EncodeIdByInt64AndStr(test_constants.ProjectBlockTimestamp5, test_constants.ProjectId6),
         Ok: true,
       },
       err: nil,
@@ -34,18 +34,18 @@ func TestHandler(t *testing.T) {
        Projects: &[]tcr_attributes.Project{
           {
             ProjectId: test_constants.ProjectId6,
-            Admin: test_constants.Admin1,
+            Admin: test_constants.ProjectAdmin1,
             Content:  test_constants.ProjectContent1,
-            BlockTimestamp: test_constants.BlockTimestamp5,
+            BlockTimestamp: test_constants.ProjectBlockTimestamp5,
           },
           {
             ProjectId: test_constants.ProjectId5,
-            Admin: test_constants.Admin1,
+            Admin: test_constants.ProjectAdmin1,
             Content:  test_constants.ProjectContent1,
-            BlockTimestamp: test_constants.BlockTimestamp5,
+            BlockTimestamp: test_constants.ProjectBlockTimestamp5,
          },
        },
-       NextCursor: utils.Base64EncodeIdByInt64AndStr(test_constants.BlockTimestamp4, test_constants.ProjectId4),
+       NextCursor: utils.Base64EncodeIdByInt64AndStr(test_constants.ProjectBlockTimestamp4, test_constants.ProjectId4),
        Ok: true,
      },
      err: nil,
@@ -53,24 +53,24 @@ func TestHandler(t *testing.T) {
     {
      request: lambda_get_project_list_config.Request {
        Limit: 2,
-       Cursor: utils.Base64EncodeIdByInt64AndStr(test_constants.BlockTimestamp4, test_constants.ProjectId4),
+       Cursor: utils.Base64EncodeIdByInt64AndStr(test_constants.ProjectBlockTimestamp4, test_constants.ProjectId4),
      },
      response: lambda_get_project_list_config.Response {
        Projects: &[]tcr_attributes.Project{
          {
            ProjectId: test_constants.ProjectId4,
-           Admin: test_constants.Admin1,
+           Admin: test_constants.ProjectAdmin1,
            Content:  test_constants.ProjectContent1,
-           BlockTimestamp: test_constants.BlockTimestamp4,
+           BlockTimestamp: test_constants.ProjectBlockTimestamp4,
          },
          {
            ProjectId: test_constants.ProjectId3,
-           Admin: test_constants.Admin1,
+           Admin: test_constants.ProjectAdmin1,
            Content:  test_constants.ProjectContent1,
-           BlockTimestamp: test_constants.BlockTimestamp3,
+           BlockTimestamp: test_constants.ProjectBlockTimestamp3,
          },
        },
-       NextCursor: utils.Base64EncodeIdByInt64AndStr(test_constants.BlockTimestamp2, test_constants.ProjectId2),
+       NextCursor: utils.Base64EncodeIdByInt64AndStr(test_constants.ProjectBlockTimestamp2, test_constants.ProjectId2),
        Ok: true,
      },
      err: nil,
@@ -78,33 +78,33 @@ func TestHandler(t *testing.T) {
     {
      request: lambda_get_project_list_config.Request {
        Limit: 5,
-       Cursor: utils.Base64EncodeIdByInt64AndStr(test_constants.BlockTimestamp4, test_constants.ProjectId4),
+       Cursor: utils.Base64EncodeIdByInt64AndStr(test_constants.ProjectBlockTimestamp4, test_constants.ProjectId4),
      },
      response: lambda_get_project_list_config.Response {
        Projects: &[]tcr_attributes.Project{
          {
            ProjectId: test_constants.ProjectId4,
-           Admin: test_constants.Admin1,
+           Admin: test_constants.ProjectAdmin1,
            Content:  test_constants.ProjectContent1,
-           BlockTimestamp: test_constants.BlockTimestamp4,
+           BlockTimestamp: test_constants.ProjectBlockTimestamp4,
          },
          {
            ProjectId: test_constants.ProjectId3,
-           Admin: test_constants.Admin1,
+           Admin: test_constants.ProjectAdmin1,
            Content:  test_constants.ProjectContent1,
-           BlockTimestamp: test_constants.BlockTimestamp3,
+           BlockTimestamp: test_constants.ProjectBlockTimestamp3,
          },
          {
            ProjectId: test_constants.ProjectId2,
-           Admin: test_constants.Admin1,
+           Admin: test_constants.ProjectAdmin1,
            Content:  test_constants.ProjectContent1,
-           BlockTimestamp: test_constants.BlockTimestamp2,
+           BlockTimestamp: test_constants.ProjectBlockTimestamp2,
          },
          {
            ProjectId: test_constants.ProjectId1,
-           Admin: test_constants.Admin1,
+           Admin: test_constants.ProjectAdmin1,
            Content:  test_constants.ProjectContent1,
-           BlockTimestamp: test_constants.BlockTimestamp1,
+           BlockTimestamp: test_constants.ProjectBlockTimestamp1,
          },
        },
        NextCursor: "",

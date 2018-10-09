@@ -1,16 +1,16 @@
-package lambda_project_config
+package lambda_objective_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
-  "BigBang/internal/platform/postgres_config/TCR/project_config"
-  "BigBang/internal/pkg/utils"
+  "BigBang/internal/platform/postgres_config/TCR/objective_config"
 )
 
 
 type Request struct {
   ProjectId   string  `json:"projectId,required"`
-  Admin       string  `json:"admin,required"`
+  MilestoneId int64  `json:"milestoneId,required"`
+  ObjectiveId int64 `json:"objectiveId,required"`
   Content     string  `json:"content,required"`
   BlockTimestamp  int64 `json:"blockTimestamp,required"`
 }
@@ -20,15 +20,15 @@ type Response struct {
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
-func (request *Request) ToProjectRecord() (record *project_config.ProjectRecord) {
-  projectRecord := &project_config.ProjectRecord{
-    ID: utils.GenerateIdByInt64AndStr(request.BlockTimestamp, request.ProjectId),
+func (request *Request) ToObjectiveRecord() (record *objective_config.ObjectiveRecord) {
+  objectiveRecord := &objective_config.ObjectiveRecord{
     ProjectId:     request.ProjectId,
-    Admin:         request.Admin,
+    MilestoneId: request.MilestoneId,
+    ObjectiveId: request.ObjectiveId,
     Content:       request.Content,
     BlockTimestamp: request.BlockTimestamp,
   }
-  return projectRecord
+  return objectiveRecord
 }
 
 func ProcessRequest(request Request, response *Response) {
@@ -42,8 +42,8 @@ func ProcessRequest(request Request, response *Response) {
   }()
   postgresBigBangClient.Begin()
 
-  projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
-  projectExecutor.UpsertProjectRecordTx(request.ToProjectRecord())
+  objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
+  objectiveExecutor.UpsertObjectiveRecordTx(request.ToObjectiveRecord())
 
   postgresBigBangClient.Commit()
   response.Ok = true
