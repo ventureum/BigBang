@@ -147,6 +147,24 @@ func (objectiveExecutor *ObjectiveExecutor) VerifyObjectiveRecordExisting (
   }
 }
 
+func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeight(
+  projectId string, milestoneId int, objectiveId int, deltaRating int64, deltaWeight int64) {
+  _, err := objectiveExecutor.C.Exec(
+    ADD_RATING_AND_WEIGHT_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
+    log.Printf("Failed to add rating and weight for projectId %s, milestoneId %d and objectiveId %d with error: %+v\n",
+      projectId, milestoneId, objectiveId, err)
+    errorInfo.ErrorData["milestoneId"] = milestoneId
+    errorInfo.ErrorData["projectId"] = projectId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added rating and weight for projectId %s, milestoneId %d and objectiveId %d\n",
+    projectId, milestoneId, objectiveId)
+}
+
 /*
  * Tx versions
  */
@@ -270,4 +288,22 @@ func (objectiveExecutor *ObjectiveExecutor) VerifyObjectiveRecordExistingTx (
     log.Printf("No objective record for projectId %s, milestoneId %d and objectiveId %d", projectId, milestoneId, objectiveId)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeightTx(
+    projectId string, milestoneId int, objectiveId int, deltaRating int64, deltaWeight int64) {
+  _, err := objectiveExecutor.Tx.Exec(
+    ADD_RATING_AND_WEIGHT_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
+    log.Printf("Failed to add rating and weight for projectId %s, milestoneId %d and objectiveId %d with error: %+v\n",
+      projectId, milestoneId, objectiveId, err)
+    errorInfo.ErrorData["milestoneId"] = milestoneId
+    errorInfo.ErrorData["projectId"] = projectId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added rating and weight for projectId %s, milestoneId %d and objectiveId %d\n",
+    projectId, milestoneId, objectiveId)
 }

@@ -1,8 +1,10 @@
 package tcr_attributes
 
 type Objective struct {
-  ObjectiveId   string         `json:"objectiveId,required"`
+  ProjectId      string        `json:"projectId,required"`
+  MilestoneId   int64        `json:"milestoneId,required"`
+  ObjectiveId   int64          `json:"objectiveId,required"`
   Content       string         `json:"content,required"`
-  TotalRating   int64          `json:"totalRating,required"`
-  TotalWeight   int64          `json:"totalWeight,required"`
+  BlockTimestamp  int64        `json:"blockTimestamp,required"`
+  AvgRating      int64         `json:"avgRating,required"`
 }
