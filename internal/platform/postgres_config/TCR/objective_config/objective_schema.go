@@ -14,7 +14,7 @@ CREATE TABLE objectives (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (project_id, milestone_id, objective_id),
-    FOREIGN KEY (project_id, milestone_id) REFERENCES milestones (project_id, milestone_id)
+    FOREIGN KEY (project_id, milestone_id) REFERENCES milestones (project_id, milestone_id) ON DELETE CASCADE
 );
 CREATE INDEX objectives_index ON objectives (project_id, milestone_id, objective_id);
 CREATE INDEX objectives_asc_index ON objectives (objective_id ASC NULLS LAST);

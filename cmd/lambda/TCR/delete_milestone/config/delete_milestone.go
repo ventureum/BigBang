@@ -1,18 +1,17 @@
-package lambda_delete_objective_config
+package lambda_delete_milestone_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
-  "BigBang/internal/platform/postgres_config/TCR/objective_config"
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
+  "BigBang/internal/platform/postgres_config/TCR/project_config"
 )
 
 
 type Request struct {
   ProjectId   string  `json:"projectId,required"`
   MilestoneId int64  `json:"milestoneId,required"`
-  ObjectiveId int64 `json:"objectiveId,required"`
 }
 
 type Response struct {
@@ -30,22 +29,22 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+
   projectId := request.ProjectId
   milestoneId := request.MilestoneId
-  objectiveId := request.ObjectiveId
   postgresBigBangClient.Begin()
 
-  objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
+  projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
 
-  objectiveExecutor.VerifyObjectiveRecordExistingTx(projectId, milestoneId, objectiveId)
-  objectiveExecutor.DeleteObjectiveRecordByIDsTx(projectId, milestoneId, objectiveId)
-  milestoneExecutor.DecreaseNumObjectivesTx(projectId, milestoneId)
+  milestoneExecutor.VerifyMilestoneRecordExistingTx(projectId, milestoneId)
+  milestoneExecutor.DeleteMilestoneRecordByIDsTx(projectId, milestoneId)
+  projectExecutor.DecreaseNumMilestonesTx(projectId)
 
   postgresBigBangClient.Commit()
 
-  log.Printf("Objective is deleted for projectId %s, milestoneId %d and objectiveId %d\n",
-    projectId,  milestoneId, objectiveId)
+  log.Printf("Milestone is deleted for projectId %s and milestoneId %d\n",
+    projectId,  milestoneId)
 
   response.Ok = true
 }
