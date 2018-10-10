@@ -4,6 +4,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/objective_config"
+  "BigBang/internal/platform/postgres_config/TCR/milestone_config"
 )
 
 
@@ -42,9 +43,12 @@ func ProcessRequest(request Request, response *Response) {
   }()
   postgresBigBangClient.Begin()
 
+  milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
-  objectiveExecutor.UpsertObjectiveRecordTx(request.ToObjectiveRecord())
-
+  inserted := objectiveExecutor.UpsertObjectiveRecordTx(request.ToObjectiveRecord())
+  if inserted {
+    milestoneExecutor.IncreaseNumObjectivesTx(request.ProjectId, request.MilestoneId)
+  }
   postgresBigBangClient.Commit()
   response.Ok = true
 }

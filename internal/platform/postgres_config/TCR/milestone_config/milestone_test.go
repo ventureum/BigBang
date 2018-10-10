@@ -13,23 +13,23 @@ const MilestoneId2 = 2
 
 
 var MilestoneRecord1 = MilestoneRecord {
-  ProjectId: ProjectId1,
-  MilestoneId: MilestoneId1,
-  Content: "123",
-  StartTime: 1000,
-  EndTime: 2000,
-  NumObjs: 5,
-  AvgRating: 10,
+  ProjectId:     ProjectId1,
+  MilestoneId:   MilestoneId1,
+  Content:       "123",
+  StartTime:     1000,
+  EndTime:       2000,
+  NumObjectives: 5,
+  AvgRating:     10,
 }
 
 var MilestoneRecord2 = MilestoneRecord {
-  ProjectId: ProjectId1,
-  MilestoneId: MilestoneId2,
-  Content: "456",
-  StartTime: 2000,
-  EndTime: 3000,
-  NumObjs: 10,
-  AvgRating: 20,
+  ProjectId:     ProjectId1,
+  MilestoneId:   MilestoneId2,
+  Content:       "456",
+  StartTime:     2000,
+  EndTime:       3000,
+  NumObjectives: 10,
+  AvgRating:     20,
 }
 
 type MilestoneTestSuite struct {
@@ -72,7 +72,7 @@ func (suite *MilestoneTestSuite) TestNonEmptyQueryForGetMilestoneRecordByIDs() {
   suite.Equal(MilestoneRecord1.Content, objectiveRecord.Content)
   suite.Equal(MilestoneRecord1.StartTime, objectiveRecord.StartTime)
   suite.Equal(MilestoneRecord1.EndTime, objectiveRecord.EndTime)
-  suite.Equal(MilestoneRecord1.NumObjs, objectiveRecord.NumObjs)
+  suite.Equal(MilestoneRecord1.NumObjectives, objectiveRecord.NumObjectives)
   suite.Equal(MilestoneRecord1.AvgRating, objectiveRecord.AvgRating)
 }
 
@@ -103,7 +103,7 @@ func (suite *MilestoneTestSuite) TestNonEmptyQueryForGetMilestoneRecordsByProjec
     suite.Equal(expectedMilestoneRecords[index].Content, objectiveRecord.Content)
     suite.Equal(expectedMilestoneRecords[index].StartTime, objectiveRecord.StartTime)
     suite.Equal(expectedMilestoneRecords[index].EndTime, objectiveRecord.EndTime)
-    suite.Equal(expectedMilestoneRecords[index].NumObjs, objectiveRecord.NumObjs)
+    suite.Equal(expectedMilestoneRecords[index].NumObjectives, objectiveRecord.NumObjectives)
     suite.Equal(expectedMilestoneRecords[index].AvgRating, objectiveRecord.AvgRating)
   }
 }
