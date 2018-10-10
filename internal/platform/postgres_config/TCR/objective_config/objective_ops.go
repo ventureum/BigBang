@@ -118,19 +118,9 @@ func (objectiveExecutor *ObjectiveExecutor) GetObjectiveRecordsByProjectIdAndMil
   }
   return &objectiveRecords
 }
-
 func (objectiveExecutor *ObjectiveExecutor) VerifyObjectiveRecordExisting (
     projectId string, milestoneId int64, objectiveId int64) {
-  var existing bool
-  err := objectiveExecutor.C.Get(&existing, VERIFY_OBJECTIVE_EXISTING_COMMAND, projectId, milestoneId, objectiveId)
-  if err != nil {
-    errInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
-    log.Printf("Failed to verify objective record existing for projectId %s, milestoneId %d and objectiveId %d with error: %+v\n",
-      projectId, milestoneId, objectiveId, err)
-    errInfo.ErrorData["milestoneId"] = milestoneId
-    errInfo.ErrorData["projectId"] = projectId
-    log.Panicln(errInfo.Marshal())
-  }
+  existing := objectiveExecutor.CheckObjectiveRecordExisting(projectId, milestoneId, objectiveId)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoObjectiveIdExisting,
@@ -144,6 +134,22 @@ func (objectiveExecutor *ObjectiveExecutor) VerifyObjectiveRecordExisting (
     log.Printf("No objective record for projectId %s, milestoneId %d and objectiveId %d", projectId, milestoneId, objectiveId)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (objectiveExecutor *ObjectiveExecutor) CheckObjectiveRecordExisting (
+    projectId string, milestoneId int64, objectiveId int64) bool {
+  var existing bool
+  err := objectiveExecutor.C.Get(&existing, VERIFY_OBJECTIVE_EXISTING_COMMAND, projectId, milestoneId, objectiveId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
+    log.Printf("Failed to verify objective record existing for projectId %s, milestoneId %d and objectiveId %d with error: %+v\n",
+      projectId, milestoneId, objectiveId, err)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+
+  return existing
 }
 
 func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeight(
@@ -264,16 +270,7 @@ func (objectiveExecutor *ObjectiveExecutor) GetObjectiveRecordsByProjectIdAndMil
 
 func (objectiveExecutor *ObjectiveExecutor) VerifyObjectiveRecordExistingTx (
     projectId string, milestoneId int64, objectiveId int64) {
-  var existing bool
-  err := objectiveExecutor.Tx.Get(&existing, VERIFY_OBJECTIVE_EXISTING_COMMAND, projectId, milestoneId, objectiveId)
-  if err != nil {
-    errInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
-    log.Printf("Failed to verify objective record existing for projectId %s, milestoneId %d and objectiveId %d with error: %+v\n",
-      projectId, milestoneId, objectiveId, err)
-    errInfo.ErrorData["milestoneId"] = milestoneId
-    errInfo.ErrorData["projectId"] = projectId
-    log.Panicln(errInfo.Marshal())
-  }
+  existing := objectiveExecutor.CheckObjectiveRecordExistingTx(projectId, milestoneId, objectiveId)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoObjectiveIdExisting,
@@ -287,6 +284,22 @@ func (objectiveExecutor *ObjectiveExecutor) VerifyObjectiveRecordExistingTx (
     log.Printf("No objective record for projectId %s, milestoneId %d and objectiveId %d", projectId, milestoneId, objectiveId)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (objectiveExecutor *ObjectiveExecutor) CheckObjectiveRecordExistingTx (
+    projectId string, milestoneId int64, objectiveId int64) bool {
+  var existing bool
+  err := objectiveExecutor.Tx.Get(&existing, VERIFY_OBJECTIVE_EXISTING_COMMAND, projectId, milestoneId, objectiveId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
+    log.Printf("Failed to verify objective record existing for projectId %s, milestoneId %d and objectiveId %d with error: %+v\n",
+      projectId, milestoneId, objectiveId, err)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+
+  return existing
 }
 
 func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeightTx(
