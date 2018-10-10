@@ -1,4 +1,4 @@
-package get_objective
+package delete_objective
 
 import (
   "github.com/stretchr/testify/assert"
