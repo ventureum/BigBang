@@ -5,8 +5,8 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/app/tcr_attributes"
+  "BigBang/cmd/lambda/TCR/common"
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
-  "BigBang/internal/platform/postgres_config/TCR/objective_config"
 )
 
 
@@ -35,40 +35,10 @@ func ProcessRequest(request Request, response *Response) {
   milestoneId := request.MilestoneId
 
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
-  objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
-
 
   milestoneExecutor.VerifyMilestoneRecordExisting(projectId, milestoneId)
-
   milestoneRecord := milestoneExecutor.GetMilestoneRecordByIDs(projectId, milestoneId)
-  milestone := &tcr_attributes.Milestone{
-    ProjectId:      milestoneRecord.ProjectId,
-    MilestoneId:    milestoneRecord.MilestoneId,
-    Content:        milestoneRecord.Content,
-    StartTime:      milestoneRecord.StartTime,
-    EndTime:        milestoneRecord.EndTime,
-    BlockTimestamp: milestoneRecord.BlockTimestamp,
-    NumObjectives:  milestoneRecord.NumObjectives,
-    State: milestoneRecord.State,
-    AvgRating:      milestoneRecord.AvgRating,
-  }
-
-  objectiveRecords := objectiveExecutor.GetObjectiveRecordsByProjectIdAndMilestoneId(projectId, milestoneId)
-
-  var objectives []tcr_attributes.Objective
-  for _, objectiveRecord := range *objectiveRecords {
-    objective := tcr_attributes.Objective{
-      ProjectId: objectiveRecord.ProjectId,
-      MilestoneId: objectiveRecord.MilestoneId,
-      ObjectiveId: objectiveRecord.ObjectiveId,
-      Content: objectiveRecord.Content,
-      BlockTimestamp: objectiveRecord.BlockTimestamp,
-      AvgRating: objectiveRecord.AvgRating,
-    }
-    objectives = append(objectives, objective)
-  }
-  milestone.Objectives = &objectives
-  response.Milestone = milestone
+  response.Milestone = common.ConstructMilestoneFromMilestoneRecord(milestoneRecord, postgresBigBangClient)
 
   log.Printf("Milestone Content is loaded for projectId %s and milestoneId %d\n",
     projectId, milestoneId)

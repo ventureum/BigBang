@@ -60,14 +60,21 @@ SET
    total_rating = total_rating + $2,
    total_weight = total_weight + $3,
    avg_rating = (total_rating + $2) / GREATEST(total_weight + $3, 1)
-WHERE project_id = $1
+WHERE project_id = $1;
 `
 
 const INCREASE_NUM_MILESTONES_COMMAND = `
 UPDATE projects
 SET
    num_milestones = num_milestones + 1
-WHERE project_id = $1
+WHERE project_id = $1;
+`
+
+const DECREASE_NUM_MILESTONES_COMMAND = `
+UPDATE projects
+SET
+   num_milestones = num_milestones - 1
+WHERE project_id = $1;
 `
 
 const INCREASE_NUM_MILESTONES_COMPLETED_COMMAND = `
@@ -75,12 +82,12 @@ UPDATE projects
 SET
    num_milestones_completed = LEAST(num_milestones_completed + 1, num_milestones),
    current_milestone = 0
-WHERE project_id = $1
+WHERE project_id = $1;
 `
 
 const SET_CURRENT_MILESTONE_COMMAND = `
 UPDATE projects
 SET
-   current_milestone = (num_milestones_completed + 1)%(num_milestones + 1)
-WHERE project_id = $1
+   current_milestone = $2
+WHERE project_id = $1;
 `

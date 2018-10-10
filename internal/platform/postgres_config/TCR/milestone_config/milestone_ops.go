@@ -2,7 +2,6 @@ package milestone_config
 
 import (
   "log"
-  "time"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "database/sql"
@@ -28,7 +27,7 @@ func (milestoneExecutor *MilestoneExecutor) ClearMilestoneTable() {
   milestoneExecutor.ClearTable(TABLE_NAME_FOR_MILESTONE)
 }
 
-func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecord(milestoneRecord *MilestoneRecord) time.Time {
+func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecord(milestoneRecord *MilestoneRecord) bool {
   res, err := milestoneExecutor.C.NamedQuery(UPSERT_MILESTONE_COMMAND, milestoneRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "milestoneId", milestoneRecord.MilestoneId, error_config.MilestoneRecordLocation)
@@ -39,11 +38,11 @@ func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecord(milestoneRecor
 
   log.Printf("Sucessfully upserted milestone record for milestoneId %s\n", milestoneRecord.MilestoneId)
 
-  var createdTime time.Time
+  var inserted sql.NullBool
   for res.Next() {
-    res.Scan(&createdTime)
+    err = res.Scan(&inserted)
   }
-  return createdTime
+  return inserted.Bool
 }
 
 func (milestoneExecutor *MilestoneExecutor) DeleteMilestoneRecordByIDs(
@@ -168,7 +167,7 @@ func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectives(projectId stri
 /*
  * Tx versions
  */
-func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecordTx(milestoneRecord *MilestoneRecord) time.Time {
+func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecordTx(milestoneRecord *MilestoneRecord) bool {
   res, err := milestoneExecutor.Tx.NamedQuery(UPSERT_MILESTONE_COMMAND, milestoneRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "milestoneId", milestoneRecord.MilestoneId, error_config.MilestoneRecordLocation)
@@ -179,11 +178,11 @@ func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecordTx(milestoneRec
 
   log.Printf("Sucessfully upserted milestone record for milestoneId %s\n", milestoneRecord.MilestoneId)
 
-  var createdTime time.Time
+  var inserted sql.NullBool
   for res.Next() {
-    res.Scan(&createdTime)
+    err = res.Scan(&inserted)
   }
-  return createdTime
+  return inserted.Bool
 }
 
 func (milestoneExecutor *MilestoneExecutor) DeleteMilestoneRecordByIDsTx(

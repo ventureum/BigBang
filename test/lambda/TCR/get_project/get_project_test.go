@@ -8,6 +8,8 @@ import (
   "BigBang/test/constants"
 )
 
+var EmptyObjectives []tcr_attributes.Objective
+
 func TestHandler(t *testing.T) {
   tests := []struct{
     request lambda_get_project_config.Request
@@ -24,6 +26,94 @@ func TestHandler(t *testing.T) {
           Admin: test_constants.ProjectAdmin1,
           Content:   test_constants.ProjectContent1,
           BlockTimestamp: test_constants.ProjectBlockTimestamp1,
+          MilestonesInfo: &tcr_attributes.MilestonesInfo{
+            CurrentMilestone: test_constants.MilestoneId2,
+            NumMilestonesCompleted: 1,
+            NumMilestones: 4,
+            Milestones: &[]tcr_attributes.Milestone {
+              {
+                 ProjectId: test_constants.ProjectId1,
+                 MilestoneId: test_constants.MilestoneId1,
+                 Content: test_constants.MilestoneContent1,
+                 BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
+                 StartTime: test_constants.MilestoneStartTime1,
+                 EndTime: test_constants.MilestoneEndTime1,
+                 State: tcr_attributes.CompleteMilestoneState,
+                 NumObjectives: 2,
+                 Objectives: &[]tcr_attributes.Objective{
+                   {
+                     ProjectId: test_constants.ProjectId1,
+                     MilestoneId: test_constants.MilestoneId1,
+                     ObjectiveId: test_constants.ObjectiveId1,
+                     Content: test_constants.ObjectiveContent1,
+                     BlockTimestamp: test_constants.ObjectiveBlockTimestamp1,
+                   },
+                   {
+                     ProjectId: test_constants.ProjectId1,
+                     MilestoneId: test_constants.MilestoneId1,
+                     ObjectiveId: test_constants.ObjectiveId2,
+                     Content: test_constants.ObjectiveContent1,
+                     BlockTimestamp: test_constants.ObjectiveBlockTimestamp2,
+                   },
+                 },
+              },
+              {
+                ProjectId: test_constants.ProjectId1,
+                MilestoneId: test_constants.MilestoneId2,
+                Content: test_constants.MilestoneContent1,
+                BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
+                StartTime: test_constants.MilestoneStartTime2,
+                EndTime: test_constants.MilestoneEndTime2,
+                State: tcr_attributes.InProgressMilestoneState,
+                NumObjectives: 3,
+                Objectives: &[]tcr_attributes.Objective{
+                  {
+                    ProjectId: test_constants.ProjectId1,
+                    MilestoneId: test_constants.MilestoneId2,
+                    ObjectiveId: test_constants.ObjectiveId1,
+                    Content: test_constants.ObjectiveContent1,
+                    BlockTimestamp: test_constants.ObjectiveBlockTimestamp3,
+                  },
+                  {
+                    ProjectId: test_constants.ProjectId1,
+                    MilestoneId: test_constants.MilestoneId2,
+                    ObjectiveId: test_constants.ObjectiveId2,
+                    Content: test_constants.ObjectiveContent1,
+                    BlockTimestamp: test_constants.ObjectiveBlockTimestamp4,
+                  },
+                  {
+                    ProjectId: test_constants.ProjectId1,
+                    MilestoneId: test_constants.MilestoneId2,
+                    ObjectiveId: test_constants.ObjectiveId3,
+                    Content: test_constants.ObjectiveContent1,
+                    BlockTimestamp: test_constants.ObjectiveBlockTimestamp5,
+                  },
+                },
+              },
+              {
+                ProjectId: test_constants.ProjectId1,
+                MilestoneId: test_constants.MilestoneId3,
+                Content: test_constants.MilestoneContent1,
+                BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
+                StartTime: test_constants.MilestoneStartTime3,
+                EndTime: test_constants.MilestoneEndTime3,
+                State: tcr_attributes.PendingMilestoneState,
+                NumObjectives: 0,
+                Objectives: &EmptyObjectives,
+              },
+              {
+                ProjectId: test_constants.ProjectId1,
+                MilestoneId: test_constants.MilestoneId4,
+                Content: test_constants.MilestoneContent1,
+                BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
+                StartTime: test_constants.MilestoneStartTime4,
+                EndTime: test_constants.MilestoneEndTime4,
+                State: tcr_attributes.PendingMilestoneState,
+                NumObjectives: 0,
+                Objectives: &EmptyObjectives,
+              },
+            },
+          },
         },
         Ok: true,
       },
@@ -38,5 +128,7 @@ func TestHandler(t *testing.T) {
     assert.Equal(t, test.response.Project.Admin, result.Project.Admin)
     assert.Equal(t, test.response.Project.Content, result.Project.Content)
     assert.Equal(t, test.response.Project.BlockTimestamp, result.Project.BlockTimestamp)
+    assert.Equal(t, test.response.Project.MilestonesInfo, result.Project.MilestonesInfo)
+
   }
 }

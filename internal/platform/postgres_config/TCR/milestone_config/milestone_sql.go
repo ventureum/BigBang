@@ -30,7 +30,7 @@ DO
         end_time = :end_time,
         state = :state
     WHERE milestones.project_id = :project_id and milestones.milestone_id = :milestone_id
-RETURNING created_at;
+RETURNING (xmax = 0) AS inserted;
 `
 
 const DELETE_MILESTONE_BY_IDS_COMMAND = `
