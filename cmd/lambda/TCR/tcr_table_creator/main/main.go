@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-  lambda.Start(config.Handler)
+  lambda.Start(lambda_tcr_table_creator_config.Handler)
 }
