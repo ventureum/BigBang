@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["delete_milestone_test.go"],
+    deps = [
+        "//cmd/lambda/TCR/delete_milestone/config:go_default_library",
+        "//internal/platform/postgres_config/TCR/milestone_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)
