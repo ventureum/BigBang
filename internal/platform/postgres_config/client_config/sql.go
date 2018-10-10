@@ -52,3 +52,20 @@ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'actor_profile_status_enum'
 END IF;
 END$$;
 `
+
+const LOAD_MILESTONE_STATE_ENUM = `
+DO $$
+BEGIN
+IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'milestone_state_enum') THEN
+  CREATE TYPE milestone_state_enum AS ENUM ('COMPLETE','IN_PROGRESS', 'PENDING');
+END IF;
+END$$;
+`
+const DROP_MILESTONE_STATE_ENUM = `
+DO $$
+BEGIN
+IF EXISTS (SELECT 1 FROM pg_type WHERE typname = 'milestone_state_enum') THEN
+  DROP TYPE milestone_state_enum;
+END IF;
+END$$;
+`

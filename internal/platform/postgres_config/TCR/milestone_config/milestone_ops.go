@@ -13,13 +13,15 @@ type MilestoneExecutor struct {
 }
 
 func (milestoneExecutor *MilestoneExecutor) CreateMilestoneTable() {
+  milestoneExecutor.LoadMilestoneStateEnum()
   milestoneExecutor.CreateTimestampTrigger()
   milestoneExecutor.CreateTable(TABLE_SCHEMA_FOR_MILESTONE, TABLE_NAME_FOR_MILESTONE)
   milestoneExecutor.RegisterTimestampTrigger(TABLE_NAME_FOR_MILESTONE)
 }
 
 func (milestoneExecutor *MilestoneExecutor) DeleteMilestoneTable() {
-   milestoneExecutor.DeleteTable(TABLE_NAME_FOR_MILESTONE)
+  milestoneExecutor.DeleteTable(TABLE_NAME_FOR_MILESTONE)
+  milestoneExecutor.DropMilestoneStateEnum()
 }
 
 func (milestoneExecutor *MilestoneExecutor) ClearMilestoneTable() {

@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "milestone.go",
         "milestone_info.go",
+        "milestone_state.go",
         "obj_vote_info.go",
         "objective.go",
         "project.go",

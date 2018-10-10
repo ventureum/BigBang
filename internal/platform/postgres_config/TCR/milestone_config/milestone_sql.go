@@ -6,20 +6,20 @@ INSERT INTO milestones
   project_id,
   milestone_id,
   content,
+  block_timestamp,
   start_time,
   end_time,
-  num_objs,
-  avg_rating
+  state
 )
 VALUES 
 (
   :project_id,
   :milestone_id,
   :content,
+  :block_timestamp,
   :start_time,
   :end_time,
-  :num_objs,
-  :avg_rating
+  :state
 )
 ON CONFLICT (project_id, milestone_id) 
 DO
@@ -28,8 +28,7 @@ DO
         content = :content,
         start_time = :start_time,
         end_time = :end_time,
-        num_objs = :num_objs,
-        avg_rating = :avg_rating
+        state = :state
     WHERE milestones.project_id = :project_id and milestones.milestone_id = :milestone_id
 RETURNING created_at;
 `
