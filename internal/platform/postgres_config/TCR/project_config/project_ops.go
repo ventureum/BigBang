@@ -145,6 +145,18 @@ func (projectExecutor *ProjectExecutor) IncreaseNumMilestones(projectId string) 
   log.Printf("Successfully increased numMilestones for projectId %s\n", projectId)
 }
 
+func (projectExecutor *ProjectExecutor) DecreaseNumMilestones(projectId string) {
+  _, err := projectExecutor.C.Exec(DECREASE_NUM_MILESTONES_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to decrease numMilestones for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully decreased numMilestones for projectId %s\n", projectId)
+}
+
 func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesCompleted(projectId string) {
   _, err := projectExecutor.C.Exec(INCREASE_NUM_MILESTONES_COMPLETED_COMMAND, projectId)
 
@@ -157,16 +169,16 @@ func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesCompleted(projectId
   log.Printf("Successfully increased numMilestonesCompleted for projectId %s\n", projectId)
 }
 
-func (projectExecutor *ProjectExecutor) SetCurrentMilestone(projectId string) {
-  _, err := projectExecutor.C.Exec(SET_CURRENT_MILESTONE_COMMAND, projectId)
+func (projectExecutor *ProjectExecutor) SetCurrentMilestone(projectId string, milestoneId int64) {
+  _, err := projectExecutor.C.Exec(SET_CURRENT_MILESTONE_COMMAND, projectId, milestoneId)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
-    log.Printf("Failed to set current milestone for projectId %s with error: %+v\n", projectId, err)
+    log.Printf("Failed to set current milestone %d for projectId %s with error: %+v\n", milestoneId, projectId, err)
     log.Panic(errorInfo.Marshal())
   }
 
-  log.Printf("Successfully set current milestone for projectId %s\n", projectId)
+  log.Printf("Successfully set current milestone %d for projectId %s\n", milestoneId, projectId)
 }
 
 /*
@@ -292,6 +304,18 @@ func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesTx(projectId string
   log.Printf("Successfully increased numMilestones for projectId %s\n", projectId)
 }
 
+func (projectExecutor *ProjectExecutor) DecreaseNumMilestonesTx(projectId string) {
+  _, err := projectExecutor.Tx.Exec(DECREASE_NUM_MILESTONES_COMMAND, projectId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to decrease numMilestones for projectId %s with error: %+v\n", projectId, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully decreased numMilestones for projectId %s\n", projectId)
+}
+
 func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesCompletedTx(projectId string) {
   _, err := projectExecutor.Tx.Exec(INCREASE_NUM_MILESTONES_COMPLETED_COMMAND, projectId)
 
@@ -304,14 +328,14 @@ func (projectExecutor *ProjectExecutor) IncreaseNumMilestonesCompletedTx(project
   log.Printf("Successfully increased numMilestonesCompleted for projectId %s\n", projectId)
 }
 
-func (projectExecutor *ProjectExecutor) SetCurrentMilestoneTX(projectId string) {
-  _, err := projectExecutor.Tx.Exec(SET_CURRENT_MILESTONE_COMMAND, projectId)
+func (projectExecutor *ProjectExecutor) SetCurrentMilestoneTx(projectId string, milestoneId int64) {
+  _, err := projectExecutor.Tx.Exec(SET_CURRENT_MILESTONE_COMMAND, projectId, milestoneId)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
-    log.Printf("Failed to set current milestone for projectId %s with error: %+v\n", projectId, err)
+    log.Printf("Failed to set current milestone %d for projectId %s with error: %+v\n", milestoneId, projectId, err)
     log.Panic(errorInfo.Marshal())
   }
 
-  log.Printf("Successfully set current milestone for projectId %s\n", projectId)
+  log.Printf("Successfully set current milestone %d for projectId %s\n", milestoneId, projectId)
 }

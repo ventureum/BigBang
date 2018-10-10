@@ -6,6 +6,7 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/app/tcr_attributes"
+  "BigBang/cmd/lambda/TCR/common"
 )
 
 
@@ -34,17 +35,8 @@ func ProcessRequest(request Request, response *Response) {
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
 
   projectExecutor.VerifyProjectRecordExisting(projectId)
-
   projectRecord := projectExecutor.GetProjectRecord(projectId)
-  project := &tcr_attributes.Project{
-    ProjectId: projectRecord.ProjectId,
-    Admin: projectRecord.Admin,
-    Content: projectRecord.Content,
-    AvgRating: projectRecord.AvgRating,
-    BlockTimestamp: projectRecord.BlockTimestamp,
-  }
-
-  response.Project = project
+  response.Project = common.ConstructProjectFromProjectRecord(projectRecord, postgresBigBangClient)
 
   log.Printf("Project Content is loaded for projectId %s\n", projectId)
 

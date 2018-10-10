@@ -5,6 +5,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/app/tcr_attributes"
+  "BigBang/internal/platform/postgres_config/TCR/project_config"
 )
 
 
@@ -47,8 +48,20 @@ func ProcessRequest(request Request, response *Response) {
   }()
   postgresBigBangClient.Begin()
 
+  projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
-  milestoneExecutor.UpsertMilestoneRecordTx(request.ToMilestoneRecord())
+  inserted := milestoneExecutor.UpsertMilestoneRecordTx(request.ToMilestoneRecord())
+
+  if inserted {
+    projectExecutor.IncreaseNumMilestonesTx(request.ProjectId)
+  }
+
+  switch state := request.State; state {
+    case tcr_attributes.CompleteMilestoneState:
+      projectExecutor.IncreaseNumMilestonesCompletedTx(request.ProjectId)
+    case tcr_attributes.InProgressMilestoneState:
+      projectExecutor.SetCurrentMilestoneTx(request.ProjectId, request.MilestoneId)
+  }
 
   postgresBigBangClient.Commit()
   response.Ok = true
