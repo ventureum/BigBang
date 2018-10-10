@@ -7,6 +7,7 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/pkg/utils"
   "BigBang/internal/app/tcr_attributes"
+  "BigBang/cmd/lambda/TCR/common"
 )
 
 
@@ -50,13 +51,7 @@ func ProcessRequest(request Request, response *Response) {
   var projects []tcr_attributes.Project
   for index, projectRecord := range *projectRecords {
     if index < int(limit) {
-      project := &tcr_attributes.Project{
-        ProjectId: projectRecord.ProjectId,
-        Admin: projectRecord.Admin,
-        Content: projectRecord.Content,
-        BlockTimestamp: projectRecord.BlockTimestamp,
-        AvgRating: projectRecord.AvgRating,
-      }
+      project := common.ConstructProjectFromProjectRecord(&projectRecord, postgresBigBangClient)
       projects = append(projects, *project)
     } else {
       response.NextCursor = utils.Base64EncodeStr(projectRecord.ID)
