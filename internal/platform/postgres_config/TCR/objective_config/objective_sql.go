@@ -24,7 +24,7 @@ DO
         content = :content
     WHERE  objectives.objective_id = :objective_id and 
            objectives.project_id = :project_id and objectives.milestone_id = :milestone_id
-RETURNING created_at;
+RETURNING (xmax = 0) AS inserted;
 `
 
 const DELETE_OBJECTIVE_BY_IDS_COMMAND = `

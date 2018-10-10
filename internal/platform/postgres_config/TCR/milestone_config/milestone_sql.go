@@ -57,3 +57,17 @@ ORDER BY milestone_id ASC;
 const VERIFY_MILESTONE_EXISTING_COMMAND = `
 select exists(select 1 from milestones where project_id = $1 and milestone_id = $2);
 `
+
+const INCREASE_NUM_OBJECTIVES_COMMAND = `
+UPDATE milestones
+SET
+   num_objectives = num_objectives + 1
+WHERE project_id = $1 and milestone_id = $2;
+`
+
+const DECREASE_NUM_OBJECTIVES_COMMAND = `
+UPDATE milestones
+SET
+   num_objectives = num_objectives - 1
+WHERE project_id = $1 and milestone_id = $2;
+`

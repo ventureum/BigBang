@@ -137,6 +137,34 @@ func (milestoneExecutor *MilestoneExecutor) VerifyMilestoneRecordExisting (
   }
 }
 
+func (milestoneExecutor *MilestoneExecutor) IncreaseNumObjectives(projectId string, milestoneId int64) {
+  _, err := milestoneExecutor.C.Exec(INCREASE_NUM_OBJECTIVES_COMMAND, projectId, milestoneId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to increase numObjectives for projectId %s and milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errorInfo.ErrorData["milestoneId"] = milestoneId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully increased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
+}
+
+func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectives(projectId string, milestoneId int64) {
+  _, err := milestoneExecutor.C.Exec(DECREASE_NUM_OBJECTIVES_COMMAND, projectId, milestoneId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to decrease numObjectives for projectId %s and milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errorInfo.ErrorData["milestoneId"] = milestoneId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully decreased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
+}
+
 /*
  * Tx versions
  */
@@ -247,4 +275,32 @@ func (milestoneExecutor *MilestoneExecutor) VerifyMilestoneRecordExistingTx (
     log.Printf("No milestone record for projectId %s and milestoneId %d", projectId, milestoneId)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (milestoneExecutor *MilestoneExecutor) IncreaseNumObjectivesTx(projectId string, milestoneId int64) {
+  _, err := milestoneExecutor.Tx.Exec(INCREASE_NUM_OBJECTIVES_COMMAND, projectId, milestoneId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to increase numObjectives for projectId %s and milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errorInfo.ErrorData["milestoneId"] = milestoneId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully increased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
+}
+
+func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectivesTx(projectId string, milestoneId int64) {
+  _, err := milestoneExecutor.Tx.Exec(DECREASE_NUM_OBJECTIVES_COMMAND, projectId, milestoneId)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to decrease numObjectives for projectId %s and milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errorInfo.ErrorData["milestoneId"] = milestoneId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully decreased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
 }

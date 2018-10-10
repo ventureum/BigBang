@@ -2,10 +2,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["objective.go"],
-    importpath = "BigBang/cmd/lambda/TCR/objective/config",
+    srcs = ["get_milestone.go"],
+    importpath = "BigBang/cmd/lambda/TCR/get_milestone/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//internal/app/tcr_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/TCR/milestone_config:go_default_library",
         "//internal/platform/postgres_config/TCR/objective_config:go_default_library",

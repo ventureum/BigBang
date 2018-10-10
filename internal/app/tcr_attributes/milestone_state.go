@@ -1,7 +1,7 @@
 package tcr_attributes
 
-type MileStoneState string
+type MilestoneState string
 
-const CompleteMilestoneState MileStoneState = "COMPLETE"
-const InProgressMilestoneState MileStoneState = "IN_PROGRESS"
-const PendingMilestoneState MileStoneState = "PENDING"
+const CompleteMilestoneState MilestoneState = "COMPLETE"
+const InProgressMilestoneState MilestoneState = "IN_PROGRESS"
+const PendingMilestoneState MilestoneState = "PENDING"

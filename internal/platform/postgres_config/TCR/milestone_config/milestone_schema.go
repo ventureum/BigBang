@@ -10,7 +10,7 @@ CREATE TABLE milestones (
     start_time BIGINT NOT NULL,
     end_time BIGINT NOT NULL,
     state milestone_state_enum NOT NULL,
-    num_objs BIGINT NOT NULL DEFAULT 0,
+    num_objectives BIGINT NOT NULL DEFAULT 0,
     avg_rating BIGINT NOT NULL DEFAULT 0,
     total_rating BIGINT NOT NULL DEFAULT 0,
     total_weight BIGINT NOT NULL DEFAULT 0,

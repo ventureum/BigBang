@@ -9,13 +9,13 @@ import (
 
 
 type Request struct {
-  ProjectId   string  `json:"projectId,required"`
-  MilestoneId int64  `json:"milestoneId,required"`
-  Content     string  `json:"content,required"`
-  BlockTimestamp  int64 `json:"blockTimestamp,required"`
-  StartTime  int64 `json:"startTime,required"`
-  EndTime    int64 `json:"endTime,required"`
-  State tcr_attributes.MileStoneState `json:"state,required"`
+  ProjectId   string                  `json:"projectId,required"`
+  MilestoneId int64                   `json:"milestoneId,required"`
+  Content     string                  `json:"content,required"`
+  BlockTimestamp  int64               `json:"blockTimestamp,required"`
+  StartTime  int64                    `json:"startTime,required"`
+  EndTime    int64                    `json:"endTime,required"`
+  State tcr_attributes.MilestoneState `json:"state,required"`
 }
 
 type Response struct {

@@ -2,7 +2,6 @@ package objective_config
 
 import (
   "log"
-  "time"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "database/sql"
@@ -26,7 +25,7 @@ func (objectiveExecutor *ObjectiveExecutor) ClearObjectiveTable() {
   objectiveExecutor.ClearTable(TABLE_NAME_FOR_OBJECTIVE)
 }
 
-func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecord(objectiveRecord *ObjectiveRecord) time.Time {
+func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecord(objectiveRecord *ObjectiveRecord) bool {
   res, err := objectiveExecutor.C.NamedQuery(UPSERT_OBJECTIVE_COMMAND, objectiveRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "objectiveId", objectiveRecord.ObjectiveId, error_config.ObjectiveRecordLocation)
@@ -38,11 +37,11 @@ func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecord(objectiveRecor
 
   log.Printf("Sucessfully upserted objective record for objectiveId %s\n", objectiveRecord.ObjectiveId)
 
-  var createdTime time.Time
+  var inserted sql.NullBool
   for res.Next() {
-    res.Scan(&createdTime)
+    err = res.Scan(&inserted)
   }
-  return createdTime
+  return inserted.Bool
 }
 
 func (objectiveExecutor *ObjectiveExecutor) DeleteObjectiveRecordByIDs(
@@ -169,7 +168,7 @@ func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeight(
  * Tx versions
  */
 
-func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecordTx(objectiveRecord *ObjectiveRecord) time.Time {
+func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecordTx(objectiveRecord *ObjectiveRecord) bool {
   res, err := objectiveExecutor.Tx.NamedQuery(UPSERT_OBJECTIVE_COMMAND, objectiveRecord)
   if err != nil {
     errInfo := error_config.MatchError(err, "objectiveId", objectiveRecord.ObjectiveId, error_config.ObjectiveRecordLocation)
@@ -181,11 +180,11 @@ func (objectiveExecutor *ObjectiveExecutor) UpsertObjectiveRecordTx(objectiveRec
 
   log.Printf("Sucessfully upserted objective record for objectiveId %s\n", objectiveRecord.ObjectiveId)
 
-  var createdTime time.Time
+  var inserted sql.NullBool
   for res.Next() {
-    res.Scan(&createdTime)
+    err = res.Scan(&inserted)
   }
-  return createdTime
+  return inserted.Bool
 }
 
 func (objectiveExecutor *ObjectiveExecutor) DeleteObjectiveRecordByIDsTx(
