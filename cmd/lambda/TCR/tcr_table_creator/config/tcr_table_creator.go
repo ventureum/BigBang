@@ -1,4 +1,4 @@
-package config
+package lambda_tcr_table_creator_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
