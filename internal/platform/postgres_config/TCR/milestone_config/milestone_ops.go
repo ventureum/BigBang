@@ -32,11 +32,13 @@ func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecord(milestoneRecor
   if err != nil {
     errInfo := error_config.MatchError(err, "milestoneId", milestoneRecord.MilestoneId, error_config.MilestoneRecordLocation)
     errInfo.ErrorData["projectId"] = milestoneRecord.ProjectId
-    log.Printf("Failed to upsert milestone record: %+v with error:\n %+v", milestoneRecord, err)
+    log.Printf("Failed to upsert milestone record for projectId %s and milestoneId %d with error:\n %+v",
+      milestoneRecord.ProjectId, milestoneRecord.MilestoneId, err)
     log.Panicln(errInfo.Marshal())
   }
 
-  log.Printf("Sucessfully upserted milestone record for milestoneId %s\n", milestoneRecord.MilestoneId)
+  log.Printf("Sucessfully upserted milestone record for projectId %s and milestoneId %d\n",
+    milestoneRecord.ProjectId, milestoneRecord.MilestoneId)
 
   var inserted sql.NullBool
   for res.Next() {
@@ -172,11 +174,13 @@ func (milestoneExecutor *MilestoneExecutor) UpsertMilestoneRecordTx(milestoneRec
   if err != nil {
     errInfo := error_config.MatchError(err, "milestoneId", milestoneRecord.MilestoneId, error_config.MilestoneRecordLocation)
     errInfo.ErrorData["projectId"] = milestoneRecord.ProjectId
-    log.Printf("Failed to upsert milestone record: %+v with error:\n %+v", milestoneRecord, err)
+    log.Printf("Failed to upsert milestone record for projectId %s and milestoneId %d with error:\n %+v",
+      milestoneRecord.ProjectId, milestoneRecord.MilestoneId, err)
     log.Panicln(errInfo.Marshal())
   }
 
-  log.Printf("Sucessfully upserted milestone record for milestoneId %s\n", milestoneRecord.MilestoneId)
+  log.Printf("Sucessfully upserted milestone record for projectId %s and milestoneId %d\n",
+    milestoneRecord.ProjectId, milestoneRecord.MilestoneId)
 
   var inserted sql.NullBool
   for res.Next() {

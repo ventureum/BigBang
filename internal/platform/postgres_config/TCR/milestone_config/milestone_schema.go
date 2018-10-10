@@ -3,7 +3,7 @@ package milestone_config
 
 const TABLE_SCHEMA_FOR_MILESTONE = `
 CREATE TABLE milestones (
-    project_id TEXT NOT NULL,
+    project_id TEXT NOT NULL REFERENCES projects (project_id),
     milestone_id BIGINT NOT NULL,
     content TEXT NOT NULL,
     block_timestamp BIGINT NOT NULL,
