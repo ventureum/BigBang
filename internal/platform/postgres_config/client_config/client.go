@@ -141,3 +141,18 @@ func (postgresBigBangClient *PostgresBigBangClient) SetIdleInTransactionSessionT
     log.Panicf("Failed to Set Idle In Transaction Session Timeout: %+v\n", err)
   }
 }
+
+func (postgresBigBangClient *PostgresBigBangClient) LoadMilestoneStateEnum() {
+  _, err := postgresBigBangClient.C.Exec(LOAD_MILESTONE_STATE_ENUM)
+  if err != nil {
+    log.Panicf("Failed to load milestone state enum with error: %+v\n", err)
+  }
+}
+
+func (postgresBigBangClient *PostgresBigBangClient) DropMilestoneStateEnum() {
+  _, err := postgresBigBangClient.C.Exec(DROP_MILESTONE_STATE_ENUM)
+  if err != nil {
+    log.Panicf("Failed to drop milestone state enum with error: %+v\n", err)
+  }
+}
+
