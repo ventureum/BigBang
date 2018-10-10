@@ -84,13 +84,7 @@ func (projectExecutor *ProjectExecutor) GetProjectRecord(projectId string) *Proj
 }
 
 func (projectExecutor *ProjectExecutor) VerifyProjectRecordExisting (projectId string) {
-  var existing bool
-  err := projectExecutor.C.Get(&existing, VERIFY_PROJECT_EXISTING_COMMAND, projectId)
-  if err != nil {
-    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
-    log.Printf("Failed to verify project record existing for projectId %s with error: %+v\n", projectId, err)
-    log.Panicln(errInfo.Marshal())
-  }
+  existing := projectExecutor.CheckProjectRecordExisting(projectId)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoProjectIdExisting,
@@ -102,6 +96,17 @@ func (projectExecutor *ProjectExecutor) VerifyProjectRecordExisting (projectId s
     log.Printf("No project record for projectId %s", projectId)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (projectExecutor *ProjectExecutor) CheckProjectRecordExisting (projectId string) bool {
+  var existing bool
+  err := projectExecutor.C.Get(&existing, VERIFY_PROJECT_EXISTING_COMMAND, projectId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to verify project record existing for projectId %s with error: %+v\n", projectId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return existing
 }
 
 func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursor(cursor string, limit int64) *[]ProjectRecord {
@@ -243,13 +248,7 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordTx(projectId string) *Pr
 }
 
 func (projectExecutor *ProjectExecutor) VerifyProjectRecordExistingTx (projectId string) {
-  var existing bool
-  err := projectExecutor.Tx.Get(&existing, VERIFY_PROJECT_EXISTING_COMMAND, projectId)
-  if err != nil {
-    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
-    log.Printf("Failed to verify project record existing for projectId %s with error: %+v\n", projectId, err)
-    log.Panicln(errInfo.Marshal())
-  }
+  existing := projectExecutor.CheckProjectRecordExistingTx(projectId)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoProjectIdExisting,
@@ -261,6 +260,17 @@ func (projectExecutor *ProjectExecutor) VerifyProjectRecordExistingTx (projectId
     log.Printf("No project record for projectId %s", projectId)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (projectExecutor *ProjectExecutor) CheckProjectRecordExistingTx (projectId string) bool {
+  var existing bool
+  err := projectExecutor.Tx.Get(&existing, VERIFY_PROJECT_EXISTING_COMMAND, projectId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    log.Printf("Failed to verify project record existing for projectId %s with error: %+v\n", projectId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return existing
 }
 
 func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursorTx(cursor string, limit int64) *[]ProjectRecord {

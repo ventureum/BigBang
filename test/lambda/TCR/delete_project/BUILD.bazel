@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["delete_project_test.go"],
+    deps = [
+        "//cmd/lambda/TCR/delete_project/config:go_default_library",
+        "//internal/platform/postgres_config/TCR/project_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)
