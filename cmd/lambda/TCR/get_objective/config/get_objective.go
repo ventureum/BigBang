@@ -16,7 +16,7 @@ type Request struct {
 }
 
 type Response struct {
-  Objective *tcr_attributes.Objective `json:"Objective,omitempty"`
+  Objective *tcr_attributes.Objective `json:"objective,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
