@@ -1,20 +1,16 @@
 #!/usr/bin/env bash
 
-#echo "generating tcr_table_creator zip"
-#.//generate_lambda_zip.sh TCR tcr_table_creator $1 $2
-
+echo "generating tcr_table_creator zip"
+.//generate_lambda_zip.sh TCR tcr_table_creator $1 $2
 
 echo "generating project zip"
 .//generate_lambda_zip.sh TCR project $1 $2
 
-#echo "generating get_project zip"
-#.//generate_lambda_zip.sh TCR get_project $1 $2
-#
-#echo "generating get_project_list zip"
-#.//generate_lambda_zip.sh TCR get_project_list $1 $2
-#
-#echo "generating get_project_list zip"
-#.//generate_lambda_zip.sh TCR get_project_list $1 $2
+echo "generating get_project zip"
+.//generate_lambda_zip.sh TCR get_project $1 $2
+
+echo "generating get_project_list zip"
+.//generate_lambda_zip.sh TCR get_project_list $1 $2
 
 echo "generating delete_project zip"
 .//generate_lambda_zip.sh TCR delete_project $1 $2
@@ -27,7 +23,6 @@ echo "generating get_objective zip"
 
 echo "generating delete_objective zip"
 .//generate_lambda_zip.sh TCR delete_objective $1 $2
-
 
 echo "generating milestone zip"
 .//generate_lambda_zip.sh TCR milestone $1 $2
@@ -53,6 +48,3 @@ echo "generating delete_milestone zip"
 #
 #echo "generating get_rating_vote_list zip"
 #.//generate_lambda_zip.sh TCR get_rating_vote_list $1 $2
-
-
-

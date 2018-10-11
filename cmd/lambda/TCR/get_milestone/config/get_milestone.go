@@ -16,7 +16,7 @@ type Request struct {
 }
 
 type Response struct {
-  Milestone *tcr_attributes.Milestone `json:"project,omitempty"`
+  Milestone *tcr_attributes.Milestone `json:"milestone,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
