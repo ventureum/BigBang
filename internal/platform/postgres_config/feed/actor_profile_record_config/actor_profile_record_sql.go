@@ -52,3 +52,7 @@ WHERE actor = $1;
 const VERIFY_ACTOR_EXISTING_COMMAND = `
 select exists(select 1 from actor_profile_records where actor = $1 and actor_profile_status = 'ACTIVATED');
 `
+
+const VERIFY_ACTOR_TYPE_COMMAND = `
+select exists(select 1 from actor_profile_records where actor = $1 and and actor_type = $2 and actor_profile_status = 'ACTIVATED');
+`

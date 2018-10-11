@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-  lambda.Start(config.Handler)
+  lambda.Start(lambda_feed_events_table_creator_config.Handler)
 }

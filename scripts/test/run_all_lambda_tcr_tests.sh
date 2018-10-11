@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 bazel clean
 bazel run //:gazelle
+
+./run_unit_test.sh  //test/lambda/feed/feed_events_table_creator:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/tcr_table_creator:go_default_test
+
+./run_unit_test.sh  //test/lambda/feed/profile:go_default_test
+
 ./run_unit_test.sh  //test/lambda/TCR/project:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/milestone:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/objective:go_default_test
