@@ -93,6 +93,18 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
   }
 }
 
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorType(actor string, actorType string) bool {
+  var match bool
+  err := actorProfileRecordExecutor.C.Get(&match, VERIFY_ACTOR_TYPE_COMMAND, actor, actorType)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    errInfo.ErrorData["actorType"] = actorType
+    log.Printf("Failed to verify ActorType %s for actor %s with error: %+v\n", actorType, actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return match
+}
+
 /*
  * Tx Versions
  */
@@ -164,4 +176,16 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
     log.Printf("No Actor Fuel Acount for actor %s", actor)
     log.Panicln(errorInfo.Marshal())
   }
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorTypeTx(actor string, actorType string) bool {
+  var match bool
+  err := actorProfileRecordExecutor.Tx.Get(&match, VERIFY_ACTOR_TYPE_COMMAND, actor, actorType)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    errInfo.ErrorData["actorType"] = actorType
+    log.Printf("Failed to verify ActorType %s for actor %s with error: %+v\n", actorType, actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return match
 }

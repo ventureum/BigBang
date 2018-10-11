@@ -1,4 +1,4 @@
-package config
+package lambda_profile_config
 
 import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
@@ -8,6 +8,7 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
+  "BigBang/internal/platform/postgres_config/TCR/actor_rating_vote_account_config"
 )
 
 
@@ -49,10 +50,10 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient.Begin()
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
-
   inserted := actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())
 
   if inserted {
+    actorRatingVoteAccountExecutor := actor_rating_vote_account_config.ActorRatingVoteAccountExecutor{*postgresBigBangClient}
     refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresBigBangClient}
     actorReputationsRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
       *postgresBigBangClient}
@@ -73,8 +74,14 @@ func ProcessRequest(request Request, response *Response) {
       Reputation: initReputation,
       MilestonePoints: 0,
     })
-
     log.Printf("Created Actor Fuel Account for actor %s", request.Actor)
+
+    actorRatingVoteAccountExecutor.UpsertActorRatingVoteAccountRecordTx(&actor_rating_vote_account_config.ActorRatingVoteAccountRecord{
+      Actor: request.Actor,
+      AvailableRatingVotes: 0,
+      ReceivedRatingVotes: 0,
+    })
+    log.Printf("Created Actor Rating Vote Account for actor %s", request.Actor)
   }
 
   postgresBigBangClient.Commit()
