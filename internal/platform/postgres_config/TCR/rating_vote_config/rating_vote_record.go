@@ -22,11 +22,21 @@ type RatingVoteRecord struct {
 
 
 func (ratingVoteRecord *RatingVoteRecord) GenerateID() {
-  idStr := fmt.Sprintf("%s:%09d:%09d", ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId)
+  idStr := fmt.Sprintf("%d:%s:%09d:%09d:%s", ratingVoteRecord.BlockTimestamp, ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId, ratingVoteRecord.Voter)
   ratingVoteRecord.ID = idStr
 }
 
 func (ratingVoteRecord *RatingVoteRecord) EncodeID() string {
-  idStr := fmt.Sprintf("%s:%09d:%09d", ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId)
+  idStr := fmt.Sprintf("%s:%09d:%09d:%s", ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId, ratingVoteRecord.Voter)
   return utils.Base64EncodeIdByInt64AndStr(ratingVoteRecord.BlockTimestamp, idStr)
+}
+
+func GenerateEncodedRatingVoteRecordID(projectId string, milestoneId int64, objectiveId int64, voter string, blockTimestamp int64) string {
+  idStr := fmt.Sprintf("%s:%09d:%09d:%s", projectId, milestoneId, objectiveId, voter)
+  return utils.Base64EncodeIdByInt64AndStr(blockTimestamp, idStr)
+}
+
+func GenerateRatingVoteRecordID(projectId string, milestoneId int64, objectiveId int64, voter string, blockTimestamp int64) string {
+  idStr := fmt.Sprintf("%d:%s:%09d:%09d:%s", blockTimestamp, projectId, milestoneId, objectiveId, voter)
+  return idStr
 }
