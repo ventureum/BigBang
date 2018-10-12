@@ -12,6 +12,7 @@ go_library(
     visibility = ["//:__subpackages__"],
     deps = [
         "//internal/pkg/error_config:go_default_library",
+        "//internal/pkg/utils:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
     ],
 )

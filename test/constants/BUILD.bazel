@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "milestone.go",
         "objective.go",
+        "profile.go",
         "project.go",
     ],
     importpath = "BigBang/test/constants",

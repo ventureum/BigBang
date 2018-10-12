@@ -1,126 +1,128 @@
-package config
+package rating_vote
 
 import (
   "github.com/stretchr/testify/assert"
   "testing"
   "BigBang/internal/platform/postgres_config/TCR/rating_vote_config"
   "BigBang/internal/platform/postgres_config/client_config"
+  "BigBang/cmd/lambda/TCR/rating_vote/config"
+  "BigBang/test/constants"
 )
 
 func TestHandler(t *testing.T) {
   tests := []struct{
-    request Request
-    response Response
+    request lambda_rating_vote_config.Request
+    response lambda_rating_vote_config.Response
     err    error
   }{
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 1,
-        Voter: "0xVoter001",
+        Voter: test_constants.Actor1,
         Rating: 20,
         Weight: 30,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
     },
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 1,
-        Voter: "0xVoter002",
+        Voter: test_constants.Actor2,
         Rating: 20,
         Weight: 30,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
     },
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 1,
-        Voter: "0xVoter003",
+        Voter: test_constants.Actor3,
         Rating: 20,
         Weight: 30,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
     },
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 1,
-        Voter: "0xVoter004",
+        Voter: test_constants.Actor4,
         Rating: 20,
         Weight: 30,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
     },
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 1,
-        Voter: "0xVoter005",
+        Voter: test_constants.Actor5,
         Rating: 20,
         Weight: 30,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
     },
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 1,
-        Voter: "0xVoter006",
+        Voter: test_constants.Actor6,
         Rating: 20,
         Weight: 30,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
     },
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 2,
-        Voter: "0xVoter001",
+        Voter: test_constants.Actor1,
         Rating: 25,
         Weight: 35,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
     },
     {
-      request: Request {
-        ProjectId: "0xProject001",
+      request: lambda_rating_vote_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: 1,
         ObjectiveId: 2,
-        Voter: "0xVoter002",
+        Voter: test_constants.Actor2,
         Rating: 30,
         Weight: 40,
       },
-      response: Response {
+      response: lambda_rating_vote_config.Response {
         Ok: true,
       },
       err: nil,
@@ -131,7 +133,7 @@ func TestHandler(t *testing.T) {
   ratingVoteExecutor.ClearRatingVoteTable()
 
   for _, test := range tests {
-    result, err := Handler(test.request)
+    result, err := lambda_rating_vote_config.Handler(test.request)
     assert.IsType(t, test.err, err)
     assert.Equal(t, test.response, result)
   }
