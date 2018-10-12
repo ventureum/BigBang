@@ -52,8 +52,8 @@ const VERIFY_OBJECTIVE_EXISTING_COMMAND = `
 select exists(select 1 from objectives where project_id = $1 and milestone_id = $2 and objective_id = $3);
 `
 
-const ADD_RATING_AND_WEIGHT_COMMAND = `
-UPDATE projects
+const ADD_RATING_AND_WEIGHT_FOR_OBJECTIVE_COMMAND = `
+UPDATE objectives
 SET 
    total_rating = total_rating + $4,
    total_weight = total_weight + $5,

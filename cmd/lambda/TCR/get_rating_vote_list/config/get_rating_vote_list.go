@@ -1,4 +1,4 @@
-package config
+package lambda_get_rating_vote_list_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
@@ -13,7 +13,7 @@ import (
 type Request struct {
   ProjectId     string         `json:"projectId,required"`
   MilestoneId   int64          `json:"milestoneId,required"`
-  ObjectiveId   int64          `json:"objId,required"`
+  ObjectiveId   int64          `json:"objectiveId,required"`
   Limit  int64  `json:"limit,required"`
   Cursor string `json:"cursor,omitempty"`
 }
@@ -40,7 +40,7 @@ func ProcessRequest(request Request, response *Response) {
 
   projectId := request.ProjectId
   milestoneId := request.MilestoneId
-  objId := request.ObjectiveId
+  objectiveId := request.ObjectiveId
   limit := request.Limit
   cursorStr := request.Cursor
 
@@ -52,13 +52,13 @@ func ProcessRequest(request Request, response *Response) {
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
 
   ratingVoteRecords := ratingVoteExecutor.GetRatingVoteRecordsByCursor(
-    projectId, milestoneId, objId, cursor, limit + 1)
+    projectId, milestoneId, objectiveId, cursor, limit + 1)
 
   response.NextCursor = ""
   response.ObjVoteInfo = &tcr_attributes.ObjVoteInfo{
     ProjectId: projectId,
     MilestoneId: milestoneId,
-    ObjectiveId: objId,
+    ObjectiveId: objectiveId,
   }
 
   var ratingVotes []tcr_attributes.RatingVote
@@ -81,10 +81,10 @@ func ProcessRequest(request Request, response *Response) {
 
   if cursorStr == "" {
     log.Printf("ObjVoteInfo is loaded for first query with ProjectId %s, MilestoneId %d, ObjectiveId %d and limit %d\n",
-      projectId, milestoneId, objId, limit)
+      projectId, milestoneId, objectiveId, limit)
   } else {
     log.Printf("ObjVoteInfo is loaded for query with ProjectId %s, MilestoneId %d, ObjectiveId %d, cursor %s and limit %d\n",
-      projectId, milestoneId, objId, cursorStr, limit)
+      projectId, milestoneId, objectiveId, cursorStr, limit)
   }
   response.Ok = true
 }

@@ -71,3 +71,12 @@ SET
    num_objectives = num_objectives - 1
 WHERE project_id = $1 and milestone_id = $2;
 `
+
+const ADD_RATING_AND_WEIGHT_FOR_MILESTONE_COMMAND = `
+UPDATE milestones
+SET
+   total_rating = total_rating + $3,
+   total_weight = total_weight + $4,
+   avg_rating = (total_rating + $3) / GREATEST(total_weight + $4, 1)
+WHERE project_id = $1 and milestone_id = $2;
+`

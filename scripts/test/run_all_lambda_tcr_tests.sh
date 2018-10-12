@@ -18,6 +18,7 @@ bazel run //:gazelle
 
 
 ./run_unit_test.sh  //test/lambda/TCR/rating_vote:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/update_actor_rating_votes:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/delete_objective:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/delete_milestone:go_default_test

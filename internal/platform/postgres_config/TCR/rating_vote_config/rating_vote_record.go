@@ -11,7 +11,7 @@ type RatingVoteRecord struct {
   ID            string         `json:"id" db:"id"`
   ProjectId     string         `json:"projectId" db:"project_id"`
   MilestoneId   int64          `json:"milestoneId" db:"milestone_id"`
-  ObjectiveId   int64          `json:"objId" db:"objective_id"`
+  ObjectiveId   int64          `json:"objectiveId" db:"objective_id"`
   Voter         string         `json:"voter" db:"voter"`
   BlockTimestamp int64         `json:"block_timestamp" db:"block_timestamp"`
   Rating        int64          `json:"rating" db:"rating"`
