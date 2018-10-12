@@ -4,16 +4,18 @@ const UPSERT_ACTOR_RATING_VOTE_ACCOUNT_RECORD_COMMAND = `
 INSERT INTO actor_rating_vote_accounts 
 (
   actor,
+  project_id,
   available_rating_votes,
   received_rating_votes
 )
 VALUES 
 (
   :actor,
+  :project_id,
   :available_rating_votes,
   :received_rating_votes
 )
-ON CONFLICT (actor) 
+ON CONFLICT (actor, project_id) 
 DO
  UPDATE
     SET

@@ -16,6 +16,7 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_update_actor_rating_votes_config.Request {
         Actor: test_constants.Actor1,
+        ProjectId: test_constants.ProjectId1,
         AvailableVotes: 50,
         ReceivedVotes: 60,
       },

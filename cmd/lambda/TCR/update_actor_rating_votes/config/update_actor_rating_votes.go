@@ -10,6 +10,7 @@ import (
 
 type Request struct {
   Actor   string  `json:"actor,required"`
+  ProjectId string `json:"projectId,required"`
   AvailableVotes int64  `json:"availableVotes,required"`
   ReceivedVotes int64 `json:"receivedVotes,required"`
 }
@@ -36,6 +37,7 @@ func ProcessRequest(request Request, response *Response) {
 
   actorRatingVoteAccountExecutor.UpsertActorRatingVoteAccountRecordTx(&actor_rating_vote_account_config.ActorRatingVoteAccountRecord{
     Actor: request.Actor,
+    ProjectId: request.ProjectId,
     AvailableRatingVotes: request.AvailableVotes,
     ReceivedRatingVotes: request.ReceivedVotes,
   })
