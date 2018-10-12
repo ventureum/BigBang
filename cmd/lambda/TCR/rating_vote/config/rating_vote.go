@@ -56,6 +56,7 @@ func ProcessRequest(request Request, response *Response) {
     MilestoneId: milestoneId,
     ObjectiveId: objectiveId,
     Voter: request.Voter,
+    BlockTimestamp: request.BlockTimestamp,
     Rating: rating,
     Weight: weight,
   }

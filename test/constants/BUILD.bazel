@@ -7,6 +7,7 @@ go_library(
         "objective.go",
         "profile.go",
         "project.go",
+        "rating_vote.go",
     ],
     importpath = "BigBang/test/constants",
     visibility = ["//visibility:public"],

@@ -168,10 +168,10 @@ func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExisting (
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursor(
-    projectId string, milestoneId int64, objectiveId int64, cursor int64, limit int64) *[]RatingVoteRecord {
+    projectId string, milestoneId int64, objectiveId int64, cursor string, limit int64) *[]RatingVoteRecord {
   var ratingVoteRecords []RatingVoteRecord
   var err error
-  if cursor > 0 {
+  if cursor != "" {
     err = ratingVoteExecutor.C.Select(
       &ratingVoteRecords,
       PAGINATION_QUERY_RATING_VOTE_LIST_COMMAND,
@@ -185,7 +185,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursor(
 
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "projectId", projectId, error_config.RatingVoteRecordLocation)
-    log.Printf("Failed to get rating vote Records by cursor %d and limit %d for projectId %s, milestoneId and %d objectiveId %d with error: %+v\n",
+    log.Printf("Failed to get rating vote Records by cursor %s and limit %d for projectId %s, milestoneId and %d objectiveId %d with error: %+v\n",
       cursor, limit, projectId, milestoneId, objectiveId, err)
     errInfo.ErrorData["milestoneId"] = milestoneId
     errInfo.ErrorData["objectiveId"] = objectiveId
@@ -342,10 +342,10 @@ func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExistingTx (
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursorTx(
-    projectId string, milestoneId int64, objectiveId int64, cursor int64, limit int64) *[]RatingVoteRecord {
+    projectId string, milestoneId int64, objectiveId int64, cursor string, limit int64) *[]RatingVoteRecord {
   var ratingVoteRecords []RatingVoteRecord
   var err error
-  if cursor > 0 {
+  if cursor != "" {
     err = ratingVoteExecutor.Tx.Select(
       &ratingVoteRecords,
       PAGINATION_QUERY_RATING_VOTE_LIST_COMMAND,
@@ -359,7 +359,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursorTx(
 
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "projectId", projectId, error_config.RatingVoteRecordLocation)
-    log.Printf("Failed to get rating vote Records by cursor %d and limit %d for projectId %s, milestoneId and %d objectiveId %d with error: %+v\n",
+    log.Printf("Failed to get rating vote Records by cursor %s and limit %d for projectId %s, milestoneId and %d objectiveId %d with error: %+v\n",
       cursor, limit, projectId, milestoneId, objectiveId, err)
     errInfo.ErrorData["milestoneId"] = milestoneId
     errInfo.ErrorData["objectiveId"] = objectiveId

@@ -33,8 +33,13 @@ echo "generating get_milestone zip"
 echo "generating delete_milestone zip"
 .//generate_lambda_zip.sh TCR delete_milestone $1 $2
 
+
 echo "generating rating_vote zip"
 .//generate_lambda_zip.sh TCR rating_vote $1 $2
+
+echo "generating get_rating_vote_list zip"
+.//generate_lambda_zip.sh TCR get_rating_vote_list $1 $2
+
 
 echo "generating update_actor_rating_votes zip"
 .//generate_lambda_zip.sh TCR update_actor_rating_votes $1 $2
@@ -51,5 +56,4 @@ echo "generating update_actor_rating_votes zip"
 #echo "generating rating_vote zip"
 #.//generate_lambda_zip.sh TCR rating_vote $1 $2
 #
-#echo "generating get_rating_vote_list zip"
-#.//generate_lambda_zip.sh TCR get_rating_vote_list $1 $2
+

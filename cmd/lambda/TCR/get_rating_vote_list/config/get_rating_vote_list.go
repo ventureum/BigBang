@@ -7,6 +7,7 @@ import (
   "BigBang/internal/pkg/utils"
   "BigBang/internal/app/tcr_attributes"
   "BigBang/internal/platform/postgres_config/TCR/rating_vote_config"
+  "BigBang/internal/platform/postgres_config/TCR/objective_config"
 )
 
 
@@ -20,10 +21,10 @@ type Request struct {
 
 
 type Response struct {
-  ObjVoteInfo *tcr_attributes.ObjVoteInfo `json:"objVoteInfo,omitempty"`
-  NextCursor string `json:"nextCursor,omitempty"`
-  Ok bool `json:"ok"`
-  Message *error_config.ErrorInfo `json:"message,omitempty"`
+  ObjectiveVotesInfo *tcr_attributes.ObjectiveVotesInfo `json:"objectiveVotesInfo,omitempty"`
+  NextCursor string                              `json:"nextCursor,omitempty"`
+  Ok bool                                        `json:"ok"`
+  Message *error_config.ErrorInfo                `json:"message,omitempty"`
 }
 
 
@@ -31,7 +32,7 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.ObjVoteInfo = nil
+      response.ObjectiveVotesInfo = nil
       response.NextCursor = ""
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
@@ -42,11 +43,14 @@ func ProcessRequest(request Request, response *Response) {
   milestoneId := request.MilestoneId
   objectiveId := request.ObjectiveId
   limit := request.Limit
-  cursorStr := request.Cursor
 
-  var cursor int64
+  objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
+  objectiveExecutor.VerifyObjectiveRecordExisting(projectId, milestoneId, objectiveId)
+
+  cursorStr := request.Cursor
+  var cursor string
   if cursorStr != "" {
-    cursor = utils.Base64DecodeToInt64(cursorStr)
+    cursor = utils.Base64DecodeToString(cursorStr)
   }
 
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
@@ -55,7 +59,7 @@ func ProcessRequest(request Request, response *Response) {
     projectId, milestoneId, objectiveId, cursor, limit + 1)
 
   response.NextCursor = ""
-  response.ObjVoteInfo = &tcr_attributes.ObjVoteInfo{
+  response.ObjectiveVotesInfo = &tcr_attributes.ObjectiveVotesInfo{
     ProjectId: projectId,
     MilestoneId: milestoneId,
     ObjectiveId: objectiveId,
@@ -68,22 +72,22 @@ func ProcessRequest(request Request, response *Response) {
         Voter: ratingVoteRecord.Voter,
         Rating: ratingVoteRecord.Rating,
         Weight: ratingVoteRecord.Weight,
-        VotedAt: ratingVoteRecord.CreatedAt,
+        BlockTimestamp: ratingVoteRecord.BlockTimestamp,
       }
       ratingVotes = append(ratingVotes, ratingVote)
     } else {
-      response.NextCursor = utils.Base64EncodeInt64(ratingVoteRecord.ID)
+      response.NextCursor = ratingVoteRecord.EncodeID()
     }
   }
 
 
-  response.ObjVoteInfo.RatingVotes = &ratingVotes
+  response.ObjectiveVotesInfo.RatingVotes = &ratingVotes
 
   if cursorStr == "" {
-    log.Printf("ObjVoteInfo is loaded for first query with ProjectId %s, MilestoneId %d, ObjectiveId %d and limit %d\n",
+    log.Printf("ObjectiveVotesInfo is loaded for first query with ProjectId %s, MilestoneId %d, ObjectiveId %d and limit %d\n",
       projectId, milestoneId, objectiveId, limit)
   } else {
-    log.Printf("ObjVoteInfo is loaded for query with ProjectId %s, MilestoneId %d, ObjectiveId %d, cursor %s and limit %d\n",
+    log.Printf("ObjectiveVotesInfo is loaded for query with ProjectId %s, MilestoneId %d, ObjectiveId %d, cursor %s and limit %d\n",
       projectId, milestoneId, objectiveId, cursorStr, limit)
   }
   response.Ok = true

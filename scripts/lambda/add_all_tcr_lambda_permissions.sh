@@ -34,6 +34,9 @@ echo "adding lambda permission for delete_objective"
 echo "adding lambda permission for rating_vote"
 .//add_tcr_lambda_permission.sh rating_vote $1 $2 rating-vote
 
+echo "adding lambda permission for get_rating_vote_list"
+.//add_tcr_lambda_permission.sh get_rating_vote_list $1 $2 get-rating-vote-list
+
 echo "adding lambda permission for update_actor_rating_votes"
 .//add_tcr_lambda_permission.sh update_actor_rating_votes $1 $2 update-actor-rating-votes
 
