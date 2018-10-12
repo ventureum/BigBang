@@ -17,7 +17,7 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_delete_project_config.Request {
-        ProjectId: test_constants.ProjectId1,
+        ProjectId: test_constants.ProjectId2,
       },
       response: lambda_delete_project_config.Response {
         Ok: true,

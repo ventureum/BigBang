@@ -2,7 +2,6 @@ package rating_vote_config
 
 import (
   "log"
-  "time"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "database/sql"
@@ -26,8 +25,10 @@ func (ratingVoteExecutor *RatingVoteExecutor) ClearRatingVoteTable() {
   ratingVoteExecutor.ClearTable(TABLE_NAME_FOR_RATING_VOTE)
 }
 
-func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecord(ratingVoteRecord *RatingVoteRecord) time.Time {
-  res, err := ratingVoteExecutor.C.NamedQuery(UPSERT_RATING_VOTE_COMMAND, ratingVoteRecord)
+func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecord(ratingVoteRecord *RatingVoteRecord) {
+
+  res, err := ratingVoteExecutor.C.NamedExec(UPDATE_RATING_VOTE_COMMAND, ratingVoteRecord)
+
   if err != nil {
     errInfo := error_config.MatchError(err, "objectiveId", ratingVoteRecord.ObjectiveId, error_config.RatingVoteRecordLocation)
     errInfo.ErrorData["projectId"] = ratingVoteRecord.ProjectId
@@ -37,14 +38,23 @@ func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecord(ratingVoteR
     log.Panicln(errInfo.Marshal())
   }
 
+  count, err := res.RowsAffected()
+
+  if count == 0 {
+    _, err = ratingVoteExecutor.C.NamedExec(INSERT_RATING_VOTE_COMMAND, ratingVoteRecord)
+
+    if err != nil {
+      errInfo := error_config.MatchError(err, "objectiveId", ratingVoteRecord.ObjectiveId, error_config.RatingVoteRecordLocation)
+      errInfo.ErrorData["projectId"] = ratingVoteRecord.ProjectId
+      errInfo.ErrorData["milestoneId"] = ratingVoteRecord.MilestoneId
+      errInfo.ErrorData["voter"] = ratingVoteRecord.Voter
+      log.Printf("Failed to upsert rating vote Record: %+v with error:\n %+v", ratingVoteRecord, err)
+      log.Panicln(errInfo.Marshal())
+    }
+  }
+
   log.Printf("Sucessfully upserted rating vote Record for projectId %s, milestoneId %d, objectiveId %d and voter %s\n",
     ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId, ratingVoteRecord.Voter)
-
-  var createdTime time.Time
-  for res.Next() {
-    res.Scan(&createdTime)
-  }
-  return createdTime
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) DeleteRatingVoteRecordsByIDs(
@@ -189,8 +199,10 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursor(
 /*
  * Tx versions
  */
-func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecordTx(ratingVoteRecord *RatingVoteRecord) time.Time {
-  res, err := ratingVoteExecutor.Tx.NamedQuery(UPSERT_RATING_VOTE_COMMAND, ratingVoteRecord)
+func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecordTx(ratingVoteRecord *RatingVoteRecord) {
+
+  res, err := ratingVoteExecutor.Tx.NamedExec(UPDATE_RATING_VOTE_COMMAND, ratingVoteRecord)
+
   if err != nil {
     errInfo := error_config.MatchError(err, "objectiveId", ratingVoteRecord.ObjectiveId, error_config.RatingVoteRecordLocation)
     errInfo.ErrorData["projectId"] = ratingVoteRecord.ProjectId
@@ -200,14 +212,23 @@ func (ratingVoteExecutor *RatingVoteExecutor) UpsertRatingVoteRecordTx(ratingVot
     log.Panicln(errInfo.Marshal())
   }
 
+  count, err := res.RowsAffected()
+
+  if count == 0 {
+    _, err = ratingVoteExecutor.Tx.NamedExec(INSERT_RATING_VOTE_COMMAND, ratingVoteRecord)
+
+    if err != nil {
+      errInfo := error_config.MatchError(err, "objectiveId", ratingVoteRecord.ObjectiveId, error_config.RatingVoteRecordLocation)
+      errInfo.ErrorData["projectId"] = ratingVoteRecord.ProjectId
+      errInfo.ErrorData["milestoneId"] = ratingVoteRecord.MilestoneId
+      errInfo.ErrorData["voter"] = ratingVoteRecord.Voter
+      log.Printf("Failed to upsert rating vote Record: %+v with error:\n %+v", ratingVoteRecord, err)
+      log.Panicln(errInfo.Marshal())
+    }
+  }
+
   log.Printf("Sucessfully upserted rating vote Record for projectId %s, milestoneId %d, objectiveId %d and voter %s\n",
     ratingVoteRecord.ProjectId, ratingVoteRecord.MilestoneId, ratingVoteRecord.ObjectiveId, ratingVoteRecord.Voter)
-
-  var createdTime time.Time
-  for res.Next() {
-    res.Scan(&createdTime)
-  }
-  return createdTime
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) DeleteRatingVoteRecordsByIDsTx(

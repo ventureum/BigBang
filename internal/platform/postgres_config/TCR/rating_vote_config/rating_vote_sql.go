@@ -1,35 +1,40 @@
 package rating_vote_config
 
-const UPSERT_RATING_VOTE_COMMAND = `
+const INSERT_RATING_VOTE_COMMAND = `
 INSERT INTO rating_votes 
-(
+( 
+  id,
   project_id,
   milestone_id,
   objective_id,
   voter,
+  block_timestamp,
   rating,
   weight
 )
 VALUES 
 (
+  :id,
   :project_id,
   :milestone_id,
   :objective_id,
   :voter,
+  :block_timestamp,
   :rating,
   :weight
-)
-ON CONFLICT (project_id, milestone_id, objective_id, voter) 
-DO
- UPDATE
+);
+`
+
+const UPDATE_RATING_VOTE_COMMAND = `
+UPDATE rating_votes
     SET
+        block_timestamp = :block_timestamp,
         rating = :rating,
         weight = :weight
     WHERE rating_votes.project_id = :project_id and 
           rating_votes.milestone_id = :milestone_id and
           rating_votes.objective_id = :objective_id and
           rating_votes.voter = :voter
-RETURNING created_at;
 `
 
 const DELETE_RATING_VOTE_BY_IDS_AND_VOTER_COMMAND = `
