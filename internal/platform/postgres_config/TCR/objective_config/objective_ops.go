@@ -152,10 +152,10 @@ func (objectiveExecutor *ObjectiveExecutor) CheckObjectiveRecordExisting (
   return existing
 }
 
-func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeight(
-  projectId string, milestoneId int, objectiveId int, deltaRating int64, deltaWeight int64) {
+func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeightForObjective(
+  projectId string, milestoneId int64, objectiveId int64, deltaRating int64, deltaWeight int64) {
   _, err := objectiveExecutor.C.Exec(
-    ADD_RATING_AND_WEIGHT_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
+    ADD_RATING_AND_WEIGHT_FOR_OBJECTIVE_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
@@ -302,10 +302,10 @@ func (objectiveExecutor *ObjectiveExecutor) CheckObjectiveRecordExistingTx (
   return existing
 }
 
-func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeightTx(
-    projectId string, milestoneId int, objectiveId int, deltaRating int64, deltaWeight int64) {
+func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeightForObjectiveTx(
+    projectId string, milestoneId int64, objectiveId int64, deltaRating int64, deltaWeight int64) {
   _, err := objectiveExecutor.Tx.Exec(
-    ADD_RATING_AND_WEIGHT_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
+    ADD_RATING_AND_WEIGHT_FOR_OBJECTIVE_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)

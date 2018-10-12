@@ -172,6 +172,23 @@ func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectives(projectId stri
   log.Printf("Successfully decreased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
 }
 
+func (milestoneExecutor *MilestoneExecutor) AddRatingAndWeightForMilestone(
+    projectId string, milestoneId int64, deltaRating int64, deltaWeight int64) {
+  _, err := milestoneExecutor.C.Exec(
+    ADD_RATING_AND_WEIGHT_FOR_MILESTONE_COMMAND, projectId, milestoneId, deltaRating, deltaWeight)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.ObjectiveRecordLocation)
+    log.Printf("Failed to add rating and weight for projectId %s, milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errorInfo.ErrorData["projectId"] = projectId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added rating and weight for projectId %s, milestoneId %d\n",
+    projectId, milestoneId)
+}
+
 /*
  * Tx versions
  */
@@ -318,4 +335,21 @@ func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectivesTx(projectId st
   }
 
   log.Printf("Successfully decreased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
+}
+
+func (milestoneExecutor *MilestoneExecutor) AddRatingAndWeightForMilestoneTx(
+    projectId string, milestoneId int64, deltaRating int64, deltaWeight int64) {
+  _, err := milestoneExecutor.Tx.Exec(
+    ADD_RATING_AND_WEIGHT_FOR_MILESTONE_COMMAND, projectId, milestoneId, deltaRating, deltaWeight)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.ObjectiveRecordLocation)
+    log.Printf("Failed to add rating and weight for projectId %s, milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errorInfo.ErrorData["projectId"] = projectId
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added rating and weight for projectId %s, milestoneId %d\n",
+    projectId, milestoneId)
 }

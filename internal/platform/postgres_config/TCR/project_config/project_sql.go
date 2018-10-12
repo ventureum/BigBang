@@ -54,7 +54,7 @@ ORDER BY id DESC
 LIMIT $1;
 `
 
-const ADD_RATING_AND_WEIGHT_COMMAND = `
+const ADD_RATING_AND_WEIGHT_FOR_PROJECT_COMMAND = `
 UPDATE projects
 SET 
    total_rating = total_rating + $2,

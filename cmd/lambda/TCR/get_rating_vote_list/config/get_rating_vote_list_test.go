@@ -1,4 +1,4 @@
-package config
+package lambda_get_rating_vote_list_config
 
 import (
   "BigBang/internal/app/tcr_attributes"

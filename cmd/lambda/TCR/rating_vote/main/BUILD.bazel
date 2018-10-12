@@ -5,10 +5,7 @@ go_library(
     srcs = ["main.go"],
     importpath = "BigBang/cmd/lambda/TCR/rating_vote/main",
     visibility = ["//visibility:private"],
-    deps = [
-        "//cmd/lambda/TCR/rating_vote/config:go_default_library",
-        "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",
-    ],
+    deps = ["//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library"],
 )
 
 go_binary(
