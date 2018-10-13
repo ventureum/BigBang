@@ -25,6 +25,78 @@ func TestHandler(t *testing.T) {
       },
       err: nil,
     },
+    {
+      request: lambda_update_actor_rating_votes_config.Request {
+        Actor: test_constants.Actor2,
+        ProjectId: test_constants.ProjectId1,
+        AvailableVotes: 50,
+        ReceivedVotes: 60,
+      },
+      response: lambda_update_actor_rating_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_update_actor_rating_votes_config.Request {
+        Actor: test_constants.Actor3,
+        ProjectId: test_constants.ProjectId1,
+        AvailableVotes: 50,
+        ReceivedVotes: 60,
+      },
+      response: lambda_update_actor_rating_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_update_actor_rating_votes_config.Request {
+        Actor: test_constants.Actor4,
+        ProjectId: test_constants.ProjectId1,
+        AvailableVotes: 50,
+        ReceivedVotes: 60,
+      },
+      response: lambda_update_actor_rating_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_update_actor_rating_votes_config.Request {
+        Actor: test_constants.Actor5,
+        ProjectId: test_constants.ProjectId1,
+        AvailableVotes: 50,
+        ReceivedVotes: 60,
+      },
+      response: lambda_update_actor_rating_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_update_actor_rating_votes_config.Request {
+        Actor: test_constants.Actor6,
+        ProjectId: test_constants.ProjectId1,
+        AvailableVotes: 50,
+        ReceivedVotes: 60,
+      },
+      response: lambda_update_actor_rating_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_update_actor_rating_votes_config.Request {
+        Actor: test_constants.Actor7,
+        ProjectId: test_constants.ProjectId1,
+        AvailableVotes: 50,
+        ReceivedVotes: 60,
+      },
+      response: lambda_update_actor_rating_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
   }
 
   for _, test := range tests {
