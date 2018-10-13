@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["adjust_proxy_votes.go"],
+    importpath = "BigBang/cmd/lambda/TCR/adjust_proxy_votes/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/principal_proxy_votes_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/project_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
+    ],
+)

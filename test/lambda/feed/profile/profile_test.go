@@ -97,6 +97,20 @@ func TestHandler(t *testing.T) {
       },
       err: nil,
     },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.Actor7,
+        UserType: "KOL",
+        Username: test_constants.UserName7,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.TelegramId7,
+        PhoneNumber: "5197290002",
+      },
+      response: lambda_profile_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
   }
   for _, test := range tests {
     result, err := lambda_profile_config.Handler(test.request)
