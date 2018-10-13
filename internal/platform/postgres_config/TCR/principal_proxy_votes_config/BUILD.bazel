@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "principal_proxy_votes_ops.go",
+        "principal_proxy_votes_record.go",
+        "principal_proxy_votes_schema.go",
+        "principal_proxy_votes_sql.go",
+    ],
+    importpath = "BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/pkg/utils:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+    ],
+)
