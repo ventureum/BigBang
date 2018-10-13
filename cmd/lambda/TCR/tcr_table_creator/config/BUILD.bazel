@@ -10,6 +10,7 @@ go_library(
         "//internal/platform/postgres_config/TCR/actor_rating_vote_account_config:go_default_library",
         "//internal/platform/postgres_config/TCR/milestone_config:go_default_library",
         "//internal/platform/postgres_config/TCR/objective_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/principal_proxy_votes_config:go_default_library",
         "//internal/platform/postgres_config/TCR/project_config:go_default_library",
         "//internal/platform/postgres_config/TCR/proxy_config:go_default_library",
         "//internal/platform/postgres_config/TCR/rating_vote_config:go_default_library",
