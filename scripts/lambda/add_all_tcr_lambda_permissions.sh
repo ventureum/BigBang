@@ -40,6 +40,9 @@ echo "adding lambda permission for get_rating_vote_list"
 echo "adding lambda permission for update_actor_rating_votes"
 .//add_tcr_lambda_permission.sh update_actor_rating_votes $1 $2 update-actor-rating-votes
 
+echo "adding lambda permission for adjust_proxy_votes"
+.//add_tcr_lambda_permission.sh adjust_proxy_votes $1 $2 adjust-proxy-votes
+
 #echo "adding lambda permission for add_proxy"
 #.//add_tcr_lambda_permission.sh add_proxy $1 $2 add-proxy
 #

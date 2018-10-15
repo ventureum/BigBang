@@ -44,6 +44,10 @@ echo "generating get_rating_vote_list zip"
 echo "generating update_actor_rating_votes zip"
 .//generate_lambda_zip.sh TCR update_actor_rating_votes $1 $2
 
+echo "generating adjust_proxy_votes zip"
+.//generate_lambda_zip.sh TCR adjust_proxy_votes $1 $2
+
+
 #echo "generating add_proxy zip"
 #.//generate_lambda_zip.sh TCR add_proxy $1 $2
 #
@@ -52,8 +56,4 @@ echo "generating update_actor_rating_votes zip"
 #
 #echo "generating get_proxy_list zip"
 #.//generate_lambda_zip.sh TCR get_proxy_list $1 $2
-#
-#echo "generating rating_vote zip"
-#.//generate_lambda_zip.sh TCR rating_vote $1 $2
-#
 
