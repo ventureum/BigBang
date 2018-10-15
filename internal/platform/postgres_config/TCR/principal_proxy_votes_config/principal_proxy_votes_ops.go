@@ -86,28 +86,27 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProx
   return &principalProxyVotesRecords
 }
 
-func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordsByCursor(
-    actor string, projectId string, proxy string, cursor string, limit int64) *[]PrincipalProxyVotesRecord {
+func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordListByCursor(
+    actor string, projectId string, cursor string, limit int64) *[]PrincipalProxyVotesRecord {
   var principalProxyVotesRecords []PrincipalProxyVotesRecord
   var err error
   if cursor != "" {
     err = principalProxyVotesExecutor.C.Select(
       &principalProxyVotesRecords,
       PAGINATION_QUERY_PRINCIPAL_PROXY_VOTES_LIST_COMMAND,
-      actor, projectId, proxy, cursor, limit)
+      actor, projectId, cursor, limit)
   } else {
     err = principalProxyVotesExecutor.C.Select(
       &principalProxyVotesRecords,
       QUERY_PRINCIPAL_PROXY_VOTES_LIST_COMMAND,
-      actor, projectId, proxy, limit)
+      actor, projectId, limit)
   }
 
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.PrincipalProxyVotesRecordLocation)
-    log.Printf("Failed to get Principal Proxy Votes Records by cursor %s and limit %d  for actor %s, projectId %s and proxy %s with error: %+v\n",
-      cursor, limit, actor, projectId, proxy, err)
+    log.Printf("Failed to get Principal Proxy Votes Records by cursor %s and limit %d  for actor %s and projectId %s with error: %+v\n",
+      cursor, limit, actor, projectId, err)
     errInfo.ErrorData["projectId"] = projectId
-    errInfo.ErrorData["proxy"] = proxy
     errInfo.ErrorData["cursor"] = cursor
     errInfo.ErrorData["limit"] = limit
     log.Panicln(errInfo.Marshal())
@@ -181,32 +180,30 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProx
   return &principalProxyVotesRecords
 }
 
-func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordsByCursorTx(
-    actor string, projectId string, proxy string, cursor string, limit int64) *[]PrincipalProxyVotesRecord {
+func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordListByCursorTx(
+    actor string, projectId string, cursor string, limit int64) *[]PrincipalProxyVotesRecord {
   var principalProxyVotesRecords []PrincipalProxyVotesRecord
   var err error
   if cursor != "" {
     err = principalProxyVotesExecutor.Tx.Select(
       &principalProxyVotesRecords,
       PAGINATION_QUERY_PRINCIPAL_PROXY_VOTES_LIST_COMMAND,
-      actor, projectId, proxy, cursor, limit)
+      actor, projectId, cursor, limit)
   } else {
     err = principalProxyVotesExecutor.Tx.Select(
       &principalProxyVotesRecords,
       QUERY_PRINCIPAL_PROXY_VOTES_LIST_COMMAND,
-      actor, projectId, proxy, limit)
+      actor, projectId, limit)
   }
 
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.PrincipalProxyVotesRecordLocation)
-    log.Printf("Failed to get Principal Proxy Votes Records by cursor %s and limit %d  for actor %s, projectId %s and proxy %s with error: %+v\n",
-      cursor, limit, actor, projectId, proxy, err)
+    log.Printf("Failed to get Principal Proxy Votes Records by cursor %s and limit %d  for actor %s and projectId %s with error: %+v\n",
+      cursor, limit, actor, projectId, err)
     errInfo.ErrorData["projectId"] = projectId
-    errInfo.ErrorData["proxy"] = proxy
     errInfo.ErrorData["cursor"] = cursor
     errInfo.ErrorData["limit"] = limit
     log.Panicln(errInfo.Marshal())
   }
   return &principalProxyVotesRecords
 }
-
