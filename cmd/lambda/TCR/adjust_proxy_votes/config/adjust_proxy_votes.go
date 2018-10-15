@@ -45,6 +45,7 @@ func ProcessRequest(request Request, response *Response) {
       Actor: request.Actor,
       ProjectId: request.ProjectId,
       Proxy: request.Proxy,
+      BlockTimestamp: request.BlockTimestamp,
       Votes: request.Votes,
     }
     principalProxyVotesRecord.GenerateID()

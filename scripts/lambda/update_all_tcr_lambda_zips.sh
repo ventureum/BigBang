@@ -48,6 +48,8 @@ echo "updating update_actor_rating_votes zip"
 echo "updating adjust_proxy_votes zip"
 .//update_lambda_zip.sh TCR adjust_proxy_votes $1 $2
 
+echo "updating get_proxy_votes_list_by_principal zip"
+.//update_lambda_zip.sh TCR get_proxy_votes_list_by_principal $1 $2
 
 #echo "updating add_proxy zip"
 #.//update_lambda_zip.sh TCR add_proxy $1 $2

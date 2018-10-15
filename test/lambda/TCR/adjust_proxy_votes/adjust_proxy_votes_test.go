@@ -15,9 +15,10 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_adjust_proxy_votes_config.Request {
-        Actor: test_constants.Actor2,
+        Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
-        Proxy: test_constants.Actor1,
+        Proxy: test_constants.Actor2,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp1,
         Votes: 20,
       },
       response: lambda_adjust_proxy_votes_config.Response {
@@ -27,9 +28,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_adjust_proxy_votes_config.Request {
-        Actor: test_constants.Actor3,
+        Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
-        Proxy: test_constants.Actor1,
+        Proxy: test_constants.Actor3,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp2,
         Votes: 20,
       },
       response: lambda_adjust_proxy_votes_config.Response {
@@ -39,9 +41,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_adjust_proxy_votes_config.Request {
-        Actor: test_constants.Actor4,
+        Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
-        Proxy: test_constants.Actor1,
+        Proxy: test_constants.Actor4,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
         Votes: 20,
       },
       response: lambda_adjust_proxy_votes_config.Response {
@@ -51,9 +54,36 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_adjust_proxy_votes_config.Request {
-        Actor: test_constants.Actor5,
+        Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
-        Proxy: test_constants.Actor1,
+        Proxy: test_constants.Actor5,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp4,
+        Votes: 20,
+      },
+      response: lambda_adjust_proxy_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_adjust_proxy_votes_config.Request {
+        Actor: test_constants.Actor1,
+        ProjectId: test_constants.ProjectId1,
+        Proxy: test_constants.Actor6,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
+        Votes: 20,
+      },
+      response: lambda_adjust_proxy_votes_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_adjust_proxy_votes_config.Request {
+        Actor: test_constants.Actor1,
+        ProjectId: test_constants.ProjectId1,
+        Proxy: test_constants.Actor7,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
         Votes: 20,
       },
       response: lambda_adjust_proxy_votes_config.Response {
@@ -65,31 +95,8 @@ func TestHandler(t *testing.T) {
       request: lambda_adjust_proxy_votes_config.Request {
         Actor: test_constants.Actor6,
         ProjectId: test_constants.ProjectId1,
-        Proxy: test_constants.Actor1,
-        Votes: 20,
-      },
-      response: lambda_adjust_proxy_votes_config.Response {
-        Ok: true,
-      },
-      err: nil,
-    },
-    {
-      request: lambda_adjust_proxy_votes_config.Request {
-        Actor: test_constants.Actor7,
-        ProjectId: test_constants.ProjectId1,
-        Proxy: test_constants.Actor1,
-        Votes: 20,
-      },
-      response: lambda_adjust_proxy_votes_config.Response {
-        Ok: true,
-      },
-      err: nil,
-    },
-    {
-      request: lambda_adjust_proxy_votes_config.Request {
-        Actor: test_constants.Actor6,
-        ProjectId: test_constants.ProjectId1,
         Proxy: test_constants.Actor2,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp1,
         Votes: 20,
       },
       response: lambda_adjust_proxy_votes_config.Response {
@@ -102,6 +109,7 @@ func TestHandler(t *testing.T) {
         Actor: test_constants.Actor7,
         ProjectId: test_constants.ProjectId1,
         Proxy: test_constants.Actor2,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp2,
         Votes: 20,
       },
       response: lambda_adjust_proxy_votes_config.Response {
@@ -114,6 +122,7 @@ func TestHandler(t *testing.T) {
         Actor: test_constants.Actor7,
         ProjectId: test_constants.ProjectId1,
         Proxy: test_constants.Actor2,
+        BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
         Votes: 0,
       },
       response: lambda_adjust_proxy_votes_config.Response {
