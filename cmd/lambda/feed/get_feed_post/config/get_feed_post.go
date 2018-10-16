@@ -1,4 +1,4 @@
-package config
+package lambda_get_feed_post_config
 
 import (
   "BigBang/internal/app/feed_attributes"

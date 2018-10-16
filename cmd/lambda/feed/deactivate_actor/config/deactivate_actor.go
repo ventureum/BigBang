@@ -1,4 +1,4 @@
-package config
+package lambda_deactivate_actor_config
 
 import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"

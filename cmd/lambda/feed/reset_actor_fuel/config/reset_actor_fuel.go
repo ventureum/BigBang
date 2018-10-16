@@ -1,4 +1,4 @@
-package config
+package lambda_reset_actor_fuel_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"

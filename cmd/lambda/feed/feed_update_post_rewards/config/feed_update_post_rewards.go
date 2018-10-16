@@ -1,4 +1,4 @@
-package config
+package lambda_feed_update_post_rewards_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"

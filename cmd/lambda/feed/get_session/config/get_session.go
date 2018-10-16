@@ -1,4 +1,4 @@
-package config
+package lambda_get_session_config
 
 import (
   "BigBang/internal/platform/postgres_config/feed/session_record_config"

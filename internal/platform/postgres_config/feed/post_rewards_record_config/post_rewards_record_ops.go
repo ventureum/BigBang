@@ -50,12 +50,14 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetPostRewardsRecord
   return &postRewardsRecord
 }
 
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpdatePostRewardsRecordsByAggregations() {
-  _, err := postRewardsRecordExecutor.C.Exec(UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND)
+func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpdatePostRewardsRecordsByAggregations() *[]PostRewardsForUpdate {
+  var postRewardsForUpdate []PostRewardsForUpdate
+  err := postRewardsRecordExecutor.C.Select(postRewardsForUpdate, UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND)
   if err != nil && err != sql.ErrNoRows {
     log.Panicf(
       "Failed to update post rewards records by aggregations with error: %+v\n", err)
   }
+  return &postRewardsForUpdate
 }
 
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetRecentPostRewardsRecordsByActor(
@@ -90,12 +92,14 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) DeletePostRewardsRec
   log.Printf("Sucessfully deleted post rewards records for postHash %s\n", postHash)
 }
 
-func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpdatePostRewardsRecordsByAggregationsTx() {
-  _, err := postRewardsRecordExecutor.Tx.Exec(UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND)
+func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpdatePostRewardsRecordsByAggregationsTx() *[]PostRewardsForUpdate {
+  var postRewardsForUpdate []PostRewardsForUpdate
+  err := postRewardsRecordExecutor.Tx.Select(&postRewardsForUpdate, UPSERT_POST_REWARDS_RECORD_BY_AGGREGATION_COMMAND)
   if err != nil && err != sql.ErrNoRows {
     log.Panicf(
       "Failed to update post rewards records by aggregations with error: %+v\n", err)
   }
+  return &postRewardsForUpdate
 }
 
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) GetPostRewardsRecordByPostHashTx(

@@ -209,11 +209,13 @@ func ProcessPostRecord(
     PostHash: postRecord.PostHash,
     Actor: postRecord.Actor,
     PostType: postRecord.PostType,
+    Object: activity.Object.Value(),
+    PostTime: createdTimestamp,
     DeltaFuel: int64(fuelsPenalty.Neg()),
   })
 
   // Insert Activity to GetStream
-  if (updateCount == 0) {
+  if updateCount == 0 {
     getStreamClient.AddFeedActivityToGetStream(activity)
   } else {
     getStreamClient.UpdateFeedActivityToGetStream(activity)

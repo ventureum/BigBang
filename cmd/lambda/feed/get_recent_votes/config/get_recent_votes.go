@@ -1,4 +1,4 @@
-package config
+package lambda_get_recent_votes_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"

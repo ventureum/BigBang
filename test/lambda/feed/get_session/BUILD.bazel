@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["get_session_test.go"],
+    deps = [
+        "//cmd/lambda/feed/get_session/config:go_default_library",
+        "//internal/platform/postgres_config/feed/session_record_config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)

@@ -1,4 +1,4 @@
-package config
+package lambda_feed_post_config
 
 import (
   "log"

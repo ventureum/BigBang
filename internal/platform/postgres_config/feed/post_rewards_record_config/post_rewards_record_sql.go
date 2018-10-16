@@ -7,6 +7,8 @@ INSERT INTO post_rewards_records
   post_hash,
   actor,
   post_type,
+  object,
+  post_time,
   delta_fuel
 )
 VALUES 
@@ -14,6 +16,8 @@ VALUES
   :post_hash,
   :actor,
   :post_type,
+  :object,
+  :post_time,
   :delta_fuel
 )
 ON CONFLICT (post_hash) 
@@ -22,7 +26,9 @@ DO
     SET  
        actor = :actor,
        post_type = :post_type,
-       delta_fuel = post_rewards_records.delta_fuel + :delta_fuel
+       delta_fuel = post_rewards_records.delta_fuel + :delta_fuel,
+       object = :object,
+       post_time = :post_time
     WHERE post_rewards_records.post_hash = :post_hash;
 `
 
@@ -51,7 +57,8 @@ UPDATE post_rewards_records
     delta_reputation =  updates.delta_reputation,
     delta_milestone_points =  updates.delta_reputation
 FROM updates
-WHERE  post_rewards_records.post_hash = updates.post_hash;
+WHERE  post_rewards_records.post_hash = updates.post_hash
+RETURNING post_rewards_records.object, post_rewards_records.post_time, post_rewards_records.withdrawable_mps;
 `
 
 const QUERY_RECENT_POST_REWARDS_RECORDS_BY_ACTOR_COMMAND = `

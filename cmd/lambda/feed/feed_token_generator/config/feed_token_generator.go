@@ -1,4 +1,4 @@
-package config
+package lambda_feed_token_generator_config
 
 import (
   "gopkg.in/GetStream/stream-go2.v1"
