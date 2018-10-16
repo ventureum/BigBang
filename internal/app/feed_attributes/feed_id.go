@@ -57,3 +57,11 @@ func ConvertToStringArray(feedIds []FeedId) []string {
   }
   return arr
 }
+
+func ConvertFromStringArrayToFeedIds(feedIds []string) []FeedId {
+  arr := make([]FeedId, len(feedIds))
+  for i, v := range feedIds {
+    arr[i] = CreateFeedIdFromValue(v)
+  }
+  return arr
+}

@@ -4,6 +4,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_rewards_record_config"
+  "BigBang/internal/platform/getstream_config"
 )
 
 type Response struct {
@@ -20,10 +21,16 @@ func ProcessRequest(response *Response) {
     }
     postgresBigBangClient.Close()
   }()
-
+  getStreamClient := getstream_config.ConnectGetStreamClient()
   postgresBigBangClient.Begin()
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
-  postRewardsRecordExecutor.UpdatePostRewardsRecordsByAggregationsTx()
+  postRewardsForUpdates := postRewardsRecordExecutor.UpdatePostRewardsRecordsByAggregationsTx()
+  for _, postRewardsForUpdate := range *postRewardsForUpdates {
+    getStreamClient.UpdateFeedPostRewardsByForeignIdAndTimestamp(
+      postRewardsForUpdate.Object,
+      postRewardsForUpdate.PostTime,
+      postRewardsForUpdate.WithdrawableMPs)
+  }
   postgresBigBangClient.Commit()
   response.Ok = true
 }
