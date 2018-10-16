@@ -2,13 +2,13 @@ package test_constants
 
 import "BigBang/internal/app/feed_attributes"
 
-const PostHash1 = "0xPostHash001"
-const PostHash2 = "0xPostHash002"
-const PostHash3 = "0xPostHash003"
-const PostHash4 = "0xPostHash004"
-const PostHash5 = "0xPostHash005"
-const PostHash6 = "0xPostHash006"
-const PostHash7 = "0xPostHash007"
+const PostHash1 = "0xTestPostHash001"
+const PostHash2 = "0xTestPostHash002"
+const PostHash3 = "0xTestPostHash003"
+const PostHash4 = "0xTestPostHash004"
+const PostHash5 = "0xTestPostHash005"
+const PostHash6 = "0xTestPostHash006"
+const PostHash7 = "0xTestPostHash007"
 
 const BoardId1 = "0xBoardId001"
 const BoardId2 = "0xBoardId002"
@@ -56,3 +56,6 @@ const SessionEndTime1 = 1539108008
 
 const SessionStartTime2 = 1539108012
 const SessionEndTime2 = 1539108018
+
+const PostBlockTimestamp1 = 1539108001
+const PostBlockTimestamp2 = 1539108002
