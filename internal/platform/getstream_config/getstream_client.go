@@ -35,6 +35,7 @@ func (getStreamClient *GetStreamClient) AddFeedActivityToGetStream(activity *fee
   timestamp := activity.Time
   extra := map[string]interface{} {
     "postType": activity.PostType.Value(),
+    "rewards": 0,
   }
   for k, v := range activity.Extra {
     extra[k] = v
