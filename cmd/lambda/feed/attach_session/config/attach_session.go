@@ -1,4 +1,4 @@
-package config
+package lambda_attach_session_config
 
 import (
 

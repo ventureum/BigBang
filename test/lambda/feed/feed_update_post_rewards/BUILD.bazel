@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["feed_update_post_rewards_test.go"],
+    deps = [
+        "//cmd/lambda/feed/feed_update_post_rewards/config:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)

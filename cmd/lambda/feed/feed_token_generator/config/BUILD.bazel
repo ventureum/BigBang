@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -10,11 +10,4 @@ go_library(
         "//internal/pkg/error_config:go_default_library",
         "//vendor/gopkg.in/GetStream/stream-go2.v1:go_default_library",
     ],
-)
-
-go_test(
-    name = "go_default_test",
-    srcs = ["feed_token_generator_test.go"],
-    embed = [":go_default_library"],
-    deps = ["//vendor/github.com/stretchr/testify/assert:go_default_library"],
 )

@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -13,11 +13,4 @@ go_library(
         "//internal/platform/postgres_config/feed/actor_rewards_info_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/refuel_record_config:go_default_library",
     ],
-)
-
-go_test(
-    name = "go_default_test",
-    srcs = ["dev_refuel_test.go"],
-    embed = [":go_default_library"],
-    deps = ["//vendor/github.com/stretchr/testify/assert:go_default_library"],
 )

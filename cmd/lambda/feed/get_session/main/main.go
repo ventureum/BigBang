@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-  lambda.Start(config.Handler)
+  lambda.Start(lambda_get_session_config.Handler)
 }

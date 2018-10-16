@@ -1,4 +1,4 @@
-package config
+package lambda_refuel_config
 
 import (
   "log"
