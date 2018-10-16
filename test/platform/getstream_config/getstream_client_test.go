@@ -94,7 +94,3 @@ func (suite *GetstreamConfigTestSuite) TestUpdateFeedPostRewardsByForeignIdAndTi
 func TestGetstreamConfigTestSuite(t *testing.T) {
   suite.Run(t, new(GetstreamConfigTestSuite))
 }
-
-
-
-
