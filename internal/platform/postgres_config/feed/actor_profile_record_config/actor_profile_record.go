@@ -12,6 +12,7 @@ type ActorProfileRecord struct {
   PhotoUrl string `db:"photo_url"`
   TelegramId string `db:"telegram_id"`
   PhoneNumber string `db:"phone_number"`
+  PrivateKey string `db:"private_key"`
   ActorProfileStatus feed_attributes.ActorProfileStatus  `db:"actor_profile_status"`
   CreatedAt time.Time `db:"created_at"`
   UpdatedAt time.Time `db:"updated_at"`

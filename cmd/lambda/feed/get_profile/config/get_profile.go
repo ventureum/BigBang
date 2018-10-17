@@ -22,6 +22,7 @@ type ResponseContent struct {
   PhotoUrl string `json:"photoUrl,required"`
   TelegramId string `json:"telegramId,required"`
   PhoneNumber string `json:"phoneNumber,required"`
+  PrivateKey string `json:"privateKey,required"`
   Level int64 `json:"level,required"`
   RewardsInfo *feed_attributes.RewardsInfo `json:"rewardsInfo,required"`
 }
@@ -40,6 +41,7 @@ func ProfileRecordResultToResponseContent(actorProfileRecord *actor_profile_reco
     PhotoUrl: actorProfileRecord.PhotoUrl,
     TelegramId: actorProfileRecord.TelegramId,
     PhoneNumber: actorProfileRecord.PhoneNumber,
+    PrivateKey: actorProfileRecord.PrivateKey,
   }
 }
 
