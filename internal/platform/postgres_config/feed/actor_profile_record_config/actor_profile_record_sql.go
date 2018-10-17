@@ -9,7 +9,8 @@ INSERT INTO actor_profile_records
   username,
   photo_url,
   telegram_id,
-  phone_number
+  phone_number,
+  private_key
 )
 VALUES 
 (
@@ -18,7 +19,8 @@ VALUES
   :username,
   :photo_url,
   :telegram_id,
-  :phone_number
+  :phone_number,
+  :private_key
 )
 ON CONFLICT (actor) 
 DO
@@ -28,6 +30,7 @@ DO
         photo_url = :photo_url,
         telegram_id = :telegram_id,
         phone_number = :phone_number,
+        private_key = :private_key,
         actor_profile_status = 'ACTIVATED'
     WHERE actor_profile_records.actor = :actor
 RETURNING (xmax = 0) AS inserted;

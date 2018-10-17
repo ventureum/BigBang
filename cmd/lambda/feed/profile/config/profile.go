@@ -18,6 +18,7 @@ type Request struct {
   PhotoUrl string `json:"photoUrl,omitempty"`
   TelegramId string `json:"telegramId,omitempty"`
   PhoneNumber string `json:"phoneNumber,omitempty"`
+  PrivateKey string `json:"privateKey,omitempty"`
 }
 
 type Response struct {
@@ -33,6 +34,7 @@ func (request *Request) ToActorProfileRecord() (*actor_profile_record_config.Act
     PhotoUrl: request.PhotoUrl,
     TelegramId: request.TelegramId,
     PhoneNumber: request.PhoneNumber,
+    PrivateKey: request.PrivateKey,
   }
 }
 

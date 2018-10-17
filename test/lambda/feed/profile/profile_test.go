@@ -21,6 +21,7 @@ func TestHandler(t *testing.T) {
         PhotoUrl: "http://123.com",
         TelegramId: test_constants.TelegramId1,
         PhoneNumber: "5197290001",
+        PrivateKey: test_constants.PrivateKey1,
       },
       response: lambda_profile_config.Response {
           Ok: true,
@@ -35,6 +36,7 @@ func TestHandler(t *testing.T) {
         PhotoUrl: "http://567.com",
         TelegramId: test_constants.TelegramId2,
         PhoneNumber: "5197290002",
+        PrivateKey: test_constants.PrivateKey2,
       },
       response: lambda_profile_config.Response {
         Ok: true,
@@ -49,6 +51,7 @@ func TestHandler(t *testing.T) {
         PhotoUrl: "http://567.com",
         TelegramId: test_constants.TelegramId3,
         PhoneNumber: "5197290002",
+        PrivateKey: test_constants.PrivateKey3,
       },
       response: lambda_profile_config.Response {
         Ok: true,
@@ -63,6 +66,7 @@ func TestHandler(t *testing.T) {
         PhotoUrl: "http://567.com",
         TelegramId: test_constants.TelegramId4,
         PhoneNumber: "5197290002",
+        PrivateKey: test_constants.PrivateKey4,
       },
       response: lambda_profile_config.Response {
         Ok: true,
@@ -77,6 +81,7 @@ func TestHandler(t *testing.T) {
         PhotoUrl: "http://567.com",
         TelegramId: test_constants.TelegramId5,
         PhoneNumber: "5197290002",
+        PrivateKey: test_constants.PrivateKey5,
       },
       response: lambda_profile_config.Response {
         Ok: true,
@@ -91,6 +96,7 @@ func TestHandler(t *testing.T) {
         PhotoUrl: "http://567.com",
         TelegramId: test_constants.TelegramId6,
         PhoneNumber: "5197290002",
+        PrivateKey: test_constants.PrivateKey6,
       },
       response: lambda_profile_config.Response {
         Ok: true,
@@ -105,6 +111,7 @@ func TestHandler(t *testing.T) {
         PhotoUrl: "http://567.com",
         TelegramId: test_constants.TelegramId7,
         PhoneNumber: "5197290002",
+        PrivateKey: test_constants.PrivateKey7,
       },
       response: lambda_profile_config.Response {
         Ok: true,

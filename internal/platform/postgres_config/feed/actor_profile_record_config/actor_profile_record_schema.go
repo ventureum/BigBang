@@ -8,6 +8,7 @@ CREATE TABLE actor_profile_records (
     photo_url TEXT,
     telegram_id TEXT,
     phone_number TEXT,
+    private_key TEXT,
     actor_profile_status actor_profile_status_enum NOT NULL DEFAULT 'ACTIVATED',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

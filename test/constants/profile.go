@@ -24,3 +24,11 @@ const TelegramId5 =  "0xTelegramId005"
 const TelegramId6 =  "0xTelegramId006"
 const TelegramId7 =  "0xTelegramId007"
 
+const PrivateKey1 =  "0xPrivateKey001"
+const PrivateKey2 =  "0xPrivateKey002"
+const PrivateKey3 =  "0xPrivateKey003"
+const PrivateKey4 =  "0xPrivateKey004"
+const PrivateKey5 =  "0xPrivateKey005"
+const PrivateKey6 =  "0xPrivateKey006"
+const PrivateKey7 =  "0xPrivateKey007"
+
