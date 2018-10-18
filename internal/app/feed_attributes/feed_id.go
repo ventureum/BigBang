@@ -16,9 +16,10 @@ type FeedId struct{
 
 
 const (
-  UserFeedSlug FeedSlug = "user"
-  BoardFeedSlug FeedSlug = "board"
-  CommentFeedSlug FeedSlug = "comment"
+  UserFeedSlug        FeedSlug = "user"
+  UserPostFeedSlug    FeedSlug = "user_post"
+  BoardFeedSlug       FeedSlug = "board"
+  UserCommentFeedSlug FeedSlug = "user_comment"
 )
 
 
