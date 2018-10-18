@@ -2,6 +2,7 @@ package feed_attributes
 
 import (
   "gopkg.in/GetStream/stream-go2.v1"
+  "sort"
 )
 
 type Activity struct {
@@ -51,6 +52,7 @@ func ConvertStreamActivityToActivity(streamActivity *stream.Activity) *Activity 
       extra[k] = v
     }
   }
+  sort.Sort(sort.StringSlice(streamActivity.To))
   return &Activity {
     Actor: Actor(streamActivity.Actor),
     Verb: Verb(streamActivity.Verb),

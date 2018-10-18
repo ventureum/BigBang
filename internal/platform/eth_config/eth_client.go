@@ -475,6 +475,10 @@ func ConvertPostRecordToActivity(
     verb = feed_attributes.SubmitVerb
     to = []feed_attributes.FeedId {
       {
+        FeedSlug: feed_attributes.UserPostFeedSlug,
+        UserId: feed_attributes.UserId(postRecord.PostHash),
+      },
+      {
         FeedSlug: feed_attributes.BoardFeedSlug,
         UserId: feed_attributes.AllBoardId,
       },
@@ -495,7 +499,7 @@ func ConvertPostRecordToActivity(
     }
     to = []feed_attributes.FeedId {
       {
-        FeedSlug: feed_attributes.CommentFeedSlug,
+        FeedSlug: feed_attributes.UserCommentFeedSlug,
         UserId: feed_attributes.UserId(postRecord.ParentHash),
       },
     }

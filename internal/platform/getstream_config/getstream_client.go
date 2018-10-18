@@ -40,6 +40,7 @@ func (getStreamClient *GetStreamClient) AddFeedActivityToGetStream(activity *fee
   for k, v := range activity.Extra {
     extra[k] = v
   }
+
   streamActivity := stream.Activity{
     Actor: actor,
     Verb: verb,
@@ -58,18 +59,10 @@ func (getStreamClient *GetStreamClient) AddFeedActivityToGetStream(activity *fee
     obj, actor, streamActivity)
 }
 
-func (getStreamClient *GetStreamClient) GetAllFeedActivitiesByFeedId(feedId feed_attributes.FeedId) {
-  flatFeed := getStreamClient.C.FlatFeed(string(feedId.FeedSlug), string(feedId.UserId))
-  flatFeedResponse, err := flatFeed.GetActivities(stream.WithActivitiesLimit(10))
-  if err != nil {
-    log.Panicf("Failed to get activities for feedId %s\n with error: %+v\n", feedId.Value(), err)
-  }
-  log.Printf("%+v\n",flatFeedResponse.Results)
-}
+func (getStreamClient *GetStreamClient) GetAllFeedActivitiesByFeedSlugAndUserId(
+  feedSlug string, userId string) *[]feed_attributes.Activity{
 
-func (getStreamClient *GetStreamClient) GetAllFeedActivitiesByActor(actor string) *[]feed_attributes.Activity{
-
-  flatFeed := getStreamClient.CreateFlatFeed(string(feed_attributes.UserFeedSlug), actor)
+  flatFeed := getStreamClient.CreateFlatFeed(feedSlug, userId)
 
   flatFeedResponse, err := flatFeed.GetActivities()
 
@@ -141,10 +134,10 @@ func (getStreamClient *GetStreamClient) UpdateFeedActivityToGetStreamByForeignId
 }
 
 
-func (getStreamClient *GetStreamClient) RemoveFeedActivityByForeignIdAndActor(foreignId string, actor string) {
-  flatFeed := getStreamClient.CreateFlatFeed(string(feed_attributes.UserFeedSlug), actor)
+func (getStreamClient *GetStreamClient) RemoveFeedActivityByFeedSlugAndUserIdAndForeignId(feedSlug string, userId string, foreignId string) {
+  flatFeed := getStreamClient.CreateFlatFeed(feedSlug, userId)
   flatFeed.RemoveActivityByForeignID(foreignId)
-  log.Printf("Successfully deleted feed activity by Foreign Id %s for UserFeedSlug Actor %s", foreignId, actor)
+  log.Printf("Successfully deleted feed activity by Foreign Id %s for FeedSlug %s and UserId %s", foreignId, feedSlug, userId)
 }
 
 func (getStreamClient *GetStreamClient) UpdateFeedPostRewardsByForeignIdAndTimestamp(
