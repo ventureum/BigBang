@@ -42,16 +42,16 @@ func (suite *GetstreamConfigTestSuite) TestRemoveFeedActivityByForeignIdAndActor
 suite.GetStreamClient.AddFeedActivityToGetStream(suite.ActivityTwo)
 
 activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserFeedSlug), string(suite.ActivityTwo.Actor))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
 
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityTwo, (*activities)[0])
 
 suite.GetStreamClient.RemoveFeedActivityByFeedSlugAndUserIdAndForeignId(
- string(feed_attributes.UserFeedSlug), string(suite.ActivityTwo.Actor), suite.ActivityTwo.ForeignId)
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId), suite.ActivityTwo.ForeignId)
 
 activities = suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserFeedSlug), string(suite.ActivityTwo.Actor))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
 
 suite.Equal(0, len(*activities))
 }
@@ -61,7 +61,7 @@ suite.ActivityTwo.Extra["rewards"] = int64(20)
 suite.GetStreamClient.AddFeedActivityToGetStream(suite.ActivityTwo)
 
 activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserFeedSlug), string(suite.ActivityTwo.Actor))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
 
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityTwo, (*activities)[0])
@@ -74,7 +74,7 @@ suite.GetStreamClient.UpdateFeedPostRewardsByForeignIdAndTimestamp(
   timestamp,
   newRewards)
 activities = suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserFeedSlug), string(suite.ActivityTwo.Actor))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityTwo, (*activities)[0])
 }
@@ -97,7 +97,7 @@ suite.GetStreamClient.UpdateFeedPostRewardsByForeignIdAndTimestamp(
   timestamp,
   newRewards)
 activities = suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserFeedSlug), string(suite.ActivityThree.Actor))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityThree.Object.ObjId))
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityThree, (*activities)[0])
 }
@@ -105,10 +105,6 @@ suite.Equal(*suite.ActivityThree, (*activities)[0])
 
 func (suite *GetstreamConfigTestSuite) TestFeedActivityPostTypeWithTo() {
   suite.ActivityFour.To = []feed_attributes.FeedId{
-    {
-      FeedSlug: feed_attributes.UserPostFeedSlug,
-      UserId: feed_attributes.UserId(suite.ActivityFour.Object.ObjId),
-    },
     {
       FeedSlug: feed_attributes.BoardFeedSlug,
       UserId: feed_attributes.AllBoardId,
@@ -124,53 +120,47 @@ func (suite *GetstreamConfigTestSuite) TestFeedActivityPostTypeWithTo() {
   })
   suite.GetStreamClient.AddFeedActivityToGetStream(suite.ActivityFour)
 
+
+  activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
+    string(feed_attributes.UserPostFeedSlug), string(suite.ActivityFour.Object.ObjId))
+
+  suite.ActivityFour.To = []feed_attributes.FeedId{}
+  actualActivity := (*activities)[0]
+  actualActivity.To = []feed_attributes.FeedId{}
+
+  suite.Equal(1, len(*activities))
+  suite.Equal(*suite.ActivityFour, actualActivity)
+
   activity := suite.GetStreamClient.GetFeedActivityByForeignIdAndTimestamp(
     suite.ActivityFour.ForeignId, time.Unix(int64(suite.ActivityFour.Time), 0).UTC())
 
-  suite.ActivityFour.To = []feed_attributes.FeedId{}
+  activity.To = []feed_attributes.FeedId{}
   suite.Equal(*suite.ActivityFour, *activity)
-
-  activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-    string(feed_attributes.UserPostFeedSlug), string(feed_attributes.UserId(suite.ActivityFour.Object.ObjId)))
-
-
-  suite.Equal(1, len(*activities))
-  suite.Equal(*suite.ActivityFour, (*activities)[0])
 }
 
 func (suite *GetstreamConfigTestSuite) TestFeedActivityCommentTypeWithTo() {
-  suite.ActivityFive.To = []feed_attributes.FeedId{
-    {
-      FeedSlug: feed_attributes.UserCommentFeedSlug,
-      UserId: feed_attributes.UserId(suite.ActivityFive.Object.ObjId),
-    },
-    {
-      FeedSlug: feed_attributes.BoardFeedSlug,
-      UserId: feed_attributes.AllBoardId,
-    },
-    {
-      FeedSlug: feed_attributes.BoardFeedSlug,
-      UserId: feed_attributes.UserId(test_constants.BoardId1),
-    },
-  }
 
   sort.Slice(suite.ActivityFive.To, func(i, j int) bool {
     return  suite.ActivityFive.To[i].Value() <  suite.ActivityFive.To[j].Value()
   })
   suite.GetStreamClient.AddFeedActivityToGetStream(suite.ActivityFive)
 
+
+  activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
+    string(feed_attributes.UserCommentFeedSlug), string(feed_attributes.UserId(suite.ActivityFive.Object.ObjId)))
+
+  suite.ActivityFive.To = []feed_attributes.FeedId{}
+  actualActivity := (*activities)[0]
+  actualActivity.To = []feed_attributes.FeedId{}
+
+  suite.Equal(1, len(*activities))
+  suite.Equal(*suite.ActivityFive, actualActivity)
+
   activity := suite.GetStreamClient.GetFeedActivityByForeignIdAndTimestamp(
     suite.ActivityFive.ForeignId, time.Unix(int64(suite.ActivityFive.Time), 0).UTC())
 
   suite.ActivityFive.To = []feed_attributes.FeedId{}
   suite.Equal(*suite.ActivityFive, *activity)
-
-  activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-    string(feed_attributes.UserCommentFeedSlug), string(feed_attributes.UserId(suite.ActivityFive.Object.ObjId)))
-
-  suite.Equal(1, len(*activities))
-  suite.Equal(*suite.ActivityFive, (*activities)[0])
-
 }
 
 func TestGetstreamConfigTestSuite(t *testing.T) {

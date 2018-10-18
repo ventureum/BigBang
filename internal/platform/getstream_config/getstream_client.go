@@ -52,8 +52,13 @@ func (getStreamClient *GetStreamClient) AddFeedActivityToGetStream(activity *fee
     To: feed_attributes.ConvertToStringArray(activity.To),
     Extra: extra,
   }
+  var flatFeed *stream.FlatFeed
+  if activity.Verb == feed_attributes.ReplyVerb {
+    flatFeed = getStreamClient.CreateFlatFeed(string(feed_attributes.UserCommentFeedSlug), activity.Object.ObjId)
+  } else {
+    flatFeed = getStreamClient.CreateFlatFeed(string(feed_attributes.UserPostFeedSlug), activity.Object.ObjId)
+  }
 
-  flatFeed := getStreamClient.CreateFlatFeed(string(feed_attributes.UserFeedSlug), actor)
   flatFeed.AddActivities(streamActivity)
   log.Printf("Added feed activity to GetStream with object: %s by user %s with stream activty: %v+\n",
     obj, actor, streamActivity)
