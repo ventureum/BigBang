@@ -42,16 +42,16 @@ func (suite *GetstreamConfigTestSuite) TestRemoveFeedActivityByForeignIdAndActor
 suite.GetStreamClient.AddFeedActivityToGetStream(suite.ActivityTwo)
 
 activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Actor))
 
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityTwo, (*activities)[0])
 
 suite.GetStreamClient.RemoveFeedActivityByFeedSlugAndUserIdAndForeignId(
-  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId), suite.ActivityTwo.ForeignId)
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Actor), suite.ActivityTwo.ForeignId)
 
 activities = suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Actor))
 
 suite.Equal(0, len(*activities))
 }
@@ -61,7 +61,7 @@ suite.ActivityTwo.Extra["rewards"] = int64(20)
 suite.GetStreamClient.AddFeedActivityToGetStream(suite.ActivityTwo)
 
 activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Actor))
 
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityTwo, (*activities)[0])
@@ -74,7 +74,7 @@ suite.GetStreamClient.UpdateFeedPostRewardsByForeignIdAndTimestamp(
   timestamp,
   newRewards)
 activities = suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Object.ObjId))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityTwo.Actor))
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityTwo, (*activities)[0])
 }
@@ -97,7 +97,7 @@ suite.GetStreamClient.UpdateFeedPostRewardsByForeignIdAndTimestamp(
   timestamp,
   newRewards)
 activities = suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityThree.Object.ObjId))
+  string(feed_attributes.UserPostFeedSlug), string(suite.ActivityThree.Actor))
 suite.Equal(1, len(*activities))
 suite.Equal(*suite.ActivityThree, (*activities)[0])
 }
@@ -122,7 +122,7 @@ func (suite *GetstreamConfigTestSuite) TestFeedActivityPostTypeWithTo() {
 
 
   activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-    string(feed_attributes.UserPostFeedSlug), string(suite.ActivityFour.Object.ObjId))
+    string(feed_attributes.UserPostFeedSlug), string(suite.ActivityFour.Actor))
 
   suite.ActivityFour.To = []feed_attributes.FeedId{}
   actualActivity := (*activities)[0]
@@ -147,7 +147,7 @@ func (suite *GetstreamConfigTestSuite) TestFeedActivityCommentTypeWithTo() {
 
 
   activities := suite.GetStreamClient.GetAllFeedActivitiesByFeedSlugAndUserId(
-    string(feed_attributes.UserCommentFeedSlug), string(feed_attributes.UserId(suite.ActivityFive.Object.ObjId)))
+    string(feed_attributes.UserCommentFeedSlug), string(feed_attributes.UserId(suite.ActivityFive.Actor)))
 
   suite.ActivityFive.To = []feed_attributes.FeedId{}
   actualActivity := (*activities)[0]

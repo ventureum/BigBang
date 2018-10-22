@@ -493,7 +493,12 @@ func ConvertPostRecordToActivity(
         ObjType: feed_attributes.PostObjectType,
         ObjId: postRecord.ParentHash,
     }
-    to = []feed_attributes.FeedId {}
+    to = []feed_attributes.FeedId {
+      {
+        FeedSlug: feed_attributes.CommentFeedSlug,
+        UserId: feed_attributes.UserId(postRecord.ParentHash),
+      },
+    }
   }
 
   actor := feed_attributes.Actor(postRecord.Actor)

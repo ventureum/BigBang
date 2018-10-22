@@ -20,6 +20,7 @@ const (
   UserPostFeedSlug    FeedSlug = "user_post"
   BoardFeedSlug       FeedSlug = "board"
   UserCommentFeedSlug FeedSlug = "user_comment"
+  CommentFeedSlug FeedSlug = "comment"
 )
 
 
