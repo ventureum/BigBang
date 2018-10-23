@@ -27,6 +27,8 @@ func TestHandler(t *testing.T) {
         ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
           Actor: test_constants.Actor1,
           ProjectId: test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+          ReceivedDelegateVotes: 60,
           ProxyVotesList:  &EmptyProxyVotesList,
         },
         NextCursor: principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
@@ -45,6 +47,8 @@ func TestHandler(t *testing.T) {
         ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
           Actor: test_constants.Actor1,
           ProjectId:   test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+          ReceivedDelegateVotes: 60,
           ProxyVotesList: &[]tcr_attributes.ProxyVotes{
             {
               Proxy:          test_constants.Actor7,
@@ -76,6 +80,8 @@ func TestHandler(t *testing.T) {
         ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
           Actor: test_constants.Actor1,
           ProjectId:  test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+          ReceivedDelegateVotes: 60,
           ProxyVotesList: &[]tcr_attributes.ProxyVotes{
             {
               Proxy:          test_constants.Actor5,
@@ -107,6 +113,8 @@ func TestHandler(t *testing.T) {
         ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
           Actor: test_constants.Actor1,
           ProjectId:   test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+          ReceivedDelegateVotes: 60,
           ProxyVotesList: &[]tcr_attributes.ProxyVotes{
             {
               Proxy:          test_constants.Actor5,

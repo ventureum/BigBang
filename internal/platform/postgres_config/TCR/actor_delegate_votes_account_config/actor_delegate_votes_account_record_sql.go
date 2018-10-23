@@ -26,10 +26,10 @@ DO
 
 const DELETE_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND = `
 DELETE FROM actor_delegate_votes_accounts
-WHERE actor = $1;
+WHERE actor = $1 and project_id = $2;
 `
 
 const QUERY_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND = `
 SELECT * FROM actor_delegate_votes_accounts
-WHERE actor = $1;
+WHERE actor = $1 and project_id = $2;
 `
