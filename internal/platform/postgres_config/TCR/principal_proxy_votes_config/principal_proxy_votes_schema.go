@@ -13,13 +13,13 @@ CREATE TABLE principal_proxy_votes (
     CONSTRAINT principal_proxy_votes_PK
         PRIMARY KEY (actor, project_id, proxy),
 
-    CONSTRAINT actor_actor_rating_vote_accounts_principal_proxy_votes_FK
+    CONSTRAINT actor_actor_delegate_votes_accounts_principal_proxy_votes_FK
        FOREIGN KEY (actor, project_id) 
-       REFERENCES actor_rating_vote_accounts (actor, project_id) ON DELETE CASCADE,
+       REFERENCES actor_delegate_votes_accounts (actor, project_id) ON DELETE CASCADE,
 
-    CONSTRAINT proxy_actor_rating_vote_accounts_principal_proxy_votes_FK
+    CONSTRAINT proxy_actor_delegate_votes_accounts_principal_proxy_votes_FK
        FOREIGN KEY (proxy, project_id) 
-       REFERENCES actor_rating_vote_accounts (actor, project_id) ON DELETE CASCADE
+       REFERENCES actor_delegate_votes_accounts (actor, project_id) ON DELETE CASCADE
 );
 CREATE INDEX principal_proxy_votes_index ON principal_proxy_votes (actor, project_id, proxy);
 CREATE INDEX principal_proxy_votes_desc_index ON proxies (id DESC NULLS LAST);

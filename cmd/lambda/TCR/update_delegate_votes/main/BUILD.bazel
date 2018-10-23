@@ -3,10 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
-    importpath = "BigBang/cmd/lambda/TCR/update_actor_rating_votes/main",
+    importpath = "BigBang/cmd/lambda/TCR/update_delegate_votes/main",
     visibility = ["//visibility:private"],
     deps = [
-        "//cmd/lambda/TCR/update_actor_rating_votes/config:go_default_library",
+        "//cmd/lambda/TCR/update_delegate_votes/config:go_default_library",
         "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",
     ],
 )
