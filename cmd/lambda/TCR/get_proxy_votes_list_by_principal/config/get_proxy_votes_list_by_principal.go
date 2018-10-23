@@ -1,4 +1,4 @@
-package lambda_get_proxy_votes_list_by_principal_config
+package lambda_get_proxy_voting_info_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
@@ -22,10 +22,10 @@ type Request struct {
 
 
 type Response struct {
-  ProxyVotesInfo *tcr_attributes.ProxyVotesInfo  `json:"proxyVotesInfo,omitempty"`
-  NextCursor string                              `json:"nextCursor,omitempty"`
-  Ok bool                                        `json:"ok"`
-  Message *error_config.ErrorInfo                `json:"message,omitempty"`
+  ProxyVotingInfo *tcr_attributes.ProxyVotingInfo `json:"proxyVotingInfo,omitempty"`
+  NextCursor      string                          `json:"nextCursor,omitempty"`
+  Ok              bool                            `json:"ok"`
+  Message         *error_config.ErrorInfo         `json:"message,omitempty"`
 }
 
 
@@ -33,7 +33,7 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.ProxyVotesInfo = nil
+      response.ProxyVotingInfo = nil
       response.NextCursor = ""
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
@@ -63,17 +63,17 @@ func ProcessRequest(request Request, response *Response) {
   principalProxyVotesRecordList := principalProxyVotesExecutor.GetPrincipalProxyVotesRecordListByCursor(actor, projectId, cursor, limit + 1)
 
   response.NextCursor = ""
-  response.ProxyVotesInfo = &tcr_attributes.ProxyVotesInfo {
+  response.ProxyVotingInfo = &tcr_attributes.ProxyVotingInfo{
     Actor: actor,
     ProjectId: projectId,
     AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
     ReceivedDelegateVotes: actorDelegateVotesAccount.ReceivedDelegateVotes,
   }
 
-  var proxyVotesList []tcr_attributes.ProxyVotes
+  var proxyVotesList []tcr_attributes.ProxyVoting
   for index, principalProxyVotesRecord := range *principalProxyVotesRecordList {
     if index < int(limit) {
-      ratingVote := tcr_attributes.ProxyVotes {
+      ratingVote := tcr_attributes.ProxyVoting{
         Proxy:          principalProxyVotesRecord.Proxy,
         BlockTimestamp: principalProxyVotesRecord.BlockTimestamp,
         VotesInPercent: principalProxyVotesRecord.VotesInPercent,
@@ -85,13 +85,13 @@ func ProcessRequest(request Request, response *Response) {
   }
 
 
-  response.ProxyVotesInfo.ProxyVotesList = &proxyVotesList
+  response.ProxyVotingInfo.ProxyVotingList = &proxyVotesList
 
   if cursorStr == "" {
-    log.Printf("ProxyVotesInfo is loaded for first query with Actor %s, ProjectId %s and limit %d\n",
+    log.Printf("ProxyVotingInfo is loaded for first query with Actor %s, ProjectId %s and limit %d\n",
       actor, projectId, limit)
   } else {
-    log.Printf("ProxyVotesInfo is loaded for query with Actor %s, ProjectId %s, cursor %s and limit %d\n",
+    log.Printf("ProxyVotingInfo is loaded for query with Actor %s, ProjectId %s, cursor %s and limit %d\n",
       actor, projectId, cursorStr, limit)
   }
   response.Ok = true
