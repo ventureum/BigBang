@@ -22,7 +22,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/TCR/adjust_proxy_votes:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/get_rating_vote_list:go_default_test
-./run_unit_test.sh  //test/lambda/TCR/get_proxy_votes_list_by_principal:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/get_proxy_voting_info:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/delete_objective:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/delete_milestone:go_default_test

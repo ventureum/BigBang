@@ -1,4 +1,4 @@
-package adjust_proxy_votes
+package get_proxy_voting_info
 
 import (
   "BigBang/test/constants"
@@ -9,27 +9,27 @@ import (
   "BigBang/cmd/lambda/TCR/get_proxy_votes_list_by_principal/config"
 )
 
-var EmptyProxyVotesList []tcr_attributes.ProxyVotes
+var EmptyProxyVotesList []tcr_attributes.ProxyVoting
 
 func TestHandler(t *testing.T) {
   tests := []struct{
-    request lambda_get_proxy_votes_list_by_principal_config.Request
-    response lambda_get_proxy_votes_list_by_principal_config.Response
-    err    error
+    request  lambda_get_proxy_voting_info_config.Request
+    response lambda_get_proxy_voting_info_config.Response
+    err      error
   }{
     {
-      request: lambda_get_proxy_votes_list_by_principal_config.Request {
+      request: lambda_get_proxy_voting_info_config.Request {
         Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
         Limit: 0,
       },
-      response: lambda_get_proxy_votes_list_by_principal_config.Response {
-        ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
-          Actor: test_constants.Actor1,
-          ProjectId: test_constants.ProjectId1,
+      response: lambda_get_proxy_voting_info_config.Response {
+        ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
+          Actor:                  test_constants.Actor1,
+          ProjectId:              test_constants.ProjectId1,
           AvailableDelegateVotes: 50,
-          ReceivedDelegateVotes: 60,
-          ProxyVotesList:  &EmptyProxyVotesList,
+          ReceivedDelegateVotes:  60,
+          ProxyVotingList:        &EmptyProxyVotesList,
         },
         NextCursor: principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
           test_constants.Actor1, test_constants.ProjectId1, test_constants.Actor7, test_constants.ProxyVotesBlockTimestamp5),
@@ -38,18 +38,18 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_votes_list_by_principal_config.Request {
+      request: lambda_get_proxy_voting_info_config.Request {
         Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
         Limit: 2,
       },
-      response: lambda_get_proxy_votes_list_by_principal_config.Response {
-        ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
+      response: lambda_get_proxy_voting_info_config.Response {
+        ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
           Actor: test_constants.Actor1,
           ProjectId:   test_constants.ProjectId1,
           AvailableDelegateVotes: 50,
           ReceivedDelegateVotes: 60,
-          ProxyVotesList: &[]tcr_attributes.ProxyVotes{
+          ProxyVotingList: &[]tcr_attributes.ProxyVoting{
             {
               Proxy:          test_constants.Actor7,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
@@ -69,20 +69,20 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_votes_list_by_principal_config.Request {
+      request: lambda_get_proxy_voting_info_config.Request {
         Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
         Limit: 2,
         Cursor:  principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
           test_constants.Actor1, test_constants.ProjectId1, test_constants.Actor5, test_constants.ProxyVotesBlockTimestamp4),
       },
-      response: lambda_get_proxy_votes_list_by_principal_config.Response {
-        ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
+      response: lambda_get_proxy_voting_info_config.Response {
+        ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
           Actor: test_constants.Actor1,
           ProjectId:  test_constants.ProjectId1,
           AvailableDelegateVotes: 50,
           ReceivedDelegateVotes: 60,
-          ProxyVotesList: &[]tcr_attributes.ProxyVotes{
+          ProxyVotingList: &[]tcr_attributes.ProxyVoting{
             {
               Proxy:          test_constants.Actor5,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp4,
@@ -102,20 +102,20 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_votes_list_by_principal_config.Request {
+      request: lambda_get_proxy_voting_info_config.Request {
         Actor: test_constants.Actor1,
         ProjectId: test_constants.ProjectId1,
         Limit: 5,
         Cursor: principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
           test_constants.Actor1, test_constants.ProjectId1, test_constants.Actor5, test_constants.ProxyVotesBlockTimestamp4),
       },
-      response: lambda_get_proxy_votes_list_by_principal_config.Response {
-        ProxyVotesInfo: &tcr_attributes.ProxyVotesInfo{
+      response: lambda_get_proxy_voting_info_config.Response {
+        ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
           Actor: test_constants.Actor1,
           ProjectId:   test_constants.ProjectId1,
           AvailableDelegateVotes: 50,
           ReceivedDelegateVotes: 60,
-          ProxyVotesList: &[]tcr_attributes.ProxyVotes{
+          ProxyVotingList: &[]tcr_attributes.ProxyVoting{
             {
               Proxy:          test_constants.Actor5,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp4,
@@ -145,7 +145,7 @@ func TestHandler(t *testing.T) {
     },
   }
   for _, test := range tests {
-    result, err := lambda_get_proxy_votes_list_by_principal_config.Handler(test.request)
+    result, err := lambda_get_proxy_voting_info_config.Handler(test.request)
     assert.IsType(t, test.err, err)
     assert.Equal(t, test.response, result)
   }
