@@ -47,14 +47,14 @@ func TestHandler(t *testing.T) {
           ProjectId:   test_constants.ProjectId1,
           ProxyVotesList: &[]tcr_attributes.ProxyVotes{
             {
-              Proxy:  test_constants.Actor7,
+              Proxy:          test_constants.Actor7,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
-              Votes: 20,
+              VotesInPercent: 20,
             },
             {
-              Proxy:  test_constants.Actor6,
+              Proxy:          test_constants.Actor6,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
-              Votes: 20,
+              VotesInPercent: 20,
             },
           },
         },
@@ -78,14 +78,14 @@ func TestHandler(t *testing.T) {
           ProjectId:  test_constants.ProjectId1,
           ProxyVotesList: &[]tcr_attributes.ProxyVotes{
             {
-              Proxy:  test_constants.Actor5,
+              Proxy:          test_constants.Actor5,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp4,
-              Votes: 20,
+              VotesInPercent: 20,
             },
             {
-              Proxy:  test_constants.Actor4,
+              Proxy:          test_constants.Actor4,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
-              Votes: 20,
+              VotesInPercent: 20,
             },
           },
         },
@@ -109,24 +109,24 @@ func TestHandler(t *testing.T) {
           ProjectId:   test_constants.ProjectId1,
           ProxyVotesList: &[]tcr_attributes.ProxyVotes{
             {
-              Proxy:  test_constants.Actor5,
+              Proxy:          test_constants.Actor5,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp4,
-              Votes: 20,
+              VotesInPercent: 20,
             },
             {
-              Proxy:  test_constants.Actor4,
+              Proxy:          test_constants.Actor4,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
-              Votes: 20,
+              VotesInPercent: 20,
             },
             {
-              Proxy:  test_constants.Actor3,
+              Proxy:          test_constants.Actor3,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp2,
-              Votes: 20,
+              VotesInPercent: 20,
             },
             {
-              Proxy:  test_constants.Actor2,
+              Proxy:          test_constants.Actor2,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp1,
-              Votes: 20,
+              VotesInPercent: 20,
             },
           },
         },

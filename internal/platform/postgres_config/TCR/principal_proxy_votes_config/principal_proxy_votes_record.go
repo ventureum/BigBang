@@ -7,14 +7,14 @@ import (
 )
 
 type PrincipalProxyVotesRecord struct {
-  ID            string         `json:"id" db:"id"`
-  Actor         string         `json:"actor" db:"actor"`
-  ProjectId     string         `json:"projectId" db:"project_id"`
-  Proxy         string         `json:"proxy" db:"proxy"`
-  BlockTimestamp int64         `json:"block_timestamp" db:"block_timestamp"`
-  Votes         int64          `json:"votes" db:"votes"`
-  CreatedAt     time.Time      `json:"createdAt" db:"created_at"`
-  UpdatedAt     time.Time      `json:"updatedAt" db:"updated_at"`
+  ID             string    `json:"id" db:"id"`
+  Actor          string    `json:"actor" db:"actor"`
+  ProjectId      string    `json:"projectId" db:"project_id"`
+  Proxy          string    `json:"proxy" db:"proxy"`
+  BlockTimestamp int64     `json:"block_timestamp" db:"block_timestamp"`
+  VotesInPercent int64     `json:"votesInPercent" db:"votes_in_percent"`
+  CreatedAt      time.Time `json:"createdAt" db:"created_at"`
+  UpdatedAt      time.Time `json:"updatedAt" db:"updated_at"`
 }
 
 func (principalProxyVotesRecord *PrincipalProxyVotesRecord) GenerateID() {
