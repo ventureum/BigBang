@@ -35,25 +35,27 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) Upse
   log.Printf("Sucessfully upserted Actor Delegate Votes Account Record for actor %s\n", actorDelegateVotesAccountRecord.Actor)
 }
 
-func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) DeleteActorDelegateVotesAccountRecord(actor string) {
-  _, err := actorDelegateVotesAccountExecutor.C.Exec(DELETE_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor)
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) DeleteActorDelegateVotesAccountRecord(actor string, projectId string) {
+  _, err := actorDelegateVotesAccountExecutor.C.Exec(DELETE_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor, projectId)
   if err != nil {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
-    log.Printf("Failed to delete Actor Delegate Votes Account Record for actor %s with error: %+v\n",
-      actor, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to delete Actor Delegate Votes Account Record for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
     log.Panicln(errInfo.Marshal())
   }
-  log.Printf("Sucessfully deleted Actor Delegate Votes Account Record for actor %s\n", actor)
+  log.Printf("Sucessfully deleted Actor Delegate Votes Account Record for actor %s and projectId %s\n", actor, projectId)
 }
 
 func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) GetActorDelegateVotesAccountRecord(
-  actor string) *ActorDelegateVotesAccountRecord {
+  actor string, projectId string) *ActorDelegateVotesAccountRecord {
   var actorDelegateVotesAccountRecord ActorDelegateVotesAccountRecord
-  err := actorDelegateVotesAccountExecutor.C.Get(&actorDelegateVotesAccountRecord, QUERY_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor)
+  err := actorDelegateVotesAccountExecutor.C.Get(&actorDelegateVotesAccountRecord, QUERY_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor, projectId)
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
-    log.Printf("Failed to get Actor Delegate Votes Account Record for actor %s with error: %+v\n",
-      actor, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to get Actor Delegate Votes Account Record for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
     log.Panicln(errInfo.Marshal())
   }
 
@@ -62,10 +64,11 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) GetA
       ErrorCode: error_config.NoActorExisting,
       ErrorData: map[string]interface{} {
         "actor": actor,
+        "projectId": projectId,
       },
       ErrorLocation: error_config.ActorDelegateVotesAccountRecordLocation,
     }
-    log.Printf("No Actor Delegate Votes Account Record for actor %s\n", actor)
+    log.Printf("No Actor Delegate Votes Account Record for actor %s and projectId %s\n", actor, projectId)
     log.Panicln(errorInfo.Marshal())
   }
   return &actorDelegateVotesAccountRecord
@@ -87,25 +90,27 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) Upse
   log.Printf("Sucessfully upserted Actor Delegate Votes Account Record for actor %s\n", actorDelegateVotesAccountRecord.Actor)
 }
 
-func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) DeleteActorDelegateVotesAccountRecordTx(actor string) {
-  _, err := actorDelegateVotesAccountExecutor.Tx.Exec(DELETE_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor)
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) DeleteActorDelegateVotesAccountRecordTx(actor string, projectId string) {
+  _, err := actorDelegateVotesAccountExecutor.Tx.Exec(DELETE_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor, projectId)
   if err != nil {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
-    log.Printf("Failed to delete Actor Delegate Votes Account Record for actor %s with error: %+v\n",
-      actor, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to delete Actor Delegate Votes Account Record for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
     log.Panicln(errInfo.Marshal())
   }
-  log.Printf("Sucessfully deleted Actor Delegate Votes Account Record for actor %s\n", actor)
+  log.Printf("Sucessfully deleted Actor Delegate Votes Account Record for actor %s and projectId %s\n", actor, projectId)
 }
 
 func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) GetActorDelegateVotesAccountRecordTx(
-    actor string) *ActorDelegateVotesAccountRecord {
+    actor string, projectId string) *ActorDelegateVotesAccountRecord {
   var actorDelegateVotesAccountRecord ActorDelegateVotesAccountRecord
-  err := actorDelegateVotesAccountExecutor.Tx.Get(&actorDelegateVotesAccountRecord, QUERY_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor)
+  err := actorDelegateVotesAccountExecutor.Tx.Get(&actorDelegateVotesAccountRecord, QUERY_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actor, projectId)
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
-    log.Printf("Failed to get Actor Delegate Votes Account Record for actor %s with error: %+v\n",
-      actor, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to get Actor Delegate Votes Account Record for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
     log.Panicln(errInfo.Marshal())
   }
 
@@ -114,10 +119,11 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) GetA
       ErrorCode: error_config.NoActorExisting,
       ErrorData: map[string]interface{} {
         "actor": actor,
+        "projectId": projectId,
       },
       ErrorLocation: error_config.ActorDelegateVotesAccountRecordLocation,
     }
-    log.Printf("No Actor Delegate Votes Account Record for actor %s\n", actor)
+    log.Printf("No Actor Delegate Votes Account Record for actor %s and projectId %s\n", actor, projectId)
     log.Panicln(errorInfo.Marshal())
   }
   return &actorDelegateVotesAccountRecord

@@ -9,6 +9,7 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config"
+  "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
 )
 
 
@@ -45,6 +46,8 @@ func ProcessRequest(request Request, response *Response) {
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
+  actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
+
   actorProfileRecordExecutor.VerifyActorExisting(actor)
   projectExecutor.VerifyProjectRecordExisting(projectId)
 
@@ -56,12 +59,15 @@ func ProcessRequest(request Request, response *Response) {
     cursor = utils.Base64DecodeToString(cursorStr)
   }
 
+  actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
   principalProxyVotesRecordList := principalProxyVotesExecutor.GetPrincipalProxyVotesRecordListByCursor(actor, projectId, cursor, limit + 1)
 
   response.NextCursor = ""
   response.ProxyVotesInfo = &tcr_attributes.ProxyVotesInfo {
     Actor: actor,
     ProjectId: projectId,
+    AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
+    ReceivedDelegateVotes: actorDelegateVotesAccount.ReceivedDelegateVotes,
   }
 
   var proxyVotesList []tcr_attributes.ProxyVotes
