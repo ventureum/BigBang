@@ -18,7 +18,7 @@ bazel run //:gazelle
 
 
 ./run_unit_test.sh  //test/lambda/TCR/rating_vote:go_default_test
-./run_unit_test.sh  //test/lambda/TCR/update_actor_rating_votes:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/update_delegate_votes:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/adjust_proxy_votes:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/get_rating_vote_list:go_default_test

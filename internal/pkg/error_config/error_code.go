@@ -25,6 +25,8 @@ const NoMilestoneIdExisting ErrorCode = "NoMilestoneIdExisting"
 const NoRatingVoteVoterExisting ErrorCode = "NoRatingVoteVoterExisting"
 const NoProxyUUIDExisting ErrorCode = "NoProxyUUIDExisting"
 const ProxyUUIDAlreadyExisting ErrorCode = "ProxyUUIDAlreadyExisting"
+const EmptyProxyVotingList ErrorCode = "EmptyProxyVotingList"
+const TotalProxyVotingPercentageExceeding100 ErrorCode = "TotalProxyVotingPercentageExceeding100"
 
 func CreateNoExistingErrorCode(tag string) ErrorCode {
   errCodeStr := fmt.Sprintf("No%sExisting", strings.Title(tag))

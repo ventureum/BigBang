@@ -1,18 +1,18 @@
-package lambda_update_actor_rating_votes_config
+package lambda_update_delegate_votes_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
-  "BigBang/internal/platform/postgres_config/TCR/actor_rating_vote_account_config"
+  "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
 )
 
 
 type Request struct {
-  Actor   string  `json:"actor,required"`
-  ProjectId string `json:"projectId,required"`
-  AvailableVotes int64  `json:"availableVotes,required"`
-  ReceivedVotes int64 `json:"receivedVotes,required"`
+  Actor                  string `json:"actor,required"`
+  ProjectId              string `json:"projectId,required"`
+  AvailableDelegateVotes int64  `json:"availableDelegateVotes,required"`
+  ReceivedDelegateVotes  int64  `json:"receivedDelegateVotes,required"`
 }
 
 type Response struct {
@@ -32,14 +32,14 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient.Begin()
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
-  actorRatingVoteAccountExecutor := actor_rating_vote_account_config.ActorRatingVoteAccountExecutor{*postgresBigBangClient}
+  actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(request.Actor)
 
-  actorRatingVoteAccountExecutor.UpsertActorRatingVoteAccountRecordTx(&actor_rating_vote_account_config.ActorRatingVoteAccountRecord{
+  actorDelegateVotesAccountExecutor.UpsertActorDelegateVotesAccountRecordTx(&actor_delegate_votes_account_config.ActorDelegateVotesAccountRecord{
     Actor: request.Actor,
     ProjectId: request.ProjectId,
-    AvailableRatingVotes: request.AvailableVotes,
-    ReceivedRatingVotes: request.ReceivedVotes,
+    AvailableDelegateVotes: request.AvailableDelegateVotes,
+    ReceivedDelegateVotes: request.ReceivedDelegateVotes,
   })
 
   postgresBigBangClient.Commit()
