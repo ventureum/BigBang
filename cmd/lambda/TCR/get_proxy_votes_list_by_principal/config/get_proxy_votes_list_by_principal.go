@@ -68,9 +68,9 @@ func ProcessRequest(request Request, response *Response) {
   for index, principalProxyVotesRecord := range *principalProxyVotesRecordList {
     if index < int(limit) {
       ratingVote := tcr_attributes.ProxyVotes {
-        Proxy: principalProxyVotesRecord.Proxy,
+        Proxy:          principalProxyVotesRecord.Proxy,
         BlockTimestamp: principalProxyVotesRecord.BlockTimestamp,
-        Votes: principalProxyVotesRecord.Votes,
+        VotesInPercent: principalProxyVotesRecord.VotesInPercent,
       }
       proxyVotesList = append(proxyVotesList, ratingVote)
     } else {

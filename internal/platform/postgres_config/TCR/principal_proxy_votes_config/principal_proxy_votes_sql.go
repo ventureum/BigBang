@@ -9,7 +9,7 @@ INSERT INTO principal_proxy_votes
   project_id,
   proxy,
   block_timestamp,
-  votes
+  votes_in_percent
 )
 VALUES 
 (
@@ -18,7 +18,7 @@ VALUES
   :project_id,
   :proxy,
   :block_timestamp,
-  :votes
+  :votes_in_percent
 );
 `
 
@@ -26,7 +26,7 @@ const UPDATE_PRINCIPAL_PROXY_VOTES_COMMAND = `
 UPDATE principal_proxy_votes
     SET
           block_timestamp = :block_timestamp,
-          votes = :votes
+          votes_in_percent = :votes_in_percent
     WHERE 
           principal_proxy_votes.actor = :actor and
           principal_proxy_votes.project_id = :project_id and

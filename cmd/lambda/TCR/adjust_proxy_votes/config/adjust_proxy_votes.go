@@ -10,11 +10,11 @@ import (
 
 
 type Request struct {
-  Actor   string  `json:"actor,required"`
-  ProjectId string `json:"projectId,required"`
-  Proxy string `json:"proxy,required"`
-  BlockTimestamp  int64        `json:"blockTimestamp,required"`
-  Votes int64  `json:"votes,required"`
+  Actor          string `json:"actor,required"`
+  ProjectId      string `json:"projectId,required"`
+  Proxy          string `json:"proxy,required"`
+  BlockTimestamp int64  `json:"blockTimestamp,required"`
+  VotesInPercent int64  `json:"votesInPercent,required"`
 }
 
 type Response struct {
@@ -40,13 +40,13 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor.VerifyActorExistingTx(request.Proxy)
   projectExecutor.VerifyProjectRecordExistingTx(request.ProjectId)
 
-  if request.Votes > 0 {
+  if request.VotesInPercent > 0 {
     principalProxyVotesRecord := &principal_proxy_votes_config.PrincipalProxyVotesRecord{
-      Actor: request.Actor,
-      ProjectId: request.ProjectId,
-      Proxy: request.Proxy,
+      Actor:          request.Actor,
+      ProjectId:      request.ProjectId,
+      Proxy:          request.Proxy,
       BlockTimestamp: request.BlockTimestamp,
-      Votes: request.Votes,
+      VotesInPercent: request.VotesInPercent,
     }
     principalProxyVotesRecord.GenerateID()
     principalProxyVotesExecutor.UpsertPrincipalProxyVotesRecordTx(principalProxyVotesRecord)
