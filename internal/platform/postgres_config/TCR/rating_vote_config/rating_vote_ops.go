@@ -138,7 +138,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByIDs(
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExisting (
-    projectId string, milestoneId int64, objectiveId int64, voter string) {
+    projectId string, milestoneId int64, objectiveId int64, voter string) bool {
   var existing bool
   err := ratingVoteExecutor.C.Get(&existing, VERIFY_RATING_VOTE_EXISTING_COMMAND, projectId, milestoneId, objectiveId, voter)
   if err != nil {
@@ -150,21 +150,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExisting (
     errInfo.ErrorData["voter"] = voter
     log.Panicln(errInfo.Marshal())
   }
-  if !existing {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.NoRatingVoteVoterExisting,
-      ErrorData: map[string]interface{} {
-        "objectiveId": objectiveId,
-        "milestoneId": milestoneId,
-        "projectId": projectId,
-        "voter": voter,
-      },
-      ErrorLocation: error_config.RatingVoteRecordLocation,
-    }
-    log.Printf("No rating vote Record for projectId %s, milestoneId %d, objectiveId %d and voter %s ",
-      projectId, milestoneId, objectiveId, voter)
-    log.Panicln(errorInfo.Marshal())
-  }
+  return existing
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursor(
@@ -312,7 +298,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByIDsTx(
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExistingTx (
-    projectId string, milestoneId int64, objectiveId int64, voter string) {
+    projectId string, milestoneId int64, objectiveId int64, voter string) bool {
   var existing bool
   err := ratingVoteExecutor.Tx.Get(&existing, VERIFY_RATING_VOTE_EXISTING_COMMAND, projectId, milestoneId, objectiveId, voter)
   if err != nil {
@@ -324,21 +310,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExistingTx (
     errInfo.ErrorData["voter"] = voter
     log.Panicln(errInfo.Marshal())
   }
-  if !existing {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.NoRatingVoteVoterExisting,
-      ErrorData: map[string]interface{} {
-        "objectiveId": objectiveId,
-        "milestoneId": milestoneId,
-        "projectId": projectId,
-        "voter": voter,
-      },
-      ErrorLocation: error_config.RatingVoteRecordLocation,
-    }
-    log.Printf("No rating vote Record for projectId %s, milestoneId %d, objectiveId %d and voter %s ",
-      projectId, milestoneId, objectiveId, voter)
-    log.Panicln(errorInfo.Marshal())
-  }
+  return existing
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursorTx(

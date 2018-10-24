@@ -8,6 +8,7 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/objective_config"
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
+  "log"
 )
 
 
@@ -40,6 +41,7 @@ func ProcessRequest(request Request, response *Response) {
   projectId := request.ProjectId
   milestoneId := request.MilestoneId
   objectiveId := request.ObjectiveId
+  voter := request.Voter
   rating := request.Rating
   weight := request.Weight
 
@@ -49,8 +51,25 @@ func ProcessRequest(request Request, response *Response) {
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
 
-  actorProfileRecordExecutor.VerifyActorExistingTx(request.Voter)
-  objectiveExecutor.VerifyObjectiveRecordExistingTx(request.ProjectId, request.MilestoneId, request.ObjectiveId)
+  actorProfileRecordExecutor.VerifyActorExistingTx(voter)
+  existing := ratingVoteExecutor.VerifyRatingVoteRecordExistingTx(projectId, milestoneId, objectiveId, voter)
+  if existing {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.RatingVoteExceedingLimitedVotingTimes,
+      ErrorData: map[string]interface{} {
+        "objectiveId": objectiveId,
+        "milestoneId": milestoneId,
+        "projectId": projectId,
+        "voter": voter,
+      },
+      ErrorLocation: error_config.RatingVoteRecordLocation,
+    }
+    log.Printf("Rating Vote Exceeds Limited Voting Times for projectId %s, milestoneId %d, objectiveId %d by voter %s",
+      projectId, milestoneId, objectiveId, voter)
+    log.Panicln(errorInfo.Marshal())
+  }
+
+  objectiveExecutor.VerifyObjectiveRecordExistingTx(projectId, milestoneId, objectiveId)
   ratingVoteRecord := rating_vote_config.RatingVoteRecord{
     ProjectId: projectId,
     MilestoneId: milestoneId,
