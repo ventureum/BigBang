@@ -51,7 +51,7 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) UpsertPrincipalP
     }
   }
 
-  log.Printf("Sucessfully upserted Principal Proxy Votes Record for actor %s, projectId %s and voter %s\n",
+  log.Printf("Sucessfully upserted Principal Proxy Votes Record for actor %s, projectId %s and proxy %s\n",
     principalProxyVotesRecord.Actor, principalProxyVotesRecord.ProjectId, principalProxyVotesRecord.Proxy)
 }
 
@@ -66,7 +66,7 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) DeletePrincipalP
     errInfo.ErrorData["proxy"] = proxy
     log.Panicln(errInfo.Marshal())
   }
-  log.Printf("Sucessfully deleted Principal Proxy Votes Record for actor %s, projectId %s and voter %s\n",
+  log.Printf("Sucessfully deleted Principal Proxy Votes Record for actor %s, projectId %s and proxy %s\n",
     actor, projectId, proxy)
 }
 
@@ -81,6 +81,21 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProx
       actor, projectId, proxy, err)
     errInfo.ErrorData["projectId"] = projectId
     errInfo.ErrorData["proxy"] = proxy
+    log.Panicln(errInfo.Marshal())
+  }
+  return &principalProxyVotesRecords
+}
+
+func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordsByActorAndProjectId(
+    actor string, projectId string) *[]PrincipalProxyVotesRecord {
+  var principalProxyVotesRecords []PrincipalProxyVotesRecord
+  err := principalProxyVotesExecutor.C.Select(&principalProxyVotesRecords, QUERY_PRINCIPAL_PROXY_VOTES_BY_ACTOR_AND_PROJECT_ID_COMMAND,
+    actor, projectId)
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.PrincipalProxyVotesRecordLocation)
+    log.Printf("Failed to get Principal Proxy Votes Records for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    errInfo.ErrorData["projectId"] = projectId
     log.Panicln(errInfo.Marshal())
   }
   return &principalProxyVotesRecords
@@ -145,7 +160,7 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) UpsertPrincipalP
     }
   }
 
-  log.Printf("Sucessfully upserted Principal Proxy Votes Record for actor %s, projectId %s and voter %s\n",
+  log.Printf("Sucessfully upserted Principal Proxy Votes Record for actor %s, projectId %s and proxy %s\n",
     principalProxyVotesRecord.Actor, principalProxyVotesRecord.ProjectId, principalProxyVotesRecord.Proxy)
 }
 
@@ -160,7 +175,7 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) DeletePrincipalP
     errInfo.ErrorData["proxy"] = proxy
     log.Panicln(errInfo.Marshal())
   }
-  log.Printf("Sucessfully deleted Principal Proxy Votes Record for actor %s, projectId %s and voter %s\n",
+  log.Printf("Sucessfully deleted Principal Proxy Votes Record for actor %s, projectId %s and proxy %s\n",
     actor, projectId, proxy)
 }
 
@@ -175,6 +190,22 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProx
       actor, projectId, proxy, err)
     errInfo.ErrorData["projectId"] = projectId
     errInfo.ErrorData["proxy"] = proxy
+    log.Panicln(errInfo.Marshal())
+  }
+  return &principalProxyVotesRecords
+}
+
+
+func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordsByActorAndProjectIdTx(
+    actor string, projectId string) *[]PrincipalProxyVotesRecord {
+  var principalProxyVotesRecords []PrincipalProxyVotesRecord
+  err := principalProxyVotesExecutor.Tx.Select(&principalProxyVotesRecords, QUERY_PRINCIPAL_PROXY_VOTES_BY_ACTOR_AND_PROJECT_ID_COMMAND,
+    actor, projectId)
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.PrincipalProxyVotesRecordLocation)
+    log.Printf("Failed to get Principal Proxy Votes Records for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    errInfo.ErrorData["projectId"] = projectId
     log.Panicln(errInfo.Marshal())
   }
   return &principalProxyVotesRecords

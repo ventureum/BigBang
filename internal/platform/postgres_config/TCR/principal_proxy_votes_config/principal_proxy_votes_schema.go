@@ -9,6 +9,8 @@ CREATE TABLE principal_proxy_votes (
     proxy TEXT NOT NULL,
     block_timestamp BIGINT NOT NULL,
     votes_in_percent BIGINT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT principal_proxy_votes_PK
         PRIMARY KEY (actor, project_id, proxy),

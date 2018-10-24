@@ -6,7 +6,7 @@ import (
   "testing"
   "BigBang/internal/app/tcr_attributes"
   "BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config"
-  "BigBang/cmd/lambda/TCR/get_proxy_votes_list_by_principal/config"
+  "BigBang/cmd/lambda/TCR/get_proxy_voting_info/config"
 )
 
 var EmptyProxyVotesList []tcr_attributes.ProxyVoting
@@ -53,12 +53,12 @@ func TestHandler(t *testing.T) {
             {
               Proxy:          test_constants.Actor7,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
-              VotesInPercent: 20,
+              VotesInPercent: 10,
             },
             {
               Proxy:          test_constants.Actor6,
               BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
-              VotesInPercent: 20,
+              VotesInPercent: 10,
             },
           },
         },

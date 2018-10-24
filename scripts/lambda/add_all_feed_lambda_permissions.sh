@@ -44,4 +44,3 @@ echo "adding lambda permission for subscribe_boards"
 
 echo "adding lambda permission for unsubscribe_boards"
 .//add_feed_lambda_permission.sh unsubscribe_boards $1 $2 unsubscribe-boards
-
