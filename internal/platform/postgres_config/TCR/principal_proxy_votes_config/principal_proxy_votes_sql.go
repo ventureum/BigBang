@@ -25,6 +25,7 @@ VALUES
 const UPDATE_PRINCIPAL_PROXY_VOTES_COMMAND = `
 UPDATE principal_proxy_votes
     SET
+          id = :id,
           block_timestamp = :block_timestamp,
           votes_in_percent = :votes_in_percent
     WHERE 
@@ -41,6 +42,10 @@ WHERE actor = $1 and project_id = $2 and proxy = $3;
 const QUERY_PRINCIPAL_PROXY_VOTES_BY_IDS_COMMAND = `
 SELECT * FROM principal_proxy_votes
 WHERE actor = $1 and project_id = $2 and proxy = $3;
+`
+const QUERY_PRINCIPAL_PROXY_VOTES_BY_ACTOR_AND_PROJECT_ID_COMMAND = `
+SELECT * FROM principal_proxy_votes
+WHERE actor = $1 and project_id = $2;
 `
 
 const VERIFY_PRINCIPAL_PROXY_VOTES_EXISTING_COMMAND = `

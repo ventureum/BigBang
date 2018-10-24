@@ -5,6 +5,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
   "log"
+  "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
 )
 
 
@@ -27,8 +28,9 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
   postgresBigBangClient.Begin()
-
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor.VerifyActorExistingTx(request.Proxy)
   existing := proxyExecutor.VerifyProxyRecordExisting(request.Proxy)
   if !existing {
     errorInfo := error_config.ErrorInfo{

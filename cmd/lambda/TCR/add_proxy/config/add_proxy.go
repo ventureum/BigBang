@@ -1,10 +1,11 @@
-package config
+package lambda_add_proxy_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
   "log"
+  "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
 )
 
 
@@ -28,8 +29,10 @@ func ProcessRequest(request Request, response *Response) {
   }()
   postgresBigBangClient.Begin()
 
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
-  existing := proxyExecutor.VerifyProxyRecordExisting(request.Proxy)
+  actorProfileRecordExecutor.VerifyActorExistingTx(request.Proxy)
+  existing := proxyExecutor.VerifyProxyRecordExistingTx(request.Proxy)
   if existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.ProxyUUIDAlreadyExisting,
@@ -42,7 +45,7 @@ func ProcessRequest(request Request, response *Response) {
     log.Panicln(errorInfo.Marshal())
   }
 
-  proxyExecutor.UpsertProxyRecord(&proxy_config.ProxyRecord{
+  proxyExecutor.UpsertProxyRecordTx(&proxy_config.ProxyRecord{
     UUID: request.Proxy,
   })
 

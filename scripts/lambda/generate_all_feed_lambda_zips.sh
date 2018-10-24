@@ -6,6 +6,9 @@ echo "generating attach_session zip"
 echo "generating deactivate_actor zip"
 .//generate_lambda_zip.sh feed deactivate_actor $1 $2
 
+echo "generating dev_refuel zip"
+.//generate_lambda_zip.sh feed dev_refuel $1 $2
+
 echo "generating feed_events_table_creator zip"
 .//generate_lambda_zip.sh feed feed_events_table_creator $1 $2
 
