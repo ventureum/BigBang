@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["get_actor_private_key.go"],
+    importpath = "BigBang/cmd/lambda/feed/get_actor_private_key/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
+    ],
+)

@@ -71,6 +71,52 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorProfileRec
   return &actorProfileRecord
 }
 
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorPrivateKey(actor string) string {
+  var privateKey string
+  err := actorProfileRecordExecutor.C.Get(&privateKey, QUERY_ACTOR_PRIVATE_KEY_COMMAND, actor)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    log.Printf("Failed to get actor private key for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return privateKey
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorUuidFromPublicKey(publicKey string) string {
+  var actor string
+  err := actorProfileRecordExecutor.C.Get(&actor, QUERY_ACTOR_UUID_FROM_PRIVATE_KEY_COMMAND, publicKey)
+
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoActorExistingForPublicKey,
+      ErrorData: map[string]interface{} {
+        "publicKey": publicKey,
+      },
+      ErrorLocation: error_config.ProfileAccountLocation,
+    }
+    log.Printf("No actor for publicKey %s", publicKey)
+    log.Panicln(errorInfo.Marshal())
+  }
+
+  if err != nil {
+    errInfo := error_config.MatchError(err, "publicKey", publicKey, error_config.ProfileAccountLocation)
+    log.Printf("Failed to get actor uuid for publicKey %s with error: %+v\n", publicKey, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  return actor
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) SetActorPrivateKey(actor string, privateKey string) {
+  _, err := actorProfileRecordExecutor.C.Exec(UPDATE_ACTOR_PRIVATE_KEY_COMMAND, actor, privateKey)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    log.Printf("Failed to update private key for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated private keyfor actor %s\n", actor)
+}
+
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExisting (actor string) {
   var existing bool
   err := actorProfileRecordExecutor.C.Get(&existing, VERIFY_ACTOR_EXISTING_COMMAND, actor)
@@ -154,6 +200,52 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorProfileRec
     log.Panicln(errInfo.Marshal())
   }
   return &actorProfileRecord
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorPrivateKeyTx(actor string) string {
+  var privateKey string
+  err := actorProfileRecordExecutor.Tx.Get(&privateKey, QUERY_ACTOR_PRIVATE_KEY_COMMAND, actor)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    log.Printf("Failed to get actor private key for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return privateKey
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) SetActorPrivateKeyTx(actor string, privateKey string) {
+  _, err := actorProfileRecordExecutor.Tx.Exec(UPDATE_ACTOR_PRIVATE_KEY_COMMAND, actor, privateKey)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    log.Printf("Failed to update private key for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated private keyfor actor %s\n", actor)
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorUuidFromPublicKeyTx(publicKey string) string {
+  var actor string
+  err := actorProfileRecordExecutor.Tx.Get(&actor, QUERY_ACTOR_UUID_FROM_PRIVATE_KEY_COMMAND, publicKey)
+
+  if err == sql.ErrNoRows {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoActorExistingForPublicKey,
+      ErrorData: map[string]interface{} {
+        "publicKey": publicKey,
+      },
+      ErrorLocation: error_config.ProfileAccountLocation,
+    }
+    log.Printf("No actor for publicKey %s", publicKey)
+    log.Panicln(errorInfo.Marshal())
+  }
+
+  if err != nil {
+    errInfo := error_config.MatchError(err, "publicKey", publicKey, error_config.ProfileAccountLocation)
+    log.Printf("Failed to get actor uuid for publicKey %s with error: %+v\n", publicKey, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  return actor
 }
 
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistingTx (actor string) {

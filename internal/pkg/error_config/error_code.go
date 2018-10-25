@@ -13,10 +13,12 @@ const InsufficientWaitingTimeToRefuel ErrorCode = "InsufficientWaitingTimeToRefu
 const InsufficientReputaionsAmount ErrorCode = "InsufficientReputaionsAmount"
 const InsufficientFuelAmount ErrorCode = "InsufficientFuelAmount"
 const NoActorExisting ErrorCode = "NoActorExisting"
+const NoActorExistingForPublicKey ErrorCode = "NoActorExistingForPublicKey"
 const NoPostHashExisting ErrorCode = "NoPostHashExisting"
 const ExceedingUpvoteLimit ErrorCode = "ExceedingUpvoteLimit"
 const ExceedingDownvoteLimit ErrorCode = "ExceedingDownvoteLimit"
 const General ErrorCode = "General"
+const EmptyPublicKey ErrorCode = "EmptyPublicKey"
 
 // For TCR
 const NoProjectIdExisting ErrorCode = "NoProjectIdExisting"

@@ -81,7 +81,7 @@ func (suite *MilestoneTestSuite) TestEmptyQueryForGetMilestoneRecordsByProjectId
 
 func (suite *MilestoneTestSuite) TestUpsertMilestoneRecord() {
   defer func() {
-    errPanic := recover();
+    errPanic := recover()
     suite.Nil(errPanic)
   }()
   suite.MilestoneExecutor.UpsertMilestoneRecord(&MilestoneRecord1)
