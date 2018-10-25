@@ -26,7 +26,7 @@ func TestHandler(t *testing.T) {
           PhotoUrl: "http://123.com",
           TelegramId: test_constants.TelegramId1,
           PhoneNumber: "5197290001",
-          PrivateKey: test_constants.PrivateKey1,
+          PublicKey: test_constants.PublicKey1,
           Level: 2,
           RewardsInfo: &feed_attributes.RewardsInfo{
             Fuel: 100,
