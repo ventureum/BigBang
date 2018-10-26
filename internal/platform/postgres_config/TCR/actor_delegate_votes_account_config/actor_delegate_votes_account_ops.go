@@ -98,6 +98,19 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) Upda
   log.Printf("Sucessfully updated Actor Received Delegate Votes for actor %s and projectId %s\n", actor, projectId)
 }
 
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) VerifyDelegateVotesAccountExisting (
+    actor string, projectId string) bool {
+  var existing bool
+  err := actorDelegateVotesAccountExecutor.C.Get(&existing, VERIFY_DELEGATE_VOTES_ACCOUNT_EXISTING_COMMAND, actor, projectId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
+    log.Printf("Failed to verify  Delegate Votes Account existing for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+  return existing
+}
 
 /*
  * Tx versions
@@ -178,3 +191,16 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) Upda
   log.Printf("Sucessfully updated Actor Received Delegate Votes for actor %s and projectId %s\n", actor, projectId)
 }
 
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) VerifyDelegateVotesAccountExistingTx (
+    actor string, projectId string) bool {
+  var existing bool
+  err := actorDelegateVotesAccountExecutor.Tx.Get(&existing, VERIFY_DELEGATE_VOTES_ACCOUNT_EXISTING_COMMAND, actor, projectId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
+    log.Printf("Failed to verify  Delegate Votes Account existing for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+  return existing
+}

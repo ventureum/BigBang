@@ -8,6 +8,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/feed/profile:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/project:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/add_milestone:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/milestone:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/objective:go_default_test
 
@@ -20,7 +21,8 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/TCR/rating_vote:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/add_proxy:go_default_test
-./run_unit_test.sh  //test/lambda/TCR/update_delegate_votes:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/update_available_delegate_votes:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/update_received_delegate_votes:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/add_proxy_voting_for_principal:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/get_rating_vote_list:go_default_test

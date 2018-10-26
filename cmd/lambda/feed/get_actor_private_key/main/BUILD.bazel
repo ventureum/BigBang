@@ -5,7 +5,10 @@ go_library(
     srcs = ["main.go"],
     importpath = "BigBang/cmd/lambda/feed/get_actor_private_key/main",
     visibility = ["//visibility:private"],
-    deps = ["//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library"],
+    deps = [
+        "//cmd/lambda/feed/get_actor_private_key/config:go_default_library",
+        "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",
+    ],
 )
 
 go_binary(
