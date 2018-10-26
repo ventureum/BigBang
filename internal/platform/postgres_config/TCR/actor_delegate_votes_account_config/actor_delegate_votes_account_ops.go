@@ -74,6 +74,31 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) GetA
   return &actorDelegateVotesAccountRecord
 }
 
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) UpdateAvailableDelegateVotes(actor string, projectId string, availableDelegateVotes int64) {
+  _, err := actorDelegateVotesAccountExecutor.C.Exec(UPDATE_AVAILABLE_DELEGATE_VOTES_COMMAND, actor, projectId, availableDelegateVotes)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to update Actor Available Delegate Votes for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated Actor Available Delegate Votes for actor %s and projectId %s\n", actor, projectId)
+}
+
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) UpdateReceivedDelegateVotes(actor string, projectId string, receivedDelegateVotesDelta int64) {
+  _, err := actorDelegateVotesAccountExecutor.C.Exec(UPDATE_RECEIVED_DELEGATE_VOTES_COMMAND, actor, projectId, receivedDelegateVotesDelta)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to update Actor Received Delegate Votes for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated Actor Received Delegate Votes for actor %s and projectId %s\n", actor, projectId)
+}
+
+
 /*
  * Tx versions
  */
@@ -128,3 +153,28 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) GetA
   }
   return &actorDelegateVotesAccountRecord
 }
+
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) UpdateAvailableDelegateVotesTx(actor string, projectId string, availableDelegateVotes int64) {
+  _, err := actorDelegateVotesAccountExecutor.Tx.Exec(UPDATE_AVAILABLE_DELEGATE_VOTES_COMMAND, actor, projectId, availableDelegateVotes)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to update Actor Available Delegate Votes for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated Actor Available Delegate Votes for actor %s and projectId %s\n", actor, projectId)
+}
+
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) UpdateReceivedDelegateVotesTx(actor string, projectId string, receivedDelegateVotesDelta int64) {
+  _, err := actorDelegateVotesAccountExecutor.Tx.Exec(UPDATE_RECEIVED_DELEGATE_VOTES_COMMAND, actor, projectId, receivedDelegateVotesDelta)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorDelegateVotesAccountRecordLocation)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Printf("Failed to update Actor Received Delegate Votes for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated Actor Received Delegate Votes for actor %s and projectId %s\n", actor, projectId)
+}
+
