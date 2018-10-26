@@ -1,10 +1,11 @@
-package lambda_update_delegate_votes_config
+package lambda_update_available_delegate_votes_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
+  "BigBang/internal/platform/postgres_config/TCR/project_config"
 )
 
 
@@ -12,7 +13,6 @@ type Request struct {
   Actor                  string `json:"actor,required"`
   ProjectId              string `json:"projectId,required"`
   AvailableDelegateVotes int64  `json:"availableDelegateVotes,required"`
-  ReceivedDelegateVotes  int64  `json:"receivedDelegateVotes,required"`
 }
 
 type Response struct {
@@ -31,16 +31,13 @@ func ProcessRequest(request Request, response *Response) {
   }()
   postgresBigBangClient.Begin()
 
+  projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(request.Actor)
+  projectExecutor.VerifyProjectRecordExistingTx(request.ProjectId)
 
-  actorDelegateVotesAccountExecutor.UpsertActorDelegateVotesAccountRecordTx(&actor_delegate_votes_account_config.ActorDelegateVotesAccountRecord{
-    Actor: request.Actor,
-    ProjectId: request.ProjectId,
-    AvailableDelegateVotes: request.AvailableDelegateVotes,
-    ReceivedDelegateVotes: request.ReceivedDelegateVotes,
-  })
+  actorDelegateVotesAccountExecutor.UpdateAvailableDelegateVotesTx(request.Actor, request.ProjectId, request.AvailableDelegateVotes)
 
   postgresBigBangClient.Commit()
   response.Ok = true

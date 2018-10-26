@@ -2,7 +2,7 @@ package update
 
 import (
   "testing"
-  "BigBang/cmd/lambda/TCR/update_delegate_votes/config"
+  "BigBang/cmd/lambda/TCR/update_available_delegate_votes/config"
   "BigBang/test/constants"
   "github.com/stretchr/testify/assert"
 )

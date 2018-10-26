@@ -33,3 +33,15 @@ const QUERY_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND = `
 SELECT * FROM actor_delegate_votes_accounts
 WHERE actor = $1 and project_id = $2;
 `
+
+const UPDATE_AVAILABLE_DELEGATE_VOTES_COMMAND = `
+UPDATE  actor_delegate_votes_accounts
+SET available_delegate_votes = $3
+WHERE actor = $1 and project_id = $2;
+`
+
+const UPDATE_RECEIVED_DELEGATE_VOTES_COMMAND = `
+UPDATE  actor_delegate_votes_accounts
+SET received_delegate_votes = received_delegate_votes + $3
+WHERE actor = $1 and project_id = $2;
+`
