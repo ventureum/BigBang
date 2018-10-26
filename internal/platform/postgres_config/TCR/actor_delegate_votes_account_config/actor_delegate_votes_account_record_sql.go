@@ -45,3 +45,7 @@ UPDATE  actor_delegate_votes_accounts
 SET received_delegate_votes = received_delegate_votes + $3
 WHERE actor = $1 and project_id = $2;
 `
+
+const VERIFY_DELEGATE_VOTES_ACCOUNT_EXISTING_COMMAND = `
+select exists(select 1 from actor_delegate_votes_accounts where actor = $1 and project_id = $2);
+`

@@ -37,7 +37,18 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor.VerifyActorExistingTx(request.Actor)
   projectExecutor.VerifyProjectRecordExistingTx(request.ProjectId)
 
-  actorDelegateVotesAccountExecutor.UpdateReceivedDelegateVotesTx(request.Actor, request.ProjectId, request.ReceivedDelegateVotesDelta)
+  existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExistingTx(request.Actor, request.ProjectId)
+
+  if !existing {
+    actorDelegateVotesAccountExecutor.UpsertActorDelegateVotesAccountRecordTx(&actor_delegate_votes_account_config.ActorDelegateVotesAccountRecord{
+      Actor: request.Actor,
+      ProjectId: request.ProjectId,
+      AvailableDelegateVotes: 0,
+      ReceivedDelegateVotes: request.ReceivedDelegateVotesDelta,
+    })
+  } else {
+    actorDelegateVotesAccountExecutor.UpdateReceivedDelegateVotesTx(request.Actor, request.ProjectId, request.ReceivedDelegateVotesDelta)
+  }
 
   postgresBigBangClient.Commit()
   response.Ok = true
