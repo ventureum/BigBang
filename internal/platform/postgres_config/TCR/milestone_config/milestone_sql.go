@@ -80,3 +80,21 @@ SET
    avg_rating = (total_rating + $3) / GREATEST(total_weight + $4, 1)
 WHERE project_id = $1 and milestone_id = $2;
 `
+
+const ACTIVATE_MILESTONE_COMMAND = `
+UPDATE milestones
+SET
+  block_timestamp = $3,
+  start_time = $4,
+  state = 'IN_PROGRESS'
+WHERE project_id = $1 and milestone_id = $2;
+`
+
+const FINALIZE_MILESTONE_COMMAND = `
+UPDATE milestones
+SET
+  block_timestamp = $3,
+  end_time = $4,
+  state = 'COMPLETE'
+WHERE project_id = $1 and milestone_id = $2;
+`

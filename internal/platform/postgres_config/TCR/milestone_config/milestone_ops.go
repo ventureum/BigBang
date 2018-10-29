@@ -189,6 +189,36 @@ func (milestoneExecutor *MilestoneExecutor) AddRatingAndWeightForMilestone(
     projectId, milestoneId)
 }
 
+func (milestoneExecutor *MilestoneExecutor) ActivateMilestone(
+  projectId string, milestoneId int64, blockTimestamp int64, startTime int64) {
+  _, err := milestoneExecutor.C.Exec(ACTIVATE_MILESTONE_COMMAND, projectId, milestoneId, blockTimestamp, startTime)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["blockTimestamp"] = blockTimestamp
+    errInfo.ErrorData["startTime"] = startTime
+    log.Printf("Failed to activate milestone for projectId %s and milstoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully activate milestone for projectId %s and  milstoneId %d\n", projectId, milestoneId)
+}
+
+func (milestoneExecutor *MilestoneExecutor) FinalizeMilestone(
+    projectId string, milestoneId int64, blockTimestamp int64, endTime int64) {
+  _, err := milestoneExecutor.C.Exec(FINALIZE_MILESTONE_COMMAND, projectId, milestoneId, blockTimestamp, endTime)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["blockTimestamp"] = blockTimestamp
+    errInfo.ErrorData["endTime"] = endTime
+    log.Printf("Failed to finalize milestone for projectId %s and milstoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully finalize milestone for projectId %s and  milstoneId %d\n", projectId, milestoneId)
+}
+
 /*
  * Tx versions
  */
@@ -353,3 +383,34 @@ func (milestoneExecutor *MilestoneExecutor) AddRatingAndWeightForMilestoneTx(
   log.Printf("Successfully added rating and weight for projectId %s, milestoneId %d\n",
     projectId, milestoneId)
 }
+
+func (milestoneExecutor *MilestoneExecutor) ActivateMilestoneTx(
+    projectId string, milestoneId int64, blockTimestamp int64, startTime int64) {
+  _, err := milestoneExecutor.Tx.Exec(ACTIVATE_MILESTONE_COMMAND, projectId, milestoneId, blockTimestamp, startTime)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["blockTimestamp"] = blockTimestamp
+    errInfo.ErrorData["startTime"] = startTime
+    log.Printf("Failed to activate milestone for projectId %s and milstoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully activate milestone for projectId %s and  milstoneId %d\n", projectId, milestoneId)
+}
+
+func (milestoneExecutor *MilestoneExecutor) FinalizeMilestoneTx(
+    projectId string, milestoneId int64, blockTimestamp int64, endTime int64) {
+  _, err := milestoneExecutor.Tx.Exec(FINALIZE_MILESTONE_COMMAND, projectId, milestoneId, blockTimestamp, endTime)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.MilestoneRecordLocation)
+    errInfo.ErrorData["milestoneId"] = milestoneId
+    errInfo.ErrorData["blockTimestamp"] = blockTimestamp
+    errInfo.ErrorData["endTime"] = endTime
+    log.Printf("Failed to finalize milestone for projectId %s and milstoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  log.Printf("Sucessfully finalize milestone for projectId %s and  milstoneId %d\n", projectId, milestoneId)
+}
+

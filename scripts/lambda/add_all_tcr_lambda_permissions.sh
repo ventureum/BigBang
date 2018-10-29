@@ -54,8 +54,17 @@
 #echo "adding lambda permission for get_proxy_list"
 #.//add_tcr_lambda_permission.sh get_proxy_list $1 $2 get-proxy-list
 
-echo "adding lambda permission for update_available_delegate_votes"
-.//add_tcr_lambda_permission.sh update_available_delegate_votes $1 $2 update-available-delegate-votes
+#echo "adding lambda permission for update_available_delegate_votes"
+#.//add_tcr_lambda_permission.sh update_available_delegate_votes $1 $2 update-available-delegate-votes
+#
+#echo "adding lambda permission for update_received_delegate_votes"
+#.//add_tcr_lambda_permission.sh update_received_delegate_votes $1 $2 update-received-delegate-votes
 
-echo "adding lambda permission for update_received_delegate_votes"
-.//add_tcr_lambda_permission.sh update_received_delegate_votes $1 $2 update-received-delegate-votes
+echo "adding lambda permission for add_milestone"
+.//add_tcr_lambda_permission.sh add_milestone $1 $2 add-milestone
+
+echo "adding lambda permission for activate_milestone"
+.//add_tcr_lambda_permission.sh activate_milestone $1 $2 activate-milestone
+
+echo "adding lambda permission for finalize_milestone"
+.//add_tcr_lambda_permission.sh finalize_milestone $1 $2 finalize-milestone
