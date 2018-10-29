@@ -9,7 +9,8 @@ bazel run //:gazelle
 
 ./run_unit_test.sh  //test/lambda/TCR/project:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/add_milestone:go_default_test
-./run_unit_test.sh  //test/lambda/TCR/milestone:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/activate_milestone:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/finalize_milestone:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/objective:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/get_project:go_default_test

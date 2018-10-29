@@ -27,8 +27,8 @@ func TestHandler(t *testing.T) {
           Content:   test_constants.ProjectContent1,
           BlockTimestamp: test_constants.ProjectBlockTimestamp1,
           MilestonesInfo: &tcr_attributes.MilestonesInfo{
-            CurrentMilestone: test_constants.MilestoneId2,
-            NumMilestonesCompleted: 1,
+            CurrentMilestone: 0,
+            NumMilestonesCompleted: 4,
             NumMilestones: 4,
             Milestones: &[]tcr_attributes.Milestone {
               {
@@ -64,7 +64,7 @@ func TestHandler(t *testing.T) {
                 BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
                 StartTime: test_constants.MilestoneStartTime2,
                 EndTime: test_constants.MilestoneEndTime2,
-                State: tcr_attributes.InProgressMilestoneState,
+                State: tcr_attributes.CompleteMilestoneState,
                 NumObjectives: 3,
                 Objectives: &[]tcr_attributes.Objective{
                   {
@@ -97,7 +97,7 @@ func TestHandler(t *testing.T) {
                 BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
                 StartTime: test_constants.MilestoneStartTime3,
                 EndTime: test_constants.MilestoneEndTime3,
-                State: tcr_attributes.PendingMilestoneState,
+                State: tcr_attributes.CompleteMilestoneState,
                 NumObjectives: 0,
                 Objectives: &EmptyObjectives,
               },
@@ -108,7 +108,7 @@ func TestHandler(t *testing.T) {
                 BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
                 StartTime: test_constants.MilestoneStartTime4,
                 EndTime: test_constants.MilestoneEndTime4,
-                State: tcr_attributes.PendingMilestoneState,
+                State: tcr_attributes.CompleteMilestoneState,
                 NumObjectives: 0,
                 Objectives: &EmptyObjectives,
               },
