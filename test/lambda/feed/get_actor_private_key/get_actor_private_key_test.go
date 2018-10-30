@@ -5,6 +5,7 @@ import (
   "testing"
   "BigBang/test/constants"
   "BigBang/cmd/lambda/feed/get_actor_private_key/config"
+  "strings"
 )
 
 func TestHandler(t *testing.T) {
@@ -18,7 +19,7 @@ func TestHandler(t *testing.T) {
         Actor: test_constants.Actor1,
       },
       response: lambda_get_actor_private_key_config.Response {
-        PrivateKey: test_constants.PrivateKey1,
+        PrivateKey: strings.ToLower(test_constants.PrivateKey1),
         Ok: true,
       },
        err: nil,

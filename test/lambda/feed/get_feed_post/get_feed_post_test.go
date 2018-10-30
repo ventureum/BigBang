@@ -19,7 +19,6 @@ func TestHandler(t *testing.T) {
         PostHash: test_constants.PostHash1,
         Requestor: test_constants.Actor1,
       },
-
       response: lambda_get_feed_post_config.Response {
         Post: &lambda_get_feed_post_config.ResponseContent {
           Actor: test_constants.Actor1,

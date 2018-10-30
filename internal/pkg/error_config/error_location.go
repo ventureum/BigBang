@@ -12,6 +12,8 @@ const ActorVotesCountersRecordLocation ErrorLocation = "ActorVotesCountersRecord
 const PostVotesRecordLocation ErrorLocation = "PostVotesRecordLocation"
 const SessionRecordLocation ErrorLocation = "SessionRecordLocation"
 const RefuelRecordLocation ErrorLocation = "RefuelRecordLocation"
+const ActorTypeLocation ErrorLocation = "ActorTypeLocation"
+const PostTypeLocation ErrorLocation = "PostTypeLocation"
 
 // For TCR
 const ProjectRecordLocation ErrorLocation = "ProjectRecordLocation"

@@ -5,6 +5,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "log"
+  "strings"
 )
 
 
@@ -40,7 +41,7 @@ func ProcessRequest(request Request, response *Response) {
     log.Panicln(errorInfo.Marshal())
   }
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
-  response.Actor = actorProfileRecordExecutor.GetActorUuidFromPublicKey(publicKey)
+  response.Actor = actorProfileRecordExecutor.GetActorUuidFromPublicKey(strings.ToLower(publicKey))
   response.Ok = true
 }
 
