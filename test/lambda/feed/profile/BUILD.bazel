@@ -5,6 +5,7 @@ go_test(
     srcs = ["profile_test.go"],
     deps = [
         "//cmd/lambda/feed/profile/config:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
         "//test/constants:go_default_library",
         "//vendor/github.com/stretchr/testify/assert:go_default_library",
     ],

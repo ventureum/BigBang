@@ -8,6 +8,7 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
+  "strings"
 )
 
 
@@ -29,12 +30,12 @@ type Response struct {
 func (request *Request) ToActorProfileRecord() (*actor_profile_record_config.ActorProfileRecord) {
   return &actor_profile_record_config.ActorProfileRecord{
     Actor:      request.Actor,
-    ActorType: feed_attributes.ActorType(request.UserType),
+    ActorType: feed_attributes.ValidateAndCreateActorType(request.UserType),
     Username: request.Username,
     PhotoUrl: request.PhotoUrl,
     TelegramId: request.TelegramId,
     PhoneNumber: request.PhoneNumber,
-    PublicKey: request.PublicKey,
+    PublicKey: strings.ToLower(request.PublicKey),
   }
 }
 

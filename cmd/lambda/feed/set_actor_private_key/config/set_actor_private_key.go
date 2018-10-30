@@ -4,6 +4,7 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
+  "strings"
 )
 
 
@@ -32,7 +33,7 @@ func ProcessRequest(request Request, response *Response) {
   actor := request.Actor
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
-  actorProfileRecordExecutor.SetActorPrivateKeyTx(actor, request.PrivateKey)
+  actorProfileRecordExecutor.SetActorPrivateKeyTx(actor, strings.ToLower(request.PrivateKey))
 
   postgresBigBangClient.Commit()
   response.Ok = true

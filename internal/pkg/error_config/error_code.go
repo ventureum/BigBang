@@ -19,6 +19,9 @@ const ExceedingUpvoteLimit ErrorCode = "ExceedingUpvoteLimit"
 const ExceedingDownvoteLimit ErrorCode = "ExceedingDownvoteLimit"
 const General ErrorCode = "General"
 const EmptyPublicKey ErrorCode = "EmptyPublicKey"
+const InvalidActorType ErrorCode = "InvalidActorType"
+const InvalidPostType ErrorCode = "InvalidPostType"
+
 
 // For TCR
 const NoProjectIdExisting ErrorCode = "NoProjectIdExisting"

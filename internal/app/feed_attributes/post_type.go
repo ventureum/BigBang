@@ -3,6 +3,8 @@ package feed_attributes
 import (
   "github.com/ethereum/go-ethereum/common"
   "BigBang/internal/pkg/utils"
+  "BigBang/internal/pkg/error_config"
+  "log"
 )
 
 type PostType string
@@ -10,6 +12,7 @@ type PostType string
 const (
   PostPostType    PostType = "POST"
   ReplyPostType   PostType = "COMMENT"
+  RatingCommentPostType   PostType = "RATING_COMMENT"
   AuditPostType   PostType = "AUDIT"
   AirdropPostType PostType = "AIRDROP"
 )
@@ -34,6 +37,18 @@ func CreatePostTypeFromHashStr(typeHashStr string) PostType {
       postType = AuditPostType
     case AirdropPostType.Hash():
       postType = AirdropPostType
+    case RatingCommentPostType.Hash():
+      postType = AirdropPostType
+    default:
+      errorInfo := error_config.ErrorInfo{
+        ErrorCode: error_config.InvalidPostType,
+        ErrorData: map[string]interface{} {
+          "typeHash": typeHashStr,
+        },
+        ErrorLocation: error_config.PostTypeLocation,
+      }
+      log.Printf("Invalid typeHash: %s", typeHashStr)
+      log.Panicln(errorInfo.Marshal())
   }
   return postType
 }

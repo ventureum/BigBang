@@ -5,6 +5,7 @@ import (
   "testing"
   "BigBang/cmd/lambda/feed/profile/config"
   "BigBang/test/constants"
+  "BigBang/internal/pkg/error_config"
 )
 
 func TestHandler(t *testing.T) {
@@ -115,6 +116,28 @@ func TestHandler(t *testing.T) {
       },
       response: lambda_profile_config.Response {
         Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.Actor8,
+        UserType: "InvalidUserType",
+        Username: test_constants.UserName8,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.TelegramId8,
+        PhoneNumber: "5197290002",
+        PublicKey: test_constants.PublicKey8,
+      },
+      response: lambda_profile_config.Response {
+        Ok: false,
+        Message: &error_config.ErrorInfo{
+           ErrorCode: error_config.InvalidActorType,
+           ErrorData: error_config.ErrorData {
+              "actorType": "InvalidUserType",
+           },
+           ErrorLocation: error_config.ActorTypeLocation,
+        },
       },
       err: nil,
     },

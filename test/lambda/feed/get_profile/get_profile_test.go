@@ -6,6 +6,7 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/cmd/lambda/feed/get_profile/config"
   "BigBang/test/constants"
+  "strings"
 )
 
 func TestHandler(t *testing.T) {
@@ -26,7 +27,7 @@ func TestHandler(t *testing.T) {
           PhotoUrl: "http://123.com",
           TelegramId: test_constants.TelegramId1,
           PhoneNumber: "5197290001",
-          PublicKey: test_constants.PublicKey1,
+          PublicKey: strings.ToLower(test_constants.PublicKey1),
           Level: 2,
           RewardsInfo: &feed_attributes.RewardsInfo{
             Fuel: 100,

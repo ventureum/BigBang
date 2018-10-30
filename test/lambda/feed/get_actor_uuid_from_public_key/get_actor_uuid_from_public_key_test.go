@@ -6,6 +6,7 @@ import (
   "BigBang/test/constants"
   "BigBang/cmd/lambda/feed/get_actor_uuid_from_public_key/config"
   "BigBang/internal/pkg/error_config"
+  "strings"
 )
 
 func TestHandler(t *testing.T) {
@@ -34,7 +35,7 @@ func TestHandler(t *testing.T) {
         Message: &error_config.ErrorInfo{
           ErrorCode: error_config.NoActorExistingForPublicKey,
           ErrorData: map[string]interface{} {
-            "publicKey": "0xInvalidPublicKey",
+            "publicKey": strings.ToLower("0xInvalidPublicKey"),
           },
           ErrorLocation: error_config.ProfileAccountLocation,
         },
