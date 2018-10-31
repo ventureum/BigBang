@@ -21,3 +21,4 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/feed/deactivate_actor:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/feed_token_generator:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/reset_actor_fuel:go_default_test
+./run_unit_test.sh  //test/lambda/feed/add_tracked_wallet_addresses:go_default_test
