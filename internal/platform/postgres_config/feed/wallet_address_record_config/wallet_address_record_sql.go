@@ -18,9 +18,9 @@ DELETE FROM wallet_address_records
 WHERE actor = $1;
 `
 
-const DELETE_MULTIPLE_WALLET_ADDRESS_RECORDS_BY_ACTOR_AND_LIST_OF_ADDRESSES_COMMAND = `
+const DELETE_WALLET_ADDRESS_RECORDS_BY_ACTOR_AND_ADDRESS_COMMAND = `
 DELETE FROM wallet_address_records
-WHERE actor = :actor and wallet_address IN (:deleted_addresses);
+WHERE actor = $1 and wallet_address = $2;
 `
 
 const QUERY_WALLET_ADDRESS_LIST_BY_ACTOR_COMMAND = `
