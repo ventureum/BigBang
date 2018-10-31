@@ -11,6 +11,7 @@ go_library(
         "project.go",
         "proxy_votes.go",
         "rating_vote.go",
+        "wallet_address.go",
     ],
     importpath = "BigBang/test/constants",
     visibility = ["//visibility:public"],

@@ -19,5 +19,6 @@ go_library(
         "//internal/platform/postgres_config/feed/purchase_mps_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/refuel_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/session_record_config:go_default_library",
+        "//internal/platform/postgres_config/feed/wallet_address_record_config:go_default_library",
     ],
 )
