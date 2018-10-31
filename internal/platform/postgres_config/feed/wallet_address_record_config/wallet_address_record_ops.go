@@ -38,19 +38,14 @@ func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddr
   log.Printf("Sucessfully deleted wallet address records for actor %s\n", actor)
 }
 
-func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddressRecordsByListOfAddresses(
-    actor string, listOfAddresses *[]string) {
-
-  arg := map[string]interface{}{
-    "actor": actor,
-    "deleted_addresses": *listOfAddresses,
-  }
-  _, err := walletAddressRecordExecutor.C.NamedExec(DELETE_MULTIPLE_WALLET_ADDRESS_RECORDS_BY_ACTOR_AND_LIST_OF_ADDRESSES_COMMAND, arg)
+func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddressRecordByActorAndAddress(actor string, walletAddress string) {
+  _, err := walletAddressRecordExecutor.C.Exec(DELETE_WALLET_ADDRESS_RECORDS_BY_ACTOR_AND_ADDRESS_COMMAND, actor, walletAddress)
   if err != nil {
-    log.Panicf("Failed to delete multiple wallet address records for actor %s and list of adresses %+v with error:\n %+v", actor, listOfAddresses, err)
+    log.Panicf("Failed to delete wallet address record for actor %s and walletAddress %s with error:\n %+v", actor, walletAddress, err)
   }
-  log.Printf("Sucessfully deleted multiple wallet address records for actor %s and list of adresses %+v\n", actor, listOfAddresses)
+  log.Printf("Sucessfully deleted wallet address record for actor %s and walletAddress %s \n", actor, walletAddress)
 }
+
 
 func (walletAddressRecordExecutor *WalletAddressRecordExecutor) GetWalletAddressListByActor(actor string) *[]string {
   var walletAddressList []string
@@ -83,18 +78,12 @@ func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddr
   log.Printf("Sucessfully deleted wallet address records for actor %s\n", actor)
 }
 
-func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddressRecordsByListOfAddressesTx(
-    actor string, listOfAddresses *[]string) {
-
-  arg := map[string]interface{}{
-    "actor": actor,
-    "deleted_addresses": *listOfAddresses,
-  }
-  _, err := walletAddressRecordExecutor.Tx.NamedExec(DELETE_MULTIPLE_WALLET_ADDRESS_RECORDS_BY_ACTOR_AND_LIST_OF_ADDRESSES_COMMAND, arg)
+func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddressRecordByActorAndAddressTx(actor string, walletAddress string) {
+  _, err := walletAddressRecordExecutor.Tx.Exec(DELETE_WALLET_ADDRESS_RECORDS_BY_ACTOR_AND_ADDRESS_COMMAND, actor, walletAddress)
   if err != nil {
-    log.Panicf("Failed to delete multiple wallet address records for actor %s and list of adresses %+v with error:\n %+v", actor, listOfAddresses, err)
+    log.Panicf("Failed to delete wallet address record for actor %s and walletAddress %s with error:\n %+v", actor, walletAddress, err)
   }
-  log.Printf("Sucessfully deleted multiple wallet address records for actor %s and list of adresses %+v\n", actor, listOfAddresses)
+  log.Printf("Sucessfully deleted wallet address record for actor %s and walletAddress %s \n", actor, walletAddress)
 }
 
 func (walletAddressRecordExecutor *WalletAddressRecordExecutor) GetWalletAddressListByActorTx(actor string) *[]string {

@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["delete_tracked_wallet_addresses_test.go"],
+    deps = [
+        "//cmd/lambda/feed/delete_tracked_wallet_addresses/config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)
