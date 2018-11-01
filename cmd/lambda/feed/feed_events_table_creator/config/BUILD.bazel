@@ -7,6 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/milestone_validator_record_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_rewards_info_record_config:go_default_library",
