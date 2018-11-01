@@ -49,10 +49,10 @@ func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddr
 
 func (walletAddressRecordExecutor *WalletAddressRecordExecutor) GetWalletAddressListByActor(actor string) *[]string {
   var walletAddressList []string
-  err := walletAddressRecordExecutor.C.Select(&walletAddressList, QUERY_WALLET_ADDRESS_LIST_BY_ACTOR_COMMAND)
+  err := walletAddressRecordExecutor.C.Select(&walletAddressList, QUERY_WALLET_ADDRESS_LIST_BY_ACTOR_COMMAND, actor)
   if err != nil && err != sql.ErrNoRows {
     log.Panicf(
-      "Failed to get wallet address list for actor %s and voteType %s with error:\n %+v", actor, err)
+      "Failed to get wallet address list for actor %s with error: %+v\n", actor, err)
   }
   return &walletAddressList
 }
@@ -88,10 +88,10 @@ func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddr
 
 func (walletAddressRecordExecutor *WalletAddressRecordExecutor) GetWalletAddressListByActorTx(actor string) *[]string {
   var walletAddressList []string
-  err := walletAddressRecordExecutor.Tx.Select(&walletAddressList, QUERY_WALLET_ADDRESS_LIST_BY_ACTOR_COMMAND)
+  err := walletAddressRecordExecutor.Tx.Select(&walletAddressList, QUERY_WALLET_ADDRESS_LIST_BY_ACTOR_COMMAND, actor)
   if err != nil && err != sql.ErrNoRows {
     log.Panicf(
-      "Failed to get wallet address list for actor %s and voteType %s with error:\n %+v", actor, err)
+      "Failed to get wallet address list for actor %s with error: %+v\n", actor, err)
   }
   return &walletAddressList
 }
