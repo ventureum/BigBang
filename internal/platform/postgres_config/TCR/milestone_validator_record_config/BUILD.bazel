@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "milestone_validator_record.go",
+        "milestone_validator_record_ops.go",
+        "milestone_validator_record_schema.go",
+        "milestone_validator_record_sql.go",
+    ],
+    importpath = "BigBang/internal/platform/postgres_config/TCR/milestone_validator_record_config",
+    visibility = ["//:__subpackages__"],
+    deps = ["//internal/platform/postgres_config/client_config:go_default_library"],
+)
