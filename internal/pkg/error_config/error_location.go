@@ -18,6 +18,7 @@ const PostTypeLocation ErrorLocation = "PostTypeLocation"
 // For TCR
 const ProjectRecordLocation ErrorLocation = "ProjectRecordLocation"
 const MilestoneRecordLocation ErrorLocation = "MilestoneRecordLocation"
+const MilestoneValidatorRecordLocation ErrorLocation = "MilestoneValidatorRecordLocation"
 const ObjectiveRecordLocation ErrorLocation = "ObjectiveRecordLocation"
 const ProxyRecordLocation ErrorLocation = "ProxyRecordLocation"
 const RatingVoteRecordLocation ErrorLocation = "RatingVoteRecordLocation"

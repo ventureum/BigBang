@@ -63,11 +63,17 @@
 #echo "generating update_received_delegate_votes zip"
 #.//generate_lambda_zip.sh TCR update_received_delegate_votes $1 $2
 
-echo "generating add_milestone zip"
-.//generate_lambda_zip.sh TCR add_milestone $1 $2
+#echo "generating add_milestone zip"
+#.//generate_lambda_zip.sh TCR add_milestone $1 $2
+#
+#echo "generating activate_milestone zip"
+#.//generate_lambda_zip.sh TCR activate_milestone $1 $2
+#
+#echo "generating finalize_milestone zip"
+#.//generate_lambda_zip.sh TCR finalize_milestone $1 $2
 
-echo "generating activate_milestone zip"
-.//generate_lambda_zip.sh TCR activate_milestone $1 $2
-
-echo "generating finalize_milestone zip"
-.//generate_lambda_zip.sh TCR finalize_milestone $1 $2
+#echo "generating finalize_validators zip"
+#.//generate_lambda_zip.sh TCR finalize_validators $1 $2
+#
+#echo "generating get_finalized_validators zip"
+#.//generate_lambda_zip.sh TCR get_finalized_validators $1 $2

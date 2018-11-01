@@ -4,6 +4,7 @@ import (
   "log"
   "database/sql"
   "BigBang/internal/platform/postgres_config/client_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 
@@ -65,6 +66,21 @@ func (milestoneValidatorRecordExecutor *MilestoneValidatorRecordExecutor) GetMil
   return &milestoneValidatorList
 }
 
+func (milestoneValidatorRecordExecutor *MilestoneValidatorRecordExecutor) CheckMilestoneValidatorRecordExisting (
+    projectId string, milestoneId int64, validator string) bool {
+  var existing bool
+  err := milestoneValidatorRecordExecutor.C.Get(&existing, VERIFY_MILESTONE_VALIDATOR_EXISTING_COMMAND, projectId, milestoneId, validator)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to verify milestone validator record existing for projectId %s , milestoneId %d and validator %s with error: %+v\n",
+      projectId, milestoneId, validator, err)
+    errInfo.ErrorData["projectId"] = projectId
+    errInfo.ErrorData["validator"] = validator
+    log.Panicln(errInfo.Marshal())
+  }
+  return existing
+}
+
 /*
  * Tx versions
  */
@@ -110,4 +126,19 @@ func (milestoneValidatorRecordExecutor *MilestoneValidatorRecordExecutor) GetMil
       "Failed to get milestone validator list for projectId %s and milestoneId %d with error: %+v\n", projectId, milestoneId, err)
   }
   return &milestoneValidatorList
+}
+
+func (milestoneValidatorRecordExecutor *MilestoneValidatorRecordExecutor) CheckMilestoneValidatorRecordExistingTx (
+    projectId string, milestoneId int64, validator string) bool {
+  var existing bool
+  err := milestoneValidatorRecordExecutor.Tx.Get(&existing, VERIFY_MILESTONE_VALIDATOR_EXISTING_COMMAND, projectId, milestoneId, validator)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to verify milestone validator record existing for projectId %s , milestoneId %d and validator %s with error: %+v\n",
+      projectId, milestoneId, validator, err)
+    errInfo.ErrorData["projectId"] = projectId
+    errInfo.ErrorData["validator"] = validator
+    log.Panicln(errInfo.Marshal())
+  }
+  return existing
 }

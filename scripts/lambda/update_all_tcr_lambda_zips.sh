@@ -68,3 +68,9 @@ echo "updating activate_milestone zip"
 
 echo "updating finalize_milestone zip"
 .//update_lambda_zip.sh TCR finalize_milestone $1 $2
+
+echo "updating finalize_validators zip"
+.//update_lambda_zip.sh TCR finaliz_validators $1 $2
+
+echo "updating get_finalized_validators zip"
+.//update_lambda_zip.sh TCR get_finalized_validators $1 $2

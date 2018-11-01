@@ -1,11 +1,11 @@
 package test_constants
 
-const MilestoneId1 = 1
-const MilestoneId2 = 2
-const MilestoneId3 = 3
-const MilestoneId4 = 4
-const MilestoneId5 = 5
-const MilestoneId6 = 6
+const MilestoneId1 int64 = 1
+const MilestoneId2 int64 = 2
+const MilestoneId3 int64 = 3
+const MilestoneId4 int64 = 4
+const MilestoneId5 int64 = 5
+const MilestoneId6 int64 = 6
 
 const MilestoneBlockTimestamp1 = 1539108501
 const MilestoneBlockTimestamp2 = 1539108502

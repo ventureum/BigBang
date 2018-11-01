@@ -10,6 +10,7 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
   "BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config"
+  "BigBang/internal/platform/postgres_config/TCR/milestone_validator_record_config"
 )
 
 type Response struct {
@@ -37,6 +38,7 @@ func ProcessRequest(response *Response) {
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
   actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
   principalProxyVotesExecutor := principal_proxy_votes_config.PrincipalProxyVotesExecutor{*postgresBigBangClient}
+  milestoneValidatorRecordExecutor := milestone_validator_record_config.MilestoneValidatorRecordExecutor{*postgresBigBangClient}
 
   principalProxyVotesExecutor.DeletePrincipalProxyVotesTable()
   actorDelegateVotesAccountExecutor.DeleteActorRatingVoteAccountTable()
@@ -45,7 +47,7 @@ func ProcessRequest(response *Response) {
   projectExecutor.DeleteProjectTable()
   proxyExecutor.DeleteProxyTable()
   ratingVoteExecutor.DeleteRatingVoteTable()
-
+  milestoneValidatorRecordExecutor.DeleteMilestoneValidatorRecordTable()
 
   projectExecutor.CreateProjectTable()
   milestoneExecutor.CreateMilestoneTable()
@@ -54,6 +56,7 @@ func ProcessRequest(response *Response) {
   ratingVoteExecutor.CreateRatingVoteTable()
   actorDelegateVotesAccountExecutor.CreateActorRatingVoteAccountTable()
   principalProxyVotesExecutor.CreatePrincipalProxyVotesTable()
+  milestoneValidatorRecordExecutor.CreateMilestoneValidatorRecordTable()
 
   postgresBigBangClient.Commit()
   response.Ok = true
