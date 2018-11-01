@@ -59,3 +59,12 @@ echo "updating set_actor_private_key zip"
 
 echo "updating reset_actor_fuel zip"
 .//update_lambda_zip.sh feed reset_actor_fuel $1 $2
+
+echo "updating add_tracked_wallet_addresses zip"
+.//update_lambda_zip.sh feed add_tracked_wallet_addresses $1 $2
+
+echo "updating delete_tracked_wallet_addresses zip"
+.//update_lambda_zip.sh feed delete_tracked_wallet_addresses $1 $2
+
+echo "updating get_tracked_wallet_addresses zip"
+.//update_lambda_zip.sh feed get_tracked_wallet_addresses $1 $2

@@ -45,11 +45,20 @@
 #echo "adding lambda permission for unsubscribe_boards"
 #.//add_feed_lambda_permission.sh unsubscribe_boards $1 $2 unsubscribe-boards
 
-echo "adding lambda permission for get_actor_uuid_from_public_key"
-.//add_feed_lambda_permission.sh get_actor_uuid_from_public_key $1 $2 get-actor-uuid-from-public-key
+#echo "adding lambda permission for get_actor_uuid_from_public_key"
+#.//add_feed_lambda_permission.sh get_actor_uuid_from_public_key $1 $2 get-actor-uuid-from-public-key
+#
+#echo "adding lambda permission for set-actor-private-key"
+#.//add_feed_lambda_permission.sh set_actor_private_key $1 $2 set-actor-private-key
+#
+#echo "adding lambda permission for get-actor-private-key"
+#.//add_feed_lambda_permission.sh get_actor_private_key $1 $2 get-actor-private-key
 
-echo "adding lambda permission for set-actor-private-key"
-.//add_feed_lambda_permission.sh set_actor_private_key $1 $2 set-actor-private-key
+#echo "adding lambda permission for add_tracked_wallet_addresses"
+#.//add_feed_lambda_permission.sh add_tracked_wallet_addresses $1 $2 add-tracked-wallet-addresses
 
-echo "adding lambda permission for get-actor-private-key"
-.//add_feed_lambda_permission.sh get_actor_private_key $1 $2 get-actor-private-key
+#echo "adding lambda permission for delete_tracked_wallet_addresses"
+#.//add_feed_lambda_permission.sh delete_tracked_wallet_addresses $1 $2 delete-tracked-wallet-addresses
+
+echo "adding lambda permission for get_tracked_wallet_addresses"
+.//add_feed_lambda_permission.sh get_tracked_wallet_addresses $1 $2 get-tracked-wallet-addresses

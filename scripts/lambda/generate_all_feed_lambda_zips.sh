@@ -61,3 +61,12 @@
 
 #echo "generating reset_actor_refuel zip"
 #.//generate_lambda_zip.sh feed reset_actor_fuel $1 $2
+
+#echo "generating add_tracked_wallet_addresses zip"
+#.//generate_lambda_zip.sh feed add_tracked_wallet_addresses $1 $2
+#
+#echo "generating delete_tracked_wallet_addresses zip"
+#.//generate_lambda_zip.sh feed delete_tracked_wallet_addresses $1 $2
+
+#echo "generating get_tracked_wallet_addresses zip"
+#.//generate_lambda_zip.sh feed get_tracked_wallet_addresses $1 $2
