@@ -70,3 +70,6 @@
 
 #echo "generating get_tracked_wallet_addresses zip"
 #.//generate_lambda_zip.sh feed get_tracked_wallet_addresses $1 $2
+
+echo "generating get_batch_profiles zip"
+.//generate_lambda_zip.sh feed get_batch_profiles $1 $2

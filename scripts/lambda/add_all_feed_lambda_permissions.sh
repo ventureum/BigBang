@@ -60,5 +60,8 @@
 #echo "adding lambda permission for delete_tracked_wallet_addresses"
 #.//add_feed_lambda_permission.sh delete_tracked_wallet_addresses $1 $2 delete-tracked-wallet-addresses
 
-echo "adding lambda permission for get_tracked_wallet_addresses"
-.//add_feed_lambda_permission.sh get_tracked_wallet_addresses $1 $2 get-tracked-wallet-addresses
+#echo "adding lambda permission for get_tracked_wallet_addresses"
+#.//add_feed_lambda_permission.sh get_tracked_wallet_addresses $1 $2 get-tracked-wallet-addresses
+
+echo "adding lambda permission for get_batch_profiles"
+.//add_feed_lambda_permission.sh get_batch_profiles $1 $2 get-batch-profiles
