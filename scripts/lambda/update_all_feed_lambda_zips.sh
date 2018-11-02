@@ -68,3 +68,7 @@ echo "updating delete_tracked_wallet_addresses zip"
 
 echo "updating get_tracked_wallet_addresses zip"
 .//update_lambda_zip.sh feed get_tracked_wallet_addresses $1 $2
+
+echo "updating get_batch_profiles zip"
+.//update_lambda_zip.sh feed get_batch_profiles $1 $2
+

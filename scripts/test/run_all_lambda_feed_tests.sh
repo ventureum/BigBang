@@ -4,6 +4,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/feed/feed_events_table_creator:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/profile:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/get_profile:go_default_test
+./run_unit_test.sh  //test/lambda/feed/get_batch_profiles:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/set_actor_private_key:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/get_actor_private_key:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/get_actor_uuid_from_public_key:go_default_test
