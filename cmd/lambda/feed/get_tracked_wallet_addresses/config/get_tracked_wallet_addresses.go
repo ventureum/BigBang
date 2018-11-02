@@ -28,8 +28,6 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
-  postgresBigBangClient.Begin()
-
 
   actor := request.Actor
   walletAddressRecordExecutor := wallet_address_record_config.WalletAddressRecordExecutor{*postgresBigBangClient}

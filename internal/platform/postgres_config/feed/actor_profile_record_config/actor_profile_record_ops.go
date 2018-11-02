@@ -134,7 +134,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
       },
       ErrorLocation: error_config.ProfileAccountLocation,
     }
-    log.Printf("No Actor Fuel Acount for actor %s", actor)
+    log.Printf("No Actor Profile Acount for actor %s", actor)
     log.Panicln(errorInfo.Marshal())
   }
 }
@@ -265,7 +265,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
       },
       ErrorLocation: error_config.ProfileAccountLocation,
     }
-    log.Printf("No Actor Fuel Acount for actor %s", actor)
+    log.Printf("No Actor Profile Acount for actor %s", actor)
     log.Panicln(errorInfo.Marshal())
   }
 }

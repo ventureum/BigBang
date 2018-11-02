@@ -208,7 +208,7 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) VerifyActo
       },
       ErrorLocation: error_config.ActorRewardsInfoRecordLocation,
     }
-    log.Printf("No Actor Fuel Acount for actor %s", actor)
+    log.Printf("No actor rewards info acount for actor %s", actor)
     log.Panicln(errorInfo.Marshal())
   }
 }
