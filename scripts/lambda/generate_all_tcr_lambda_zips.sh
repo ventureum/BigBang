@@ -33,7 +33,7 @@
 #echo "generating get_proxy_list zip"
 #.//generate_lambda_zip.sh TCR get_proxy_list $1 $2
 #
-#echo "generating get_proxy_votes_list_by_principal zip"
+#echo "generating get_proxy_voting_info zip"
 #.//generate_lambda_zip.sh TCR get_proxy_voting_info $1 $2
 #
 #echo "generating get_rating_vote_list zip"
@@ -78,5 +78,8 @@
 #echo "generating get_finalized_validators zip"
 #.//generate_lambda_zip.sh TCR get_finalized_validators $1 $2
 
-echo "generating get_batch_finalized_validators zip"
-.//generate_lambda_zip.sh TCR get_batch_finalized_validators $1 $2
+#echo "generating get_batch_finalized_validators zip"
+#.//generate_lambda_zip.sh TCR get_batch_finalized_validators $1 $2
+
+echo "generating get_batch_proxy_voting_info zip"
+.//generate_lambda_zip.sh TCR get_batch_proxy_voting_info $1 $2

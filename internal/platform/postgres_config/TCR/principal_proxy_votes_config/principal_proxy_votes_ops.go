@@ -5,6 +5,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "database/sql"
+  "BigBang/internal/app/tcr_attributes"
 )
 
 type PrincipalProxyVotesExecutor struct {
@@ -99,6 +100,21 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProx
     log.Panicln(errInfo.Marshal())
   }
   return &principalProxyVotesRecords
+}
+
+func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetProxyVotingListByActorAndProjectId(
+    actor string, projectId string) *[]tcr_attributes.ProxyVoting {
+  var proxyVotingList []tcr_attributes.ProxyVoting
+  err := principalProxyVotesExecutor.C.Select(&proxyVotingList, QUERY_PROXY_VOTING_LIST_BY_ACTOR_AND_PROJECT_ID_COMMAND,
+    actor, projectId)
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.PrincipalProxyVotesRecordLocation)
+    log.Printf("Failed to get Proxy Voting List for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+  return &proxyVotingList
 }
 
 func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordListByCursor(
@@ -209,6 +225,21 @@ func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProx
     log.Panicln(errInfo.Marshal())
   }
   return &principalProxyVotesRecords
+}
+
+func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetProxyVotingListByActorAndProjectIdTx(
+    actor string, projectId string) *[]tcr_attributes.ProxyVoting {
+  var proxyVotingList []tcr_attributes.ProxyVoting
+  err := principalProxyVotesExecutor.Tx.Select(&proxyVotingList, QUERY_PROXY_VOTING_LIST_BY_ACTOR_AND_PROJECT_ID_COMMAND,
+    actor, projectId)
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.PrincipalProxyVotesRecordLocation)
+    log.Printf("Failed to get Proxy Voting List for actor %s and projectId %s with error: %+v\n",
+      actor, projectId, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+  return &proxyVotingList
 }
 
 func (principalProxyVotesExecutor *PrincipalProxyVotesExecutor) GetPrincipalProxyVotesRecordListByCursorTx(

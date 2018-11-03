@@ -75,5 +75,8 @@
 #echo "adding lambda permission for get_finalized_validators"
 #.//add_tcr_lambda_permission.sh get_finalized_validators $1 $2 get-finalized-validators
 
-echo "adding lambda permission for get_batch_finalized_validators"
-.//add_tcr_lambda_permission.sh get_batch_finalized_validators $1 $2 get-batch-finalized-validators
+#echo "adding lambda permission for get_batch_finalized_validators"
+#.//add_tcr_lambda_permission.sh get_batch_finalized_validators $1 $2 get-batch-finalized-validators
+
+echo "adding lambda permission for get_batch_proxy_voting_info"
+.//add_tcr_lambda_permission.sh get_batch_proxy_voting_info $1 $2 get-batch-proxy-voting-info
