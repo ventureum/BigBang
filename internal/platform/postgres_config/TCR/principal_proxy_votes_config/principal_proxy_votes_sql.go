@@ -48,6 +48,12 @@ SELECT * FROM principal_proxy_votes
 WHERE actor = $1 and project_id = $2;
 `
 
+const QUERY_PROXY_VOTING_LIST_BY_ACTOR_AND_PROJECT_ID_COMMAND = `
+SELECT  proxy, block_timestamp, votes_in_percent FROM principal_proxy_votes
+WHERE actor = $1 and project_id = $2
+ORDER BY id DESC;
+`
+
 const VERIFY_PRINCIPAL_PROXY_VOTES_EXISTING_COMMAND = `
 select exists(select 1 from principal_proxy_votes where actor = $1 and project_id = $2 and proxy = $3);
 `

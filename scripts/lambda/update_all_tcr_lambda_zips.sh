@@ -33,7 +33,7 @@ echo "updating get_project_list zip"
 echo "updating get_proxy_list zip"
 .//update_lambda_zip.sh TCR get_proxy_list $1 $2
 
-echo "updating get_proxy_votes_list_by_principal zip"
+echo "updating get_proxy_voting_info zip"
 .//update_lambda_zip.sh TCR get_proxy_voting_info $1 $2
 
 echo "updating get_rating_vote_list zip"
@@ -78,3 +78,5 @@ echo "updating get_finalized_validators zip"
 echo "updating get_batch_finalized_validators zip"
 .//update_lambda_zip.sh TCR get_batch_finalized_validators $1 $2
 
+echo "updating get_batch_proxy_voting_info zip"
+.//update_lambda_zip.sh TCR get_batch_proxy_voting_info $1 $2

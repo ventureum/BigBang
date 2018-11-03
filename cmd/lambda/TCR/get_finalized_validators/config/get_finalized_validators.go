@@ -26,12 +26,9 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Validators = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
-  postgresBigBangClient.Begin()
-
 
   projectId := request.ProjectId
   milestoneId := request.MilestoneId

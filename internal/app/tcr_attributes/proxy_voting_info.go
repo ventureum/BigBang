@@ -1,5 +1,10 @@
 package tcr_attributes
 
+type ProxyVotingInfoKey struct {
+  Actor                  string         `json:"actor,required"`
+  ProjectId              string         `json:"projectId,required"`
+}
+
 type ProxyVotingInfo struct {
   Actor                  string         `json:"actor,required"`
   ProjectId              string         `json:"projectId,required"`
