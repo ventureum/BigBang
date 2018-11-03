@@ -69,8 +69,11 @@
 #echo "adding lambda permission for finalize_milestone"
 #.//add_tcr_lambda_permission.sh finalize_milestone $1 $2 finalize-milestone
 
-echo "adding lambda permission for finalize_validators"
-.//add_tcr_lambda_permission.sh finalize_validators $1 $2 finalize-validators
+#echo "adding lambda permission for finalize_validators"
+#.//add_tcr_lambda_permission.sh finalize_validators $1 $2 finalize-validators
+#
+#echo "adding lambda permission for get_finalized_validators"
+#.//add_tcr_lambda_permission.sh get_finalized_validators $1 $2 get-finalized-validators
 
-echo "adding lambda permission for get_finalized_validators"
-.//add_tcr_lambda_permission.sh get_finalized_validators $1 $2 get-finalized-validators
+echo "adding lambda permission for get_batch_finalized_validators"
+.//add_tcr_lambda_permission.sh get_batch_finalized_validators $1 $2 get-batch-finalized-validators

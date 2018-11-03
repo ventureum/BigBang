@@ -6,6 +6,7 @@ go_library(
         "milestone.go",
         "milestone_info.go",
         "milestone_state.go",
+        "milestone_validators_info.go",
         "objective.go",
         "objective_votes_info.go",
         "project.go",

@@ -77,3 +77,6 @@
 #
 #echo "generating get_finalized_validators zip"
 #.//generate_lambda_zip.sh TCR get_finalized_validators $1 $2
+
+echo "generating get_batch_finalized_validators zip"
+.//generate_lambda_zip.sh TCR get_batch_finalized_validators $1 $2

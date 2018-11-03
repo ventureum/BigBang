@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["get_batch_finalized_validators.go"],
+    importpath = "BigBang/cmd/lambda/TCR/get_batch_finalized_validators/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/app/tcr_attributes:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/milestone_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/milestone_validator_record_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+    ],
+)
