@@ -11,6 +11,7 @@ go_library(
     importpath = "BigBang/internal/platform/postgres_config/TCR/rating_vote_config",
     visibility = ["//:__subpackages__"],
     deps = [
+        "//internal/app/tcr_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/pkg/utils:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
