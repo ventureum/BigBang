@@ -5,6 +5,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "database/sql"
+  "BigBang/internal/app/tcr_attributes"
 )
 
 type RatingVoteExecutor struct {
@@ -120,10 +121,10 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordByIDsAndVoter(
   return &ratingVoteRecord
 }
 
-func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByIDs(
-    projectId string, milestoneId int64, objectiveId int64) *[]RatingVoteRecord {
-  var ratingVoteRecords []RatingVoteRecord
-  err := ratingVoteExecutor.C.Select(&ratingVoteRecords, QUERY_RATING_VOTES_BY_IDS_COMMAND,
+func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVotesByIDs(
+    projectId string, milestoneId int64, objectiveId int64) *[]tcr_attributes.RatingVote {
+  var ratingVotes []tcr_attributes.RatingVote
+  err := ratingVoteExecutor.C.Select(&ratingVotes, QUERY_RATING_VOTES_BY_IDS_COMMAND,
     projectId, milestoneId, objectiveId)
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "projectId", projectId, error_config.RatingVoteRecordLocation)
@@ -134,7 +135,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByIDs(
 
     log.Panicln(errInfo.Marshal())
   }
-  return &ratingVoteRecords
+  return &ratingVotes
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExisting (
@@ -280,10 +281,10 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordByIDsAndVoterTx
   return &ratingVoteRecord
 }
 
-func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByIDsTx(
-    projectId string, milestoneId int64, objectiveId int64) *[]RatingVoteRecord {
-  var ratingVoteRecords []RatingVoteRecord
-  err := ratingVoteExecutor.Tx.Select(&ratingVoteRecords, QUERY_RATING_VOTES_BY_IDS_COMMAND,
+func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVotesByIDsTx(
+    projectId string, milestoneId int64, objectiveId int64) *[]tcr_attributes.RatingVote {
+  var ratingVotes []tcr_attributes.RatingVote
+  err := ratingVoteExecutor.Tx.Select(&ratingVotes, QUERY_RATING_VOTES_BY_IDS_COMMAND,
     projectId, milestoneId, objectiveId)
   if err != nil && err != sql.ErrNoRows {
     errInfo := error_config.MatchError(err, "projectId", projectId, error_config.RatingVoteRecordLocation)
@@ -294,7 +295,7 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByIDsTx(
 
     log.Panicln(errInfo.Marshal())
   }
-  return &ratingVoteRecords
+  return &ratingVotes
 }
 
 func (ratingVoteExecutor *RatingVoteExecutor) VerifyRatingVoteRecordExistingTx (

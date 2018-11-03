@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["get_batch_rating_vote_list_test.go"],
+    deps = [
+        "//cmd/lambda/TCR/get_batch_rating_vote_list/config:go_default_library",
+        "//internal/app/tcr_attributes:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)

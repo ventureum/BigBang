@@ -80,3 +80,6 @@ echo "updating get_batch_finalized_validators zip"
 
 echo "updating get_batch_proxy_voting_info zip"
 .//update_lambda_zip.sh TCR get_batch_proxy_voting_info $1 $2
+
+echo "updating get_batch_rating_vote_list zip"
+.//update_lambda_zip.sh TCR get_batch_rating_vote_list $1 $2
