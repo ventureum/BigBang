@@ -74,3 +74,7 @@ echo "updating finalize_validators zip"
 
 echo "updating get_finalized_validators zip"
 .//update_lambda_zip.sh TCR get_finalized_validators $1 $2
+
+echo "updating get_batch_finalized_validators zip"
+.//update_lambda_zip.sh TCR get_batch_finalized_validators $1 $2
+

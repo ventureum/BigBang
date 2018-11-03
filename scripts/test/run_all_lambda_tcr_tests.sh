@@ -31,6 +31,7 @@ bazel run //:gazelle
 
 ./run_unit_test.sh  //test/lambda/TCR/finalize_validators:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/get_finalized_validators:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/get_batch_finalized_validators:go_default_test
 
 #./run_unit_test.sh  //test/lambda/TCR/delete_objective:go_default_test
 #./run_unit_test.sh  //test/lambda/TCR/delete_milestone:go_default_test
