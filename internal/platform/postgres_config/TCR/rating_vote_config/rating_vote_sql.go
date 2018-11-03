@@ -53,8 +53,9 @@ WHERE project_id = $1 and milestone_id = $2 and objective_id = $3 and voter = $4
 `
 
 const QUERY_RATING_VOTES_BY_IDS_COMMAND = `
-SELECT * FROM rating_votes
-WHERE project_id = $1 and milestone_id = $2 and objective_id = $3;
+SELECT voter, block_timestamp, rating, weight FROM rating_votes
+WHERE project_id = $1 and milestone_id = $2 and objective_id = $3
+ORDER BY id DESC;
 `
 
 const VERIFY_RATING_VOTE_EXISTING_COMMAND = `

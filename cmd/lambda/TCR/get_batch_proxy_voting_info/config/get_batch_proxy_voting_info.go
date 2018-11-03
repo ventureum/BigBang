@@ -52,14 +52,27 @@ func ProcessRequest(request Request, response *Response) {
   for _ , proxyVotingInfoKey := range proxyVotingInfoKeyList {
     actor := proxyVotingInfoKey.Actor
     projectId := proxyVotingInfoKey.ProjectId
-    actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
-    proxyVotingList := principalProxyVotesExecutor.GetProxyVotingListByActorAndProjectId(actor, projectId)
-    proxyVotingInfo := tcr_attributes.ProxyVotingInfo{
-      Actor:                  actor,
-      ProjectId:              projectId,
-      AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
-      ReceivedDelegateVotes:  actorDelegateVotesAccount.ReceivedDelegateVotes,
-      ProxyVotingList:        proxyVotingList,
+    existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExisting(actor, projectId)
+    var proxyVotingInfo tcr_attributes.ProxyVotingInfo
+    if !existing  {
+      proxyVotingInfo = tcr_attributes.ProxyVotingInfo{
+        Actor:                  actor,
+        ProjectId:              projectId,
+        AvailableDelegateVotes: 0,
+        ReceivedDelegateVotes:  0,
+        ProxyVotingList:        nil,
+      }
+
+    } else {
+      actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
+      proxyVotingList := principalProxyVotesExecutor.GetProxyVotingListByActorAndProjectId(actor, projectId)
+      proxyVotingInfo = tcr_attributes.ProxyVotingInfo{
+        Actor:                  actor,
+        ProjectId:              projectId,
+        AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
+        ReceivedDelegateVotes:  actorDelegateVotesAccount.ReceivedDelegateVotes,
+        ProxyVotingList:        proxyVotingList,
+      }
     }
     proxyVotingInfoList = append(proxyVotingInfoList, proxyVotingInfo)
     log.Printf("ProxyVotingInfo is loaded for  Actor %s and ProjectId %s\n", actor, projectId)

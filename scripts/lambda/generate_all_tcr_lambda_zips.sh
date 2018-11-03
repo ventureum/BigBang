@@ -81,5 +81,8 @@
 #echo "generating get_batch_finalized_validators zip"
 #.//generate_lambda_zip.sh TCR get_batch_finalized_validators $1 $2
 
-echo "generating get_batch_proxy_voting_info zip"
-.//generate_lambda_zip.sh TCR get_batch_proxy_voting_info $1 $2
+#echo "generating get_batch_proxy_voting_info zip"
+#.//generate_lambda_zip.sh TCR get_batch_proxy_voting_info $1 $2
+
+echo "generating get_batch_rating_vote_list zip"
+.//generate_lambda_zip.sh TCR get_batch_rating_vote_list $1 $2
