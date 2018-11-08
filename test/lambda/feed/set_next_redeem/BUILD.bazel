@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["set_next_redeem_test.go"],
+    deps = [
+        "//cmd/lambda/feed/set_next_redeem/config:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)

@@ -2,16 +2,14 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["profile.go"],
-    importpath = "BigBang/cmd/lambda/feed/profile/config",
+    srcs = ["set_next_redeem.go"],
+    importpath = "BigBang/cmd/lambda/feed/set_next_redeem/config",
     visibility = ["//visibility:public"],
     deps = [
         "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
-        "//internal/platform/postgres_config/feed/actor_rewards_info_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config:go_default_library",
-        "//internal/platform/postgres_config/feed/refuel_record_config:go_default_library",
     ],
 )

@@ -91,6 +91,47 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMi
   log.Printf("Successfully added milestone points %d for actor %s", mpsToAdd, actor)
 }
 
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMilestonePointsFromVotes(
+    actor string, mpsToAdd feed_attributes.MilestonePoint) {
+  _, err := actorRewardsInfoRecordExecutor.C.Exec(ADD_ACTOR_MILESTONE_POINTS_FROM_VOTES_COMMAND, actor, mpsToAdd)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorRewardsInfoRecordLocation)
+    log.Printf("Failed to add milestone points from votes for actor %s with error: %+v\n", actor, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added milestone points from votes %d for actor %s", mpsToAdd, actor)
+}
+
+
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMilestonePointsFromPosts(
+    actor string, mpsToAdd feed_attributes.MilestonePoint) {
+  _, err := actorRewardsInfoRecordExecutor.C.Exec(ADD_ACTOR_MILESTONE_POINTS_FROM_POSTS_COMMAND, actor, mpsToAdd)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorRewardsInfoRecordLocation)
+    log.Printf("Failed to add milestone points from posts for actor %s with error: %+v\n", actor, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added milestone points from posts %d for actor %s", mpsToAdd, actor)
+}
+
+
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMilestonePointsFromOthers(
+    actor string, mpsToAdd feed_attributes.MilestonePoint) {
+  _, err := actorRewardsInfoRecordExecutor.C.Exec(ADD_ACTOR_MILESTONE_POINTS_FROM_OTHERS_COMMAND, actor, mpsToAdd)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorRewardsInfoRecordLocation)
+    log.Printf("Failed to add milestone points from others for actor %s with error: %+v\n", actor, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added milestone points from others %d for actor %s", mpsToAdd, actor)
+}
+
 func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorReputation(
     actor string, reputationToAdd feed_attributes.Reputation) {
   _, err := actorRewardsInfoRecordExecutor.C.Exec(ADD_ACTOR_REPUTATIONS_COMMAND, actor, reputationToAdd)
@@ -247,6 +288,48 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMi
 
   log.Printf("Successfully added milestone points %d for actor %s", mpsToAdd, actor)
 }
+
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMilestonePointsFromVotesTx(
+    actor string, mpsToAdd feed_attributes.MilestonePoint) {
+  _, err := actorRewardsInfoRecordExecutor.Tx.Exec(ADD_ACTOR_MILESTONE_POINTS_FROM_VOTES_COMMAND, actor, mpsToAdd)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorRewardsInfoRecordLocation)
+    log.Printf("Failed to add milestone points from votes for actor %s with error: %+v\n", actor, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added milestone points from votes %d for actor %s", mpsToAdd, actor)
+}
+
+
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMilestonePointsFromPostsTx(
+    actor string, mpsToAdd feed_attributes.MilestonePoint) {
+  _, err := actorRewardsInfoRecordExecutor.Tx.Exec(ADD_ACTOR_MILESTONE_POINTS_FROM_POSTS_COMMAND, actor, mpsToAdd)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorRewardsInfoRecordLocation)
+    log.Printf("Failed to add milestone points from posts for actor %s with error: %+v\n", actor, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added milestone points from posts %d for actor %s", mpsToAdd, actor)
+}
+
+
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorMilestonePointsFromOthersTx(
+    actor string, mpsToAdd feed_attributes.MilestonePoint) {
+  _, err := actorRewardsInfoRecordExecutor.Tx.Exec(ADD_ACTOR_MILESTONE_POINTS_FROM_OTHERS_COMMAND, actor, mpsToAdd)
+
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorRewardsInfoRecordLocation)
+    log.Printf("Failed to add milestone points from others for actor %s with error: %+v\n", actor, err)
+    log.Panic(errorInfo.Marshal())
+  }
+
+  log.Printf("Successfully added milestone points from others %d for actor %s", mpsToAdd, actor)
+}
+
 
 func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) AddActorReputationTx(
     actor string, reputationToAdd feed_attributes.Reputation) {

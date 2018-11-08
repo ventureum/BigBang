@@ -62,6 +62,9 @@ func ProcessRequest(request Request, response *Response) {
     Actor: actor,
     Fuel: fuel,
     Reputation: reputation,
+    MilestonePointsFromPosts: 0,
+    MilestonePointsFromVotes: 0,
+    MilestonePointsFromOthers: milestonePoints,
     MilestonePoints: milestonePoints,
   })
 
