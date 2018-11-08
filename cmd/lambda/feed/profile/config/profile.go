@@ -9,6 +9,7 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
   "strings"
+  "BigBang/internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config"
 )
 
 
@@ -58,6 +59,8 @@ func ProcessRequest(request Request, response *Response) {
     refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresBigBangClient}
     actorReputationsRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
       *postgresBigBangClient}
+    milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
+
 
     initFuel := feed_attributes.MaxFuelForFuelUpdateInterval
     initReputation := feed_attributes.Reputation(initFuel)
@@ -66,6 +69,9 @@ func ProcessRequest(request Request, response *Response) {
       Actor:           request.Actor,
       Reputation:      initReputation,
       Fuel:            initFuel,
+      MilestonePointsFromVotes: 0,
+      MilestonePointsFromPosts: 0,
+      MilestonePointsFromOthers: 0,
       MilestonePoints: 0,
     }
     actorReputationsRecordExecutor.UpsertActorRewardsInfoRecordTx(&actorReputationsRecord)
@@ -76,6 +82,14 @@ func ProcessRequest(request Request, response *Response) {
       MilestonePoints: 0,
     })
     log.Printf("Created Actor Fuel Account for actor %s", request.Actor)
+
+
+    milestonePointsRedeemRequestRecordExecutor.UpsertMilestonePointsRedeemRequestRecordTx(
+      &milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecord {
+        Actor: request.Actor,
+        NextRedeemBlock: 0,
+        TargetedMilestonePoints: 0,
+    })
   }
 
   postgresBigBangClient.Commit()

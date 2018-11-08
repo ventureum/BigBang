@@ -363,7 +363,7 @@ func ProcessPostVotesRecord(
 
       log.Printf("rewards %+v for actorAddress %s\n", rewards, actorAddress)
       actorRewardsInfoRecordExecutor.AddActorReputationTx(actorAddress, feed_attributes.Reputation(rewards))
-      actorRewardsInfoRecordExecutor.AddActorMilestonePointsTx(actorAddress, feed_attributes.MilestonePoint(rewards))
+      actorRewardsInfoRecordExecutor.AddActorMilestonePointsFromVotesTx(actorAddress, feed_attributes.MilestonePoint(rewards))
       postVotesRecordExecutor.AddPostVoteDeltaRewardsInfoTx(actorAddress, postHash, voteType, 0, int64(rewards), int64(rewards))
     }
   }
@@ -450,7 +450,7 @@ func ProcessPurchaseReputationsRecord(
     *postgresBigBangClient}
   purchaseMPsRecordExecutor.UpsertPurchaseMPsRecordTx(purchaseMPsRecord)
 
-  actorRewardsInfoRecordExecutor.AddActorMilestonePointsTx(
+  actorRewardsInfoRecordExecutor.AddActorMilestonePointsFromOthersTx(
     purchaseMPsRecord.Purchaser, feed_attributes.MilestonePoint(purchaseMPsRecord.MPs))
 
   postgresBigBangClient.Commit()

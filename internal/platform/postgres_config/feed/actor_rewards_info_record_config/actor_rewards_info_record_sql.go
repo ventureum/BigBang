@@ -43,6 +43,33 @@ UPDATE actor_rewards_info_records
 RETURNING milestone_points;
 `
 
+const ADD_ACTOR_MILESTONE_POINTS_FROM_VOTES_COMMAND = `
+UPDATE actor_rewards_info_records
+    SET 
+       milestone_points_from_votes = actor_rewards_info_records.milestone_points_from_votes + $2,
+       milestone_points = actor_rewards_info_records.milestone_points + $2
+    WHERE actor = $1
+RETURNING milestone_points;
+`
+
+const ADD_ACTOR_MILESTONE_POINTS_FROM_OTHERS_COMMAND = `
+UPDATE actor_rewards_info_records
+    SET 
+       milestone_points_from_others = actor_rewards_info_records.milestone_points_from_others + $2,
+       milestone_points = actor_rewards_info_records.milestone_points + $2
+    WHERE actor = $1
+RETURNING milestone_points;
+`
+
+const ADD_ACTOR_MILESTONE_POINTS_FROM_POSTS_COMMAND = `
+UPDATE actor_rewards_info_records
+    SET 
+       milestone_points_from_posts = actor_rewards_info_records.milestone_points_from_posts + $2,
+       milestone_points = actor_rewards_info_records.milestone_points + $2
+    WHERE actor = $1
+RETURNING milestone_points;
+`
+
 const ADD_ACTOR_REPUTATIONS_COMMAND = `
 UPDATE actor_rewards_info_records
     SET reputation = actor_rewards_info_records.reputation + $2

@@ -13,6 +13,7 @@ const InsufficientWaitingTimeToRefuel ErrorCode = "InsufficientWaitingTimeToRefu
 const InsufficientReputaionsAmount ErrorCode = "InsufficientReputaionsAmount"
 const InsufficientFuelAmount ErrorCode = "InsufficientFuelAmount"
 const NoActorExisting ErrorCode = "NoActorExisting"
+const NoReDeemBlockInfoRecordExisting ErrorCode = "NoReDeemBlockInfoRecordExisting"
 const NoActorExistingForPublicKey ErrorCode = "NoActorExistingForPublicKey"
 const NoPostHashExisting ErrorCode = "NoPostHashExisting"
 const ExceedingUpvoteLimit ErrorCode = "ExceedingUpvoteLimit"
@@ -21,6 +22,7 @@ const General ErrorCode = "General"
 const EmptyPublicKey ErrorCode = "EmptyPublicKey"
 const InvalidActorType ErrorCode = "InvalidActorType"
 const InvalidPostType ErrorCode = "InvalidPostType"
+const InvalidMilestonePoints ErrorCode = "InvalidMilestonePoints"
 
 
 // For TCR

@@ -15,6 +15,8 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_votes_counters_record_config"
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
   "BigBang/internal/platform/postgres_config/feed/wallet_address_record_config"
+  "BigBang/internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config"
+  "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
 )
 
 type Response struct {
@@ -51,7 +53,11 @@ func ProcessRequest(response *Response) {
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}
   refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresBigBangClient}
   walletAddressRecordExecutor := wallet_address_record_config.WalletAddressRecordExecutor{*postgresBigBangClient}
+  milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
+  redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 
+  redeemBlockInfoRecordExecutor.DeleteRedeemBlockInfoRecordTable()
+  milestonePointsRedeemRequestRecordExecutor.DeleteMilestonePointsRedeemRequestRecordTable()
   walletAddressRecordExecutor.DeleteWalletAddressRecordTable()
   sessionRecordExecutor.DeleteSessionRecordTable()
   postVotesRecordExecutor.DeletePostVotesRecordTable()
@@ -77,6 +83,8 @@ func ProcessRequest(response *Response) {
   refuelRecordExecutor.CreateRefuelRecordTable()
   sessionRecordExecutor.CreateSessionRecordTable()
   walletAddressRecordExecutor.CreateWalletAddressRecordTable()
+  milestonePointsRedeemRequestRecordExecutor.CreateMilestonePointsRedeemRequestRecordTable()
+  redeemBlockInfoRecordExecutor.CreateRedeemBlockInfoRecordTable()
 
   postgresBigBangClient.Commit()
   response.Ok = true
