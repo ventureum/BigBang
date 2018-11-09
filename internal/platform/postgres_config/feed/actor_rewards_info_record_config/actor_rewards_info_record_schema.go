@@ -8,6 +8,7 @@ CREATE TABLE actor_rewards_info_records (
     milestone_points_from_votes BIGINT NOT NULL DEFAULT 0,
     milestone_points_from_posts BIGINT NOT NULL DEFAULT 0,
     milestone_points_from_others BIGINT NOT NULL DEFAULT 0,
+    consumed_milestone_points BIGINT NOT NULL DEFAULT 0,
     milestone_points BIGINT NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

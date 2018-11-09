@@ -5,6 +5,8 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_rewards_record_config"
   "BigBang/internal/platform/getstream_config"
+  "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
+  "time"
 )
 
 type Response struct {
@@ -23,6 +25,8 @@ func ProcessRequest(response *Response) {
   }()
   getStreamClient := getstream_config.ConnectGetStreamClient()
   postgresBigBangClient.Begin()
+  redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
+
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
   postRewardsForUpdates := postRewardsRecordExecutor.UpdatePostRewardsRecordsByAggregationsTx()
   for _, postRewardsForUpdate := range *postRewardsForUpdates {
@@ -31,6 +35,9 @@ func ProcessRequest(response *Response) {
       postRewardsForUpdate.PostTime,
       postRewardsForUpdate.WithdrawableMPs)
   }
+  currentRedeemBlock := time.Now().UTC().Unix() / (60 * 60 * 24 * 7)
+  redeemBlockInfoRecordExecutor.UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecordTx(currentRedeemBlock)
+  redeemBlockInfoRecordExecutor.InitRedeemBlockInfoTx(currentRedeemBlock + 1)
   postgresBigBangClient.Commit()
   response.Ok = true
 }

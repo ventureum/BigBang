@@ -12,6 +12,7 @@ type ActorRewardsInfoRecord struct {
   MilestonePointsFromVotes feed_attributes.MilestonePoint `db:"milestone_points_from_votes"`
   MilestonePointsFromPosts feed_attributes.MilestonePoint `db:"milestone_points_from_posts"`
   MilestonePointsFromOthers feed_attributes.MilestonePoint `db:"milestone_points_from_others"`
+  ConsumedMilestonePoints feed_attributes.MilestonePoint `db:"consumed_milestone_points"`
   MilestonePoints feed_attributes.MilestonePoint `db:"milestone_points"`
   CreatedAt       time.Time                      `db:"created_at"`
   UpdatedAt       time.Time                      `db:"updated_at"`
