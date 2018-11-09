@@ -1,4 +1,4 @@
-package milestone_points_redeem_request_record_config
+package actor_milestone_points_redeem_history_record_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
@@ -14,18 +14,18 @@ type MilestonePointsRedeemRequestRecordExecutor struct {
 func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) CreateMilestonePointsRedeemRequestRecordTable() {
   milestonePointsRedeemRequestRecordExecutor.CreateTimestampTrigger()
   milestonePointsRedeemRequestRecordExecutor.CreateTable(
-    TABLE_SCHEMA_FOR_MILESTONE_POINTS_REDEEM_REQUEST_RECORD, TABLE_NAME_FOR_MILESTONE_POINTS_REDEEM_REQUEST_RECORD)
-  milestonePointsRedeemRequestRecordExecutor.RegisterTimestampTrigger(TABLE_NAME_FOR_MILESTONE_POINTS_REDEEM_REQUEST_RECORD)
+    TABLE_SCHEMA_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD, TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
+  milestonePointsRedeemRequestRecordExecutor.RegisterTimestampTrigger(TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
 }
 
 func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) DeleteMilestonePointsRedeemRequestRecordTable() {
-  milestonePointsRedeemRequestRecordExecutor.DeleteTable(TABLE_NAME_FOR_MILESTONE_POINTS_REDEEM_REQUEST_RECORD)
+  milestonePointsRedeemRequestRecordExecutor.DeleteTable(TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
 }
 
 func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) UpsertMilestonePointsRedeemRequestRecord(
     milestonePointsRedeemRequestRecord *MilestonePointsRedeemRequestRecord) {
   _, err := milestonePointsRedeemRequestRecordExecutor.C.NamedExec(
-    UPSERT_MILESTONE_POINTS_REDEEM_REQUEST_RECORD_COMMAND, milestonePointsRedeemRequestRecord)
+    UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, milestonePointsRedeemRequestRecord)
   if err != nil {
     errorInfo := error_config.MatchError(err, "actor", milestonePointsRedeemRequestRecord.Actor, error_config.MilestonePointsRedeemRequestRecordLocation)
     log.Printf("Failed to upsert milestone points redeem request record: %+v with error: %+v\n", milestonePointsRedeemRequestRecord, err)
@@ -57,7 +57,7 @@ func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRe
 }
 
 func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) DeleteMilestonePointsRedeemRequestRecord(actor string) {
-  _, err := milestonePointsRedeemRequestRecordExecutor.C.Exec(DELETE_MILESTONE_POINTS_REDEEM_REQUEST_RECORD_COMMAND, actor)
+  _, err := milestonePointsRedeemRequestRecordExecutor.C.Exec(DELETE_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, actor)
   if err != nil {
     errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
     log.Printf("Failed to delete milestone points redeem request record for actor %s with error: %+v\n", actor, err)
@@ -97,7 +97,7 @@ func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRe
 func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) UpsertMilestonePointsRedeemRequestRecordTx(
     milestonePointsRedeemRequestRecord *MilestonePointsRedeemRequestRecord) {
   _, err := milestonePointsRedeemRequestRecordExecutor.Tx.NamedExec(
-    UPSERT_MILESTONE_POINTS_REDEEM_REQUEST_RECORD_COMMAND, milestonePointsRedeemRequestRecord)
+    UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, milestonePointsRedeemRequestRecord)
   if err != nil {
     errorInfo := error_config.MatchError(err, "actor", milestonePointsRedeemRequestRecord.Actor, error_config.MilestonePointsRedeemRequestRecordLocation)
     log.Printf("Failed to upsert milestone points redeem request record: %+v with error: %+v\n", milestonePointsRedeemRequestRecord, err)
@@ -129,7 +129,7 @@ func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRe
 }
 
 func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) DeleteMilestonePointsRedeemRequestRecordTx(actor string) {
-  _, err := milestonePointsRedeemRequestRecordExecutor.Tx.Exec(DELETE_MILESTONE_POINTS_REDEEM_REQUEST_RECORD_COMMAND, actor)
+  _, err := milestonePointsRedeemRequestRecordExecutor.Tx.Exec(DELETE_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, actor)
   if err != nil {
     errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
     log.Printf("Failed to delete milestone points redeem request record for actor %s with error: %+v\n", actor, err)

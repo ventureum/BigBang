@@ -27,7 +27,6 @@ func TestHandlerWithoutDebugMode(t *testing.T) {
             },
           },
           Ok: false,
-
       },
        err: nil,
     },

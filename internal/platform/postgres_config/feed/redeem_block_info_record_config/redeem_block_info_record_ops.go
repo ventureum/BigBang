@@ -5,6 +5,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/app/feed_attributes"
+  "time"
 )
 
 type RedeemBlockInfoRecordExecutor struct {
@@ -16,10 +17,27 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) CreateRedeem
   redeemBlockInfoRecordExecutor.CreateTable(
     TABLE_SCHEMA_FOR_REDEEM_BLOCK_INFO_RECORD, TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
   redeemBlockInfoRecordExecutor.RegisterTimestampTrigger(TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
+  nextRedeemBlock := time.Now().UTC().Unix() / (60 * 60 * 24 * 7) + 1
+  redeemBlockInfoRecordExecutor.InitRedeemBlockInfo(nextRedeemBlock)
+  redeemBlockInfoRecordExecutor.UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecord(nextRedeemBlock)
 }
 
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeemBlockInfoRecordTable() {
   redeemBlockInfoRecordExecutor.DeleteTable(TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
+}
+
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) InitRedeemBlockInfo(nextRedeemBlock int64) {
+
+  executedAt := time.Unix(nextRedeemBlock * (60 * 60 * 24 * 7) + 1, 0)
+  executedAt = executedAt.In(time.UTC)
+  _, err := redeemBlockInfoRecordExecutor.Tx.Exec(
+    INIT_REDEEM_BLOCK_INFO_RECORD_COMMAND, nextRedeemBlock, executedAt)
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "redeemBlock", nextRedeemBlock, error_config.RedeemBlockInfoRecordLocation)
+    log.Printf("Failed to init redeem request record for nextRedeemBlock %d with error: %+v\n", nextRedeemBlock, err)
+    log.Panicln(errorInfo.Marshal())
+  }
+  log.Printf("Sucessfully init redeem request record for nextRedeemBlock %d\n", nextRedeemBlock)
 }
 
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpsertRedeemBlockInfoRecord(
@@ -101,6 +119,19 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalE
 /*
  * Tx Versions
  */
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) InitRedeemBlockInfoTx(nextRedeemBlock int64) {
+  executedAt := time.Unix(nextRedeemBlock * (60 * 60 * 24 * 7) + 1, 0)
+  executedAt = executedAt.In(time.UTC)
+  _, err := redeemBlockInfoRecordExecutor.Tx.Exec(
+    INIT_REDEEM_BLOCK_INFO_RECORD_COMMAND, nextRedeemBlock, executedAt)
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "redeemBlock", nextRedeemBlock, error_config.RedeemBlockInfoRecordLocation)
+    log.Printf("Failed to init redeem request record for nextRedeemBlock %d with error: %+v\n", nextRedeemBlock, err)
+    log.Panicln(errorInfo.Marshal())
+  }
+  log.Printf("Sucessfully init redeem request record for nextRedeemBlock %d\n", nextRedeemBlock)
+}
+
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpsertRedeemBlockInfoRecordTx(
     redeemBlockInfoRecord *RedeemBlockInfoRecord) {
   _, err := redeemBlockInfoRecordExecutor.Tx.NamedExec(
@@ -176,4 +207,3 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalE
   }
   log.Printf("Sucessfully update totalEnrolledMilestonePoints for redeemBlock %d\n", redeemBlock)
 }
-

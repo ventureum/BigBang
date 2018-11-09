@@ -272,7 +272,7 @@ func ProcessPostVotesRecord(
   log.Printf("Actor List for PostHash and VoteType: %+v\n", actorList)
 
 
-  // Current Actor MilestonePoints
+  // Current Actor ActualMilestonePoints
   actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
   log.Printf("Current Actor RewardsInfo: %+v\n", actorRewardsInfo)
 
@@ -393,7 +393,7 @@ func QueryPostVotesInfo(
   postExecutor.VerifyPostRecordExisting(postVotesRecord.PostHash)
 
 
-  // Current Actor MilestonePoints
+  // Current Actor ActualMilestonePoints
   actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
   log.Printf("Current Actor RewardsInfo: %+v\n", actorRewardsInfo)
   voteInfo.RewardsInfo = actorRewardsInfo

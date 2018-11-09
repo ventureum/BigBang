@@ -10,5 +10,6 @@ go_library(
         "//internal/platform/getstream_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/post_rewards_record_config:go_default_library",
+        "//internal/platform/postgres_config/feed/redeem_block_info_record_config:go_default_library",
     ],
 )

@@ -7,6 +7,9 @@ INSERT INTO actor_rewards_info_records
   actor,
   fuel,
   reputation,
+  milestone_points_from_votes,
+  milestone_points_from_posts,
+  milestone_points_from_others,
   milestone_points
 )
 VALUES 
@@ -14,6 +17,9 @@ VALUES
   :actor,
   :fuel,
   :reputation,
+  :milestone_points_from_votes,
+  :milestone_points_from_posts,
+  :milestone_points_from_others,
   :milestone_points
 )
 ON CONFLICT (actor) 
@@ -22,7 +28,10 @@ DO
     SET 
         fuel = :fuel,
         reputation = :reputation,
-        milestone_points = :milestone_points
+        milestone_points = :milestone_points,
+        milestone_points_from_votes = :milestone_points_from_votes,
+        milestone_points_from_posts = :milestone_points_from_posts,
+        milestone_points_from_others = :milestone_points_from_others
     WHERE actor_rewards_info_records.actor = :actor;
 `
 
