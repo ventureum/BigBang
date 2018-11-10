@@ -5,7 +5,7 @@ CREATE TABLE actor_milestone_points_redeem_history_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),
     actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
     redeem_block BIGINT NOT NULL DEFAULT 0,
-    tokenPool BIGINT NOT NULL DEFAULT 0,
+    token_pool BIGINT NOT NULL DEFAULT 0,
     total_enrolled_milestone_points BIGINT NOT NULL DEFAULT 0,
     targeted_milestone_points BIGINT NOT NULL DEFAULT 0,
     actual_milestone_points BIGINT NOT NULL DEFAULT 0,

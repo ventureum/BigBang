@@ -7,157 +7,159 @@ import (
   "BigBang/internal/app/feed_attributes"
 )
 
-type MilestonePointsRedeemRequestRecordExecutor struct {
+type ActorMilestonePointsRedeemHistoryRecordExecutor struct {
   client_config.PostgresBigBangClient
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) CreateMilestonePointsRedeemRequestRecordTable() {
-  milestonePointsRedeemRequestRecordExecutor.CreateTimestampTrigger()
-  milestonePointsRedeemRequestRecordExecutor.CreateTable(
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) CreateActorMilestonePointsRedeemHistoryRecordTable() {
+  actorMilestonePointsRedeemHistoryRecordExecutor.CreateTimestampTrigger()
+  actorMilestonePointsRedeemHistoryRecordExecutor.CreateTable(
     TABLE_SCHEMA_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD, TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
-  milestonePointsRedeemRequestRecordExecutor.RegisterTimestampTrigger(TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
+  actorMilestonePointsRedeemHistoryRecordExecutor.RegisterTimestampTrigger(TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) DeleteMilestonePointsRedeemRequestRecordTable() {
-  milestonePointsRedeemRequestRecordExecutor.DeleteTable(TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) DeleteActorMilestonePointsRedeemHistoryRecordTable() {
+  actorMilestonePointsRedeemHistoryRecordExecutor.DeleteTable(TABLE_NAME_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD)
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) UpsertMilestonePointsRedeemRequestRecord(
-    milestonePointsRedeemRequestRecord *MilestonePointsRedeemRequestRecord) {
-  _, err := milestonePointsRedeemRequestRecordExecutor.C.NamedExec(
-    UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, milestonePointsRedeemRequestRecord)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) UpsertActorMilestonePointsRedeemHistoryRecord(
+    actorMilestonePointsRedeemHistoryRecord *ActorMilestonePointsRedeemHistoryRecord) {
+  _, err := actorMilestonePointsRedeemHistoryRecordExecutor.C.NamedExec(
+    UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, actorMilestonePointsRedeemHistoryRecord)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", milestonePointsRedeemRequestRecord.Actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to upsert milestone points redeem request record: %+v with error: %+v\n", milestonePointsRedeemRequestRecord, err)
+    errorInfo := error_config.MatchError(err, "actor", actorMilestonePointsRedeemHistoryRecord.Actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to upsert actor milestone points redeem history record: %+v with error: %+v\n", actorMilestonePointsRedeemHistoryRecord, err)
     log.Panicln(errorInfo.Marshal())
   }
-  log.Printf("Sucessfully upserted milestone points redeem request record for actor %s\n", milestonePointsRedeemRequestRecord.Actor)
+  log.Printf("Sucessfully upserted actor milestone points redeem history record for actor %s\n", actorMilestonePointsRedeemHistoryRecord.Actor)
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) VerifyMilestonePointsRedeemRequestExisting (actor string) {
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockExisting (redeemBlock int64) bool {
   var existing bool
-  err := milestonePointsRedeemRequestRecordExecutor.C.Get(&existing, VERIFY_ACTOR_EXISTING_COMMAND, actor)
+  err := actorMilestonePointsRedeemHistoryRecordExecutor.C.Get(&existing, VERIFY_REDEEM_BLOCK_EXISTING_COMMAND, redeemBlock)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to verify actor milestone points redeem request record existing for actor %s with error: %+v\n", actor, err)
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to verify redeem block existing for redeemBlock %d with error: %+v\n", redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
 
-  if !existing {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.NoActorExisting,
-      ErrorData: map[string]interface{} {
-        "actor": actor,
-      },
-      ErrorLocation:  error_config.MilestonePointsRedeemRequestRecordLocation,
-    }
-    log.Printf("No milestone points redeem request record for actor %s", actor)
-    log.Panicln(errorInfo.Marshal())
-  }
+  return existing
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) DeleteMilestonePointsRedeemRequestRecord(actor string) {
-  _, err := milestonePointsRedeemRequestRecordExecutor.C.Exec(DELETE_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, actor)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockForActorExisting (actor string, redeemBlock int64) bool {
+  var existing bool
+  err := actorMilestonePointsRedeemHistoryRecordExecutor.C.Get(&existing, VERIFY_REDEEM_BLOCK_FOR_ACTOR_EXISTING_COMMAND, actor, redeemBlock)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to delete milestone points redeem request record for actor %s with error: %+v\n", actor, err)
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    errorInfo.ErrorData["actor"] = actor
+    log.Printf("Failed to verify redeem block for actor existing for actor %s and redeemBlock %d with error: %+v\n", actor, redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
-  log.Printf("Sucessfully deleted milestone points redeem request record for actor %s\n", actor)
+
+  return existing
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) GetMilestonePointsRedeemRequest(
-    actor string) *feed_attributes.MilestonePointsRedeemRequest {
-  var milestonePointsRedeemRequest feed_attributes.MilestonePointsRedeemRequest
-  err := milestonePointsRedeemRequestRecordExecutor.C.Get(&milestonePointsRedeemRequest, QUERY_MILESTONE_POINTS_REDEEM_REQUEST_COMMAND, actor)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) DeleteActorMilestonePointsRedeemHistoryRecordByActor(actor string) {
+  _, err := actorMilestonePointsRedeemHistoryRecordExecutor.C.Exec(DELETE_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_BY_ACTOR_COMMAND, actor)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to get ActualMilestonePoints Redeem Request for actor %s with error: %+v\n", actor, err)
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to delete actor milestone points redeem history records for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errorInfo.Marshal())
+  }
+  log.Printf("Sucessfully deleted actor milestone points redeem history record for actor %s\n", actor)
+}
+
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) GetActorMilestonePointsRedeemHistory(
+    actor string) *feed_attributes.MilestonePointsRedeemHistory {
+  var milestonePointsRedeemHistory feed_attributes.MilestonePointsRedeemHistory
+  err := actorMilestonePointsRedeemHistoryRecordExecutor.C.Get(&milestonePointsRedeemHistory, QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORDS_COMMAND, actor)
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to get actor milestone points redeem history record for actor %s with error: %+v\n", actor, err)
     log.Panic(errorInfo.Marshal())
   }
-  return &milestonePointsRedeemRequest
+  return &milestonePointsRedeemHistory
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) GetTotalEnrolledMilestonePoints(
-    nextRedeemBlock int64) int64 {
-  var totalEnrolledMilestonePoints int64
-  err := milestonePointsRedeemRequestRecordExecutor.C.Get(&totalEnrolledMilestonePoints, QUERY_TOTAL_ENROLLED_MILESTONE_POINTS_COMMAND, nextRedeemBlock)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) UpsertBatchActorMilestonePointsRedeemHistoryRecordByRedeemBlock(redeemBlock feed_attributes.RedeemBlock) {
+  _, err := actorMilestonePointsRedeemHistoryRecordExecutor.C.Exec(UPSERT_BATCH_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORDS_BY_REDEEM_BLOCK, redeemBlock)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "nextRedeemBlock", nextRedeemBlock, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to get total enrolled ActualMilestonePoints for nextRedeemBlock %d with error: %+v\n",nextRedeemBlock, err)
-    log.Panic(errorInfo.Marshal())
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to upsert batch actor milestone points redeem history records for redeemBlock %d with error: %+v\n", redeemBlock, err)
+    log.Panicln(errorInfo.Marshal())
   }
-  return totalEnrolledMilestonePoints
+  log.Printf("Sucessfully upserted batch actor milestone points redeem history records for redeemBlock %d\n", redeemBlock)
 }
 
 
 /*
  * Tx Versions
  */
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) UpsertMilestonePointsRedeemRequestRecordTx(
-    milestonePointsRedeemRequestRecord *MilestonePointsRedeemRequestRecord) {
-  _, err := milestonePointsRedeemRequestRecordExecutor.Tx.NamedExec(
-    UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, milestonePointsRedeemRequestRecord)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) UpsertActorMilestonePointsRedeemHistoryRecordTx(
+    actorMilestonePointsRedeemHistoryRecord *ActorMilestonePointsRedeemHistoryRecord) {
+  _, err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.NamedExec(
+    UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, actorMilestonePointsRedeemHistoryRecord)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", milestonePointsRedeemRequestRecord.Actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to upsert milestone points redeem request record: %+v with error: %+v\n", milestonePointsRedeemRequestRecord, err)
+    errorInfo := error_config.MatchError(err, "actor", actorMilestonePointsRedeemHistoryRecord.Actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to upsert actor milestone points redeem history record: %+v with error: %+v\n", actorMilestonePointsRedeemHistoryRecord, err)
     log.Panicln(errorInfo.Marshal())
   }
-  log.Printf("Sucessfully upserted milestone points redeem request record for actor %s\n", milestonePointsRedeemRequestRecord.Actor)
+  log.Printf("Sucessfully upserted actor milestone points redeem history record for actor %s\n", actorMilestonePointsRedeemHistoryRecord.Actor)
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) VerifyMilestonePointsRedeemRequestExistingTx (actor string) {
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockExistingTx (redeemBlock int64) bool {
   var existing bool
-  err := milestonePointsRedeemRequestRecordExecutor.Tx.Get(&existing, VERIFY_ACTOR_EXISTING_COMMAND, actor)
+  err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Get(&existing, VERIFY_REDEEM_BLOCK_EXISTING_COMMAND, redeemBlock)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to verify actor milestone points redeem request record existing for actor %s with error: %+v\n", actor, err)
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to verify redeem block existing for redeemBlock %d with error: %+v\n", redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
 
-  if !existing {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.NoActorExisting,
-      ErrorData: map[string]interface{} {
-        "actor": actor,
-      },
-      ErrorLocation:  error_config.MilestonePointsRedeemRequestRecordLocation,
-    }
-    log.Printf("No milestone points redeem request record for actor %s", actor)
-    log.Panicln(errorInfo.Marshal())
-  }
+  return existing
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) DeleteMilestonePointsRedeemRequestRecordTx(actor string) {
-  _, err := milestonePointsRedeemRequestRecordExecutor.Tx.Exec(DELETE_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND, actor)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockForActorExistingTx (actor string, redeemBlock int64) bool {
+  var existing bool
+  err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Get(&existing, VERIFY_REDEEM_BLOCK_FOR_ACTOR_EXISTING_COMMAND, actor, redeemBlock)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to delete milestone points redeem request record for actor %s with error: %+v\n", actor, err)
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    errorInfo.ErrorData["actor"] = actor
+    log.Printf("Failed to verify redeem block for actor existing for actor %s and redeemBlock %d with error: %+v\n", actor, redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
-  log.Printf("Sucessfully deleted milestone points redeem request record for actor %s\n", actor)
+
+  return existing
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) GetMilestonePointsRedeemRequestTx(
-    actor string) *feed_attributes.MilestonePointsRedeemRequest {
-  var milestonePointsRedeemRequest feed_attributes.MilestonePointsRedeemRequest
-  err := milestonePointsRedeemRequestRecordExecutor.Tx.Get(&milestonePointsRedeemRequest, QUERY_MILESTONE_POINTS_REDEEM_REQUEST_COMMAND, actor)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) DeleteActorMilestonePointsRedeemHistoryRecordByActorTx(actor string) {
+  _, err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Exec(DELETE_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_BY_ACTOR_COMMAND, actor)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "actor", actor, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to get ActualMilestonePoints Redeem Request for actor %s with error: %+v\n", actor, err)
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to delete actor milestone points redeem history records for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errorInfo.Marshal())
+  }
+  log.Printf("Sucessfully deleted actor milestone points redeem history record for actor %s\n", actor)
+}
+
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) GetActorMilestonePointsRedeemHistoryTx(
+    actor string) *feed_attributes.MilestonePointsRedeemHistory {
+  var milestonePointsRedeemHistory feed_attributes.MilestonePointsRedeemHistory
+  err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Get(&milestonePointsRedeemHistory, QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORDS_COMMAND, actor)
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "actor", actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to get actor milestone points redeem history record for actor %s with error: %+v\n", actor, err)
     log.Panic(errorInfo.Marshal())
   }
-  return &milestonePointsRedeemRequest
+  return &milestonePointsRedeemHistory
 }
 
-func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) GetTotalEnrolledMilestonePointsTx(
-    nextRedeemBlock int64) int64 {
-  var totalEnrolledMilestonePoints int64
-  err := milestonePointsRedeemRequestRecordExecutor.Tx.Get(&totalEnrolledMilestonePoints, QUERY_TOTAL_ENROLLED_MILESTONE_POINTS_COMMAND, nextRedeemBlock)
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) UpsertBatchActorMilestonePointsRedeemHistoryRecordByRedeemBlockTx(redeemBlock feed_attributes.RedeemBlock) {
+  _, err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Exec(UPSERT_BATCH_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORDS_BY_REDEEM_BLOCK, redeemBlock)
   if err != nil {
-    errorInfo := error_config.MatchError(err, "nextRedeemBlock", nextRedeemBlock, error_config.MilestonePointsRedeemRequestRecordLocation)
-    log.Printf("Failed to get total enrolled ActualMilestonePoints for nextRedeemBlock %d with error: %+v\n",nextRedeemBlock, err)
-    log.Panic(errorInfo.Marshal())
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to upsert batch actor milestone points redeem history records for redeemBlock %d with error: %+v\n", redeemBlock, err)
+    log.Panicln(errorInfo.Marshal())
   }
-  return totalEnrolledMilestonePoints
+  log.Printf("Sucessfully upserted batch actor milestone points redeem history records for redeemBlock %d\n", redeemBlock)
 }

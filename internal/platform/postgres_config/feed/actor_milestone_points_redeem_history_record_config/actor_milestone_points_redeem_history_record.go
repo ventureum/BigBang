@@ -5,11 +5,17 @@ import (
   "BigBang/internal/app/feed_attributes"
 )
 
-type MilestonePointsRedeemRequestRecord struct {
+type ActorMilestonePointsRedeemHistoryRecord struct {
   Actor           string                         `db:"actor"`
-  NextRedeemBlock  int64     `db:"next_redeem_block"`
+  RedeemBlock  int64     `db:"redeem_block"`
+  TokenPool  int64     `db:"token_pool"`
+  TotalEnrolledMilestonePoints feed_attributes.MilestonePoint `db:"total_enrolled_milestone_points"`
   TargetedMilestonePoints feed_attributes.MilestonePoint `db:"targeted_milestone_points"`
-  TargetedMilestonePoints feed_attributes.MilestonePoint `db:"targeted_milestone_points"`
-  CreatedAt       time.Time                      `db:"created_at"`
-  UpdatedAt       time.Time                      `db:"updated_at"`
+  ActualMilestonePoints feed_attributes.MilestonePoint `db:"actual_milestone_points"`
+  ConsumedMilestonePoints feed_attributes.MilestonePoint `db:"consumed_milestone_points"`
+  RedeemedTokens int64    `db:"redeemed_tokens"`
+  SubmittedAt time.Time   `db:"submitted_at"`
+  ExecutedAt  time.Time   `db:"executed_at"`
+  CreatedAt   time.Time   `db:"created_at"`
+  UpdatedAt   time.Time   `db:"updated_at"`
 }

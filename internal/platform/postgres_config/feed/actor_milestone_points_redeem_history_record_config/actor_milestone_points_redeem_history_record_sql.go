@@ -6,7 +6,7 @@ INSERT INTO actor_milestone_points_redeem_history_records
 (
     actor,
     redeem_block,
-    tokenPool,
+    token_pool,
     total_enrolled_milestone_points,
     targeted_milestone_points,
     actual_milestone_points,
@@ -19,7 +19,7 @@ VALUES
 (
     :actor,
     :redeem_block,
-    :tokenPool,
+    :token_pool,
     :total_enrolled_milestone_points,
     :targeted_milestone_points,
     :actual_milestone_points,
@@ -42,15 +42,15 @@ FROM actor_milestone_points_redeem_history_records
 WHERE actor = $1;
 `
 
-const UPSERT_BATCH_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORDS = `
+const UPSERT_BATCH_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORDS_BY_REDEEM_BLOCK = `
 with updates as(
   INSERT INTO actor_milestone_points_redeem_history_records(
     SELECT
       gen_random_uuid() as uuid,
       milestone_points_redeem_request_records.actor as actor,
       milestone_points_redeem_request_records.next_redeem_block as redeem_block,
-      redeem_block_info_records.token_pool as tokenPool,
-      redeem_block_info_records.total_enrolled_milestone_points as totalEnrolledMilestonePoints,
+      redeem_block_info_records.token_pool as token_pool,
+      redeem_block_info_records.total_enrolled_milestone_points as total_enrolled_milestone_points,
       milestone_points_redeem_request_records.targeted_milestone_points as targeted_milestone_points,
       actor_rewards_info_records.milestone_points as actual_milestone_points,
       LEAST(milestone_points_redeem_request_records.targeted_milestone_points,  actor_rewards_info_records.milestone_points) as consumed_milestone_points,
@@ -71,4 +71,8 @@ WHERE actor_rewards_info_records.actor = updates.actor;
 
 const VERIFY_REDEEM_BLOCK_EXISTING_COMMAND = `
 select exists(select 1 from actor_milestone_points_redeem_history_records where redeem_block = $1);
+`
+
+const VERIFY_REDEEM_BLOCK_FOR_ACTOR_EXISTING_COMMAND = `
+select exists(select 1 from actor_milestone_points_redeem_history_records where actor = $1 and redeem_block = $2);
 `

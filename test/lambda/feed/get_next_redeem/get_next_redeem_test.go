@@ -16,8 +16,8 @@ var postgresBigBangClient = client_config.ConnectPostgresClient()
 var redeemBlockInfoRecordExecutor = redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 
 var milestonePointsRedeemRequestRecordExecutor = milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
-var nextRedeemBlock int64 = time.Now().UTC().Unix() / (60 * 60 * 24 * 7) + 1
-var executedAt = time.Unix(nextRedeemBlock * (60 * 60 * 24 * 7) + 1, 0)
+var nextRedeemBlock = feed_attributes.MoveToNextNRedeemBlock(1)
+var executedAt = nextRedeemBlock.ConvertToTime()
 
 func TestHandler(t *testing.T) {
   tests := []struct{

@@ -18,7 +18,6 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/feed/get_session:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/refuel:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/dev_refuel:go_default_test
-./run_unit_test.sh  //test/lambda/feed/feed_update_post_rewards:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/feed_upvote:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/get_recent_votes:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/feed_token_generator:go_default_test
@@ -28,5 +27,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/feed/delete_tracked_wallet_addresses:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/set_next_redeem:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/get_next_redeem:go_default_test
+
+./run_unit_test.sh  //test/lambda/feed/feed_update_post_rewards:go_default_test
 
 ./run_unit_test.sh  //test/lambda/feed/deactivate_actor:go_default_test
