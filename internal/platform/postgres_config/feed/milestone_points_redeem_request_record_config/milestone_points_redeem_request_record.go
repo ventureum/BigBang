@@ -7,7 +7,7 @@ import (
 
 type MilestonePointsRedeemRequestRecord struct {
   Actor           string                         `db:"actor"`
-  NextRedeemBlock  int64     `db:"next_redeem_block"`
+  NextRedeemBlock  feed_attributes.RedeemBlock     `db:"next_redeem_block"`
   TargetedMilestonePoints feed_attributes.MilestonePoint `db:"targeted_milestone_points"`
   CreatedAt       time.Time                      `db:"created_at"`
   UpdatedAt       time.Time                      `db:"updated_at"`

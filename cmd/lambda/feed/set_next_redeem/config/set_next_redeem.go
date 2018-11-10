@@ -6,7 +6,6 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config"
-  "time"
   "BigBang/internal/app/feed_attributes"
 )
 
@@ -37,7 +36,7 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
 
-  nextRedeemBlock := time.Now().UTC().Unix() / (60 * 60 * 24 * 7) + 1
+  nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
   milestonePoints := request.MilestonePoints
 
   if milestonePoints < 0 {

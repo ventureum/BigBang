@@ -6,9 +6,11 @@ go_library(
     importpath = "BigBang/cmd/lambda/feed/feed_update_post_rewards/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/getstream_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/feed/actor_milestone_points_redeem_history_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/post_rewards_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/redeem_block_info_record_config:go_default_library",
     ],

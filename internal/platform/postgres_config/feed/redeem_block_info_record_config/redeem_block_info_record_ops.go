@@ -5,7 +5,6 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/app/feed_attributes"
-  "time"
 )
 
 type RedeemBlockInfoRecordExecutor struct {
@@ -17,7 +16,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) CreateRedeem
   redeemBlockInfoRecordExecutor.CreateTable(
     TABLE_SCHEMA_FOR_REDEEM_BLOCK_INFO_RECORD, TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
   redeemBlockInfoRecordExecutor.RegisterTimestampTrigger(TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
-  nextRedeemBlock := time.Now().UTC().Unix() / (60 * 60 * 24 * 7) + 1
+  nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
   redeemBlockInfoRecordExecutor.InitRedeemBlockInfo(nextRedeemBlock)
   redeemBlockInfoRecordExecutor.UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecord(nextRedeemBlock)
 }
@@ -26,10 +25,8 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeem
   redeemBlockInfoRecordExecutor.DeleteTable(TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) InitRedeemBlockInfo(nextRedeemBlock int64) {
-
-  executedAt := time.Unix(nextRedeemBlock * (60 * 60 * 24 * 7) + 1, 0)
-  executedAt = executedAt.In(time.UTC)
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) InitRedeemBlockInfo(nextRedeemBlock feed_attributes.RedeemBlock) {
+  executedAt := nextRedeemBlock.ConvertToTime()
   _, err := redeemBlockInfoRecordExecutor.Tx.Exec(
     INIT_REDEEM_BLOCK_INFO_RECORD_COMMAND, nextRedeemBlock, executedAt)
   if err != nil {
@@ -52,7 +49,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpsertRedeem
   log.Printf("Sucessfully upserted redeem block info record for redeemBlock %d\n", redeemBlockInfoRecord.RedeemBlock)
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExisting (redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExisting (redeemBlock feed_attributes.RedeemBlock) {
   var existing bool
   err := redeemBlockInfoRecordExecutor.C.Get(&existing, VERIFY_REDEEM_BLOCK_INFO_RECORD_EXISTING_COMMAND, redeemBlock)
   if err != nil {
@@ -74,7 +71,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeem
   }
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeemBlockInfoRecord(redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeemBlockInfoRecord(redeemBlock feed_attributes.RedeemBlock) {
   _, err := redeemBlockInfoRecordExecutor.C.Exec(DELETE_REDEEM_BLOCK_INFO_RECORD_COMMAND, redeemBlock)
   if err != nil {
     errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)
@@ -85,7 +82,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeem
 }
 
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) GetRedeemBlockInfo(
-    redeemBlock int64) *feed_attributes.RedeemBlockInfo {
+    redeemBlock feed_attributes.RedeemBlock) *feed_attributes.RedeemBlockInfo {
   var redeemBlockInfo feed_attributes.RedeemBlockInfo
   err := redeemBlockInfoRecordExecutor.C.Get(&redeemBlockInfo, QUERY_REDEEM_BLOCK_INFO_COMMAND, redeemBlock)
   if err != nil {
@@ -96,7 +93,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) GetRedeemBlo
   return &redeemBlockInfo
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecuteAtForRedeemBlockInfoRecord(redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecuteAtForRedeemBlockInfoRecord(redeemBlock feed_attributes.RedeemBlock) {
   _, err := redeemBlockInfoRecordExecutor.C.Exec(UPDATE_EXECUTED_AT_COMMAND, redeemBlock)
   if err != nil {
     errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)
@@ -106,7 +103,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecut
   log.Printf("Sucessfully update executedAt for redeemBlock %d\n", redeemBlock)
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecord(redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecord(redeemBlock feed_attributes.RedeemBlock) {
   _, err := redeemBlockInfoRecordExecutor.C.Exec(UPDATE_TOTAL_ENROLLED_MILESTONEPOINTS_COMMAND, redeemBlock)
   if err != nil {
     errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)
@@ -119,9 +116,8 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalE
 /*
  * Tx Versions
  */
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) InitRedeemBlockInfoTx(nextRedeemBlock int64) {
-  executedAt := time.Unix(nextRedeemBlock * (60 * 60 * 24 * 7) + 1, 0)
-  executedAt = executedAt.In(time.UTC)
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) InitRedeemBlockInfoTx(nextRedeemBlock feed_attributes.RedeemBlock) {
+  executedAt := nextRedeemBlock.ConvertToTime()
   _, err := redeemBlockInfoRecordExecutor.Tx.Exec(
     INIT_REDEEM_BLOCK_INFO_RECORD_COMMAND, nextRedeemBlock, executedAt)
   if err != nil {
@@ -144,7 +140,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpsertRedeem
   log.Printf("Sucessfully upserted redeem block info record for redeemBlock %d\n", redeemBlockInfoRecord.RedeemBlock)
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExistingTx (redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExistingTx (redeemBlock feed_attributes.RedeemBlock) {
   var existing bool
   err := redeemBlockInfoRecordExecutor.Tx.Get(&existing, VERIFY_REDEEM_BLOCK_INFO_RECORD_EXISTING_COMMAND, redeemBlock)
   if err != nil {
@@ -166,7 +162,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeem
   }
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeemBlockInfoRecordTx(redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeemBlockInfoRecordTx(redeemBlock feed_attributes.RedeemBlock) {
   _, err := redeemBlockInfoRecordExecutor.Tx.Exec(DELETE_REDEEM_BLOCK_INFO_RECORD_COMMAND, redeemBlock)
   if err != nil {
     errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)
@@ -177,7 +173,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeem
 }
 
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) GetRedeemBlockInfoTx(
-    redeemBlock int64) *feed_attributes.RedeemBlockInfo {
+    redeemBlock feed_attributes.RedeemBlock) *feed_attributes.RedeemBlockInfo {
   var redeemBlockInfo feed_attributes.RedeemBlockInfo
   err := redeemBlockInfoRecordExecutor.Tx.Get(&redeemBlockInfo, QUERY_REDEEM_BLOCK_INFO_COMMAND, redeemBlock)
   if err != nil {
@@ -188,7 +184,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) GetRedeemBlo
   return &redeemBlockInfo
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecuteAtForRedeemBlockInfoRecordTx(redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecuteAtForRedeemBlockInfoRecordTx(redeemBlock feed_attributes.RedeemBlock) {
   _, err := redeemBlockInfoRecordExecutor.Tx.Exec(UPDATE_EXECUTED_AT_COMMAND, redeemBlock)
   if err != nil {
     errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)
@@ -198,7 +194,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecut
   log.Printf("Sucessfully update executedAt for redeemBlock %d\n", redeemBlock)
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecordTx(redeemBlock int64) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecordTx(redeemBlock feed_attributes.RedeemBlock) {
   _, err := redeemBlockInfoRecordExecutor.Tx.Exec(UPDATE_TOTAL_ENROLLED_MILESTONEPOINTS_COMMAND, redeemBlock)
   if err != nil {
     errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)

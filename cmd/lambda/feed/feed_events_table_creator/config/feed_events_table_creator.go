@@ -17,6 +17,7 @@ import (
   "BigBang/internal/platform/postgres_config/feed/wallet_address_record_config"
   "BigBang/internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config"
   "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
+  "BigBang/internal/platform/postgres_config/feed/actor_milestone_points_redeem_history_record_config"
 )
 
 type Response struct {
@@ -55,7 +56,10 @@ func ProcessRequest(response *Response) {
   walletAddressRecordExecutor := wallet_address_record_config.WalletAddressRecordExecutor{*postgresBigBangClient}
   milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
   redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
+  actorMilestonePointsRedeemHistoryRecordExecutor :=  actor_milestone_points_redeem_history_record_config.ActorMilestonePointsRedeemHistoryRecordExecutor{*postgresBigBangClient}
 
+
+  actorMilestonePointsRedeemHistoryRecordExecutor.DeleteActorMilestonePointsRedeemHistoryRecordTable()
   redeemBlockInfoRecordExecutor.DeleteRedeemBlockInfoRecordTable()
   milestonePointsRedeemRequestRecordExecutor.DeleteMilestonePointsRedeemRequestRecordTable()
   walletAddressRecordExecutor.DeleteWalletAddressRecordTable()
@@ -85,6 +89,7 @@ func ProcessRequest(response *Response) {
   walletAddressRecordExecutor.CreateWalletAddressRecordTable()
   milestonePointsRedeemRequestRecordExecutor.CreateMilestonePointsRedeemRequestRecordTable()
   redeemBlockInfoRecordExecutor.CreateRedeemBlockInfoRecordTable()
+  actorMilestonePointsRedeemHistoryRecordExecutor.CreateActorMilestonePointsRedeemHistoryRecordTable()
 
   postgresBigBangClient.Commit()
   response.Ok = true

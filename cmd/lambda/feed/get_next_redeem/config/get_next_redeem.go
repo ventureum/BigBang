@@ -50,7 +50,7 @@ func ProcessRequest(request Request, response *Response) {
     *postgresBigBangClient}
   redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 
-  nextRedeemBlock := time.Now().UTC().Unix() / (60 * 60 * 24 * 7) + 1
+  nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
   milestonePointsRedeemRequestRecordExecutor.VerifyMilestonePointsRedeemRequestExisting(actor)
 
   milestonePointsRedeemRequest := milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(actor)

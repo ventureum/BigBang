@@ -15,6 +15,7 @@ const RefuelRecordLocation ErrorLocation = "RefuelRecordLocation"
 const ActorTypeLocation ErrorLocation = "ActorTypeLocation"
 const PostTypeLocation ErrorLocation = "PostTypeLocation"
 const MilestonePointsRedeemRequestRecordLocation ErrorLocation = "MilestonePointsRedeemRequestRecordLocation"
+const ActorMilestonePointsRedeemHistoryRecordLocation ErrorLocation = "ActorMilestonePointsRedeemHistoryRecordLocation"
 const RedeemBlockInfoRecordLocation ErrorLocation = "RedeemBlockInfoRecordLocation"
 
 // For TCR
