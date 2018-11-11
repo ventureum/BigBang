@@ -100,7 +100,18 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecut
     log.Printf("Failed to update executedAt for redeemBlock %d with error: %+v\n", redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
-  log.Printf("Sucessfully update executedAt for redeemBlock %d\n", redeemBlock)
+  log.Printf("Sucessfully updated executedAt for redeemBlock %d\n", redeemBlock)
+}
+
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTokenPoolForRedeemBlockInfoRecord(
+  redeemBlock feed_attributes.RedeemBlock, tokenPool int64) {
+  _, err := redeemBlockInfoRecordExecutor.C.Exec(UPDATE_TOOKEN_POOL_COMMAND, redeemBlock, tokenPool)
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)
+    log.Printf("Failed to update tokenPool for redeemBlock %d with error: %+v\n", redeemBlock, err)
+    log.Panicln(errorInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated tokenPool for redeemBlock %d\n", redeemBlock)
 }
 
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecord(redeemBlock feed_attributes.RedeemBlock) {
@@ -184,6 +195,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) GetRedeemBlo
   return &redeemBlockInfo
 }
 
+
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecuteAtForRedeemBlockInfoRecordTx(redeemBlock feed_attributes.RedeemBlock) {
   _, err := redeemBlockInfoRecordExecutor.Tx.Exec(UPDATE_EXECUTED_AT_COMMAND, redeemBlock)
   if err != nil {
@@ -191,7 +203,18 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateExecut
     log.Printf("Failed to update executedAt for redeemBlock %d with error: %+v\n", redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
-  log.Printf("Sucessfully update executedAt for redeemBlock %d\n", redeemBlock)
+  log.Printf("Sucessfully updated executedAt for redeemBlock %d\n", redeemBlock)
+}
+
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTokenPoolForRedeemBlockInfoRecordTx(
+    redeemBlock feed_attributes.RedeemBlock, tokenPool int64) {
+  _, err := redeemBlockInfoRecordExecutor.Tx.Exec(UPDATE_TOOKEN_POOL_COMMAND, redeemBlock, tokenPool)
+  if err != nil {
+    errorInfo := error_config.MatchError(err, "redeemBlock", redeemBlock, error_config.RedeemBlockInfoRecordLocation)
+    log.Printf("Failed to update tokenPool for redeemBlock %d with error: %+v\n", redeemBlock, err)
+    log.Panicln(errorInfo.Marshal())
+  }
+  log.Printf("Sucessfully updated tokenPool for redeemBlock %d\n", redeemBlock)
 }
 
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecordTx(redeemBlock feed_attributes.RedeemBlock) {
