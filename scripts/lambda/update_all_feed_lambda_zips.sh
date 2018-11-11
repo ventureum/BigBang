@@ -89,3 +89,5 @@ echo "updating get_redeem_block_info zip"
 
 echo "updating feed_redeem_milestone_points zip"
 .//update_lambda_zip.sh feed feed_redeem_milestone_points $1 $2
+
+
