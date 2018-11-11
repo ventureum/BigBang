@@ -3,9 +3,9 @@ package lambda_set_token_pool_config
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
-  "log"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
+  "log"
 )
 
 
@@ -41,7 +41,9 @@ func ProcessRequest(request Request, response *Response) {
 
   redeemBlockInfoRecordExecutor.UpdateTokenPoolForRedeemBlockInfoRecordTx(redeemBlock, tokenPool)
 
-  log.Printf("Sucessfully set token pool for redeemBlock %d\n",redeemBlock)
+  postgresBigBangClient.Commit()
+
+  log.Printf("Sucessfully set token pool for redeemBlock %d\n", redeemBlock)
 
   response.Ok = true
 }

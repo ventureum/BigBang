@@ -19,7 +19,7 @@ type Request struct {
 
 type ResponseContent struct {
   Actor                   string                           `json:"actor,required"`
-  TargetedMilestonePoints feed_attributes.MilestonePoint   `json:"milestonePointsRedeemTarget,required"`
+  TargetedMilestonePoints feed_attributes.MilestonePoint   `json:"targetedMilestonePoints,required"`
   ActualMilestonePoints   feed_attributes.MilestonePoint   `json:"actualMilestonePoints,required"`
   EstimatedTokens         int64                            `json:"estimatedTokens,required"`
   SubmittedAt             time.Time                        `json:"submittedAt,required"`

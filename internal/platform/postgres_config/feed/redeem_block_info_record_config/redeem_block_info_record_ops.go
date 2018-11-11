@@ -49,7 +49,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpsertRedeem
   log.Printf("Sucessfully upserted redeem block info record for redeemBlock %d\n", redeemBlockInfoRecord.RedeemBlock)
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExisting (redeemBlock feed_attributes.RedeemBlock) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) CheckRedeemBlockInfoExisting (redeemBlock feed_attributes.RedeemBlock) bool {
   var existing bool
   err := redeemBlockInfoRecordExecutor.C.Get(&existing, VERIFY_REDEEM_BLOCK_INFO_RECORD_EXISTING_COMMAND, redeemBlock)
   if err != nil {
@@ -57,7 +57,11 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeem
     log.Printf("Failed to verify redeem block info record existing for redeemBlock %d with error: %+v\n", redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
+  return existing
+}
 
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExisting (redeemBlock feed_attributes.RedeemBlock) {
+  existing := redeemBlockInfoRecordExecutor.CheckRedeemBlockInfoExisting(redeemBlock)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoReDeemBlockInfoRecordExisting,
@@ -151,7 +155,7 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) UpsertRedeem
   log.Printf("Sucessfully upserted redeem block info record for redeemBlock %d\n", redeemBlockInfoRecord.RedeemBlock)
 }
 
-func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExistingTx (redeemBlock feed_attributes.RedeemBlock) {
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) CheckRedeemBlockInfoExistingTx (redeemBlock feed_attributes.RedeemBlock) bool {
   var existing bool
   err := redeemBlockInfoRecordExecutor.Tx.Get(&existing, VERIFY_REDEEM_BLOCK_INFO_RECORD_EXISTING_COMMAND, redeemBlock)
   if err != nil {
@@ -159,7 +163,11 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeem
     log.Printf("Failed to verify redeem block info record existing for redeemBlock %d with error: %+v\n", redeemBlock, err)
     log.Panicln(errorInfo.Marshal())
   }
+  return existing
+}
 
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) VerifyRedeemBlockInfoExistingTx (redeemBlock feed_attributes.RedeemBlock) {
+  existing := redeemBlockInfoRecordExecutor.CheckRedeemBlockInfoExistingTx(redeemBlock)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoReDeemBlockInfoRecordExisting,

@@ -71,5 +71,23 @@
 #echo "generating get_tracked_wallet_addresses zip"
 #.//generate_lambda_zip.sh feed get_tracked_wallet_addresses $1 $2
 
-echo "generating get_batch_profiles zip"
-.//generate_lambda_zip.sh feed get_batch_profiles $1 $2
+#echo "generating get_batch_profiles zip"
+#.//generate_lambda_zip.sh feed get_batch_profiles $1 $2
+
+#echo "generating set_token_pool zip"
+#.//generate_lambda_zip.sh feed set_token_pool  $1 $2
+#
+#echo "generating set_next_redeem zip"
+#.//generate_lambda_zip.sh feed set_next_redeem  $1 $2
+#
+#echo "generating get_next_redeem zip"
+#.//generate_lambda_zip.sh feed get_next_redeem  $1 $2
+#
+#echo "generating get_redeem_history zip"
+#.//generate_lambda_zip.sh feed get_redeem_history  $1 $2
+#
+#echo "generating get_redeem_block_info zip"
+#.//generate_lambda_zip.sh feed get_redeem_block_info  $1 $2
+
+echo "generating feed_redeem_milestone_points zip"
+.//generate_lambda_zip.sh feed feed_redeem_milestone_points $1 $2

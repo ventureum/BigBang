@@ -29,6 +29,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/feed/get_next_redeem:go_default_test
 
 ./run_unit_test.sh  //test/lambda/feed/feed_update_post_rewards:go_default_test
+./run_unit_test.sh  //test/lambda/feed/feed_redeem_milestone_points:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/get_redeem_history:go_default_test
 
 ./run_unit_test.sh  //test/lambda/feed/set_token_pool:go_default_test
