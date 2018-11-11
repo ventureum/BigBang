@@ -5,6 +5,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/internal/app/feed_attributes"
+  "database/sql"
 )
 
 type ActorMilestonePointsRedeemHistoryRecordExecutor struct {
@@ -79,6 +80,33 @@ func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedee
     log.Panic(errorInfo.Marshal())
   }
   return &milestonePointsRedeemHistory
+}
+
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) GetActorMilestonePointsRedeemHistoryByCursor(
+    actor string, cursor string, limit int64) *[]feed_attributes.MilestonePointsRedeemHistory {
+  var redeems []feed_attributes.MilestonePointsRedeemHistory
+  var err error
+  if cursor != "" {
+    err = actorMilestonePointsRedeemHistoryRecordExecutor.C.Select(
+      &redeems,
+      PAGINATION_QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_COMMAND,
+      actor, cursor, limit)
+  } else {
+    err = actorMilestonePointsRedeemHistoryRecordExecutor.C.Select(
+      &redeems,
+      QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_WITH_LIMIT_COMMAND,
+      actor, limit)
+  }
+
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to get actor milestone points redeem history by cursor %s and limit %d for actor %s with error: %+v\n",
+      cursor, limit, actor, err)
+    errInfo.ErrorData["cursor"] = cursor
+    errInfo.ErrorData["limit"] = limit
+    log.Panicln(errInfo.Marshal())
+  }
+  return &redeems
 }
 
 func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) UpsertBatchActorMilestonePointsRedeemHistoryRecordByRedeemBlock(redeemBlock feed_attributes.RedeemBlock) {
@@ -162,4 +190,31 @@ func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedee
     log.Panicln(errorInfo.Marshal())
   }
   log.Printf("Sucessfully upserted batch actor milestone points redeem history records for redeemBlock %d\n", redeemBlock)
+}
+
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) GetActorMilestonePointsRedeemHistoryByCursorTx(
+    actor string, cursor string, limit int64) *[]feed_attributes.MilestonePointsRedeemHistory {
+  var redeems []feed_attributes.MilestonePointsRedeemHistory
+  var err error
+  if cursor != "" {
+    err = actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Select(
+      &redeems,
+      PAGINATION_QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_COMMAND,
+      actor, cursor, limit)
+  } else {
+    err = actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Select(
+      &redeems,
+      QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_WITH_LIMIT_COMMAND,
+      actor, limit)
+  }
+
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ActorMilestonePointsRedeemHistoryRecordLocation)
+    log.Printf("Failed to get actor milestone points redeem history by cursor %s and limit %d for actor %s with error: %+v\n",
+      cursor, limit, actor, err)
+    errInfo.ErrorData["cursor"] = cursor
+    errInfo.ErrorData["limit"] = limit
+    log.Panicln(errInfo.Marshal())
+  }
+  return &redeems
 }
