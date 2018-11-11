@@ -35,7 +35,7 @@ func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedee
   log.Printf("Sucessfully upserted actor milestone points redeem history record for actor %s\n", actorMilestonePointsRedeemHistoryRecord.Actor)
 }
 
-func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockExisting (redeemBlock int64) bool {
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockExisting (redeemBlock feed_attributes.RedeemBlock) bool {
   var existing bool
   err := actorMilestonePointsRedeemHistoryRecordExecutor.C.Get(&existing, VERIFY_REDEEM_BLOCK_EXISTING_COMMAND, redeemBlock)
   if err != nil {
@@ -47,7 +47,7 @@ func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedee
   return existing
 }
 
-func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockForActorExisting (actor string, redeemBlock int64) bool {
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockForActorExisting (actor string, redeemBlock feed_attributes.RedeemBlock) bool {
   var existing bool
   err := actorMilestonePointsRedeemHistoryRecordExecutor.C.Get(&existing, VERIFY_REDEEM_BLOCK_FOR_ACTOR_EXISTING_COMMAND, actor, redeemBlock)
   if err != nil {
@@ -135,7 +135,7 @@ func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedee
   log.Printf("Sucessfully upserted actor milestone points redeem history record for actor %s\n", actorMilestonePointsRedeemHistoryRecord.Actor)
 }
 
-func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockExistingTx (redeemBlock int64) bool {
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockExistingTx (redeemBlock feed_attributes.RedeemBlock) bool {
   var existing bool
   err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Get(&existing, VERIFY_REDEEM_BLOCK_EXISTING_COMMAND, redeemBlock)
   if err != nil {
@@ -147,7 +147,7 @@ func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedee
   return existing
 }
 
-func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockForActorExistingTx (actor string, redeemBlock int64) bool {
+func (actorMilestonePointsRedeemHistoryRecordExecutor *ActorMilestonePointsRedeemHistoryRecordExecutor) VerifyRedeemBlockForActorExistingTx (actor string, redeemBlock feed_attributes.RedeemBlock) bool {
   var existing bool
   err := actorMilestonePointsRedeemHistoryRecordExecutor.Tx.Get(&existing, VERIFY_REDEEM_BLOCK_FOR_ACTOR_EXISTING_COMMAND, actor, redeemBlock)
   if err != nil {

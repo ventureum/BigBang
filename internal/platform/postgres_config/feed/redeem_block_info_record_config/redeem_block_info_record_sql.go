@@ -4,9 +4,7 @@ package redeem_block_info_record_config
 const UPSERT_REDEEM_BLOCK_INFO_RECORD_COMMAND = `
 INSERT INTO redeem_block_info_records
 (
-  actor
   redeem_block,
-  targeted_milestone_points,
   total_enrolled_milestone_points,
   token_pool
 )
@@ -22,7 +20,7 @@ DO
     SET 
         total_enrolled_milestone_points = :total_enrolled_milestone_points,
         token_pool = :token_pool
-    WHERE redeem_block_info_records.actor = :actor;
+    WHERE redeem_block_info_records.redeem_block = :redeem_block;
 `
 
 const INIT_REDEEM_BLOCK_INFO_RECORD_COMMAND = `
@@ -61,7 +59,7 @@ const UPDATE_TOOKEN_POOL_COMMAND = `
  UPDATE redeem_block_info_records
     SET 
         token_pool = $2
-    WHERE redeem_block_info_records.redeem_block = $1;
+    WHERE redeem_block = $1;
 `
 
 const UPDATE_TOTAL_ENROLLED_MILESTONEPOINTS_COMMAND = `

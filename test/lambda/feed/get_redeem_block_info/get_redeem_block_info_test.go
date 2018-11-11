@@ -6,6 +6,7 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/cmd/lambda/feed/get_redeem_block_info/config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/test/constants"
 )
 
 
@@ -27,7 +28,7 @@ func TestHandler(t *testing.T) {
         RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
           RedeemBlock:                  NextRedeemBlock,
           TotalEnrolledMilestonePoints: 400,
-          TokenPool:                    10000,
+          TokenPool:                    test_constants.TokenPoolSize1,
           ExecutedAt:                   ExecutedAt,
         },
         Ok: true,

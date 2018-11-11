@@ -72,3 +72,20 @@ echo "updating get_tracked_wallet_addresses zip"
 echo "updating get_batch_profiles zip"
 .//update_lambda_zip.sh feed get_batch_profiles $1 $2
 
+echo "updating set_token_pool zip"
+.//update_lambda_zip.sh feed set_token_pool  $1 $2
+
+echo "updating set_next_redeem zip"
+.//update_lambda_zip.sh feed set_next_redeem  $1 $2
+
+echo "updating get_next_redeem zip"
+.//update_lambda_zip.sh feed get_next_redeem  $1 $2
+
+echo "updating get_redeem_history zip"
+.//update_lambda_zip.sh feed get_redeem_history  $1 $2
+
+echo "updating get_redeem_block_info zip"
+.//update_lambda_zip.sh feed get_redeem_block_info  $1 $2
+
+echo "updating feed_redeem_milestone_points zip"
+.//update_lambda_zip.sh feed feed_redeem_milestone_points $1 $2

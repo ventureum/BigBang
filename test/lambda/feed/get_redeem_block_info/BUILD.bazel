@@ -4,8 +4,7 @@ go_test(
     name = "go_default_test",
     srcs = ["get_redeem_block_info_test.go"],
     deps = [
-        "//cmd/lambda/feed/set_next_redeem/config:go_default_library",
-        "//cmd/lambda/feed/set_token_pool/config:go_default_library",
+        "//cmd/lambda/feed/get_redeem_block_info/config:go_default_library",
         "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//test/constants:go_default_library",

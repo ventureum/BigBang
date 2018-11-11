@@ -62,7 +62,7 @@ with updates as(
     FROM milestone_points_redeem_request_records, actor_rewards_info_records, redeem_block_info_records
     WHERE milestone_points_redeem_request_records.actor = actor_rewards_info_records.actor and redeem_block_info_records.redeem_block = $1 and
           (milestone_points_redeem_request_records.next_redeem_block = $1 or milestone_points_redeem_request_records.targeted_milestone_points = 9223372036854775807)
-  ) RETURNING actor as actor , consumed_milestone_points as consumed_milestone_points)
+  ) RETURNING actor as actor, consumed_milestone_points as consumed_milestone_points)
 UPDATE  actor_rewards_info_records
 SET
   milestone_points = actor_rewards_info_records.milestone_points - updates.consumed_milestone_points,
