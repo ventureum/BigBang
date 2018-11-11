@@ -57,6 +57,13 @@ const UPDATE_EXECUTED_AT_COMMAND = `
     WHERE redeem_block_info_records.redeem_block = $1;
 `
 
+const UPDATE_TOOKEN_POOL_COMMAND = `
+ UPDATE redeem_block_info_records
+    SET 
+        token_pool = $2
+    WHERE redeem_block_info_records.redeem_block = $1;
+`
+
 const UPDATE_TOTAL_ENROLLED_MILESTONEPOINTS_COMMAND = `
 with updates as (
     SELECT  

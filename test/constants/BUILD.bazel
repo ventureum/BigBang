@@ -12,6 +12,7 @@ go_library(
         "project.go",
         "proxy_votes.go",
         "rating_vote.go",
+        "token_pool.go",
         "wallet_address.go",
     ],
     importpath = "BigBang/test/constants",

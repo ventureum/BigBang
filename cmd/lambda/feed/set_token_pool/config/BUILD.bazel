@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["set_token_pool.go"],
+    importpath = "BigBang/cmd/lambda/feed/set_token_pool/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/app/feed_attributes:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/feed/redeem_block_info_record_config:go_default_library",
+    ],
+)
