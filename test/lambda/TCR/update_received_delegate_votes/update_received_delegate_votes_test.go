@@ -15,28 +15,6 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_update_received_delegate_votes_config.Request {
-        Actor:                  test_constants.Actor1,
-        ProjectId:              test_constants.ProjectId1,
-        ReceivedDelegateVotesDelta: 60,
-      },
-      response: lambda_update_received_delegate_votes_config.Response {
-        Ok: true,
-      },
-      err: nil,
-    },
-    {
-      request: lambda_update_received_delegate_votes_config.Request {
-        Actor:                  test_constants.Actor2,
-        ProjectId:              test_constants.ProjectId1,
-        ReceivedDelegateVotesDelta: 60,
-      },
-      response: lambda_update_received_delegate_votes_config.Response {
-        Ok: true,
-      },
-      err: nil,
-    },
-    {
-      request: lambda_update_received_delegate_votes_config.Request {
         Actor:                  test_constants.Actor3,
         ProjectId:              test_constants.ProjectId1,
         ReceivedDelegateVotesDelta: 60,
