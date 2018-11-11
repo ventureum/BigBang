@@ -32,13 +32,13 @@ func TestHandler(t *testing.T) {
       response: lambda_get_next_redeem_config.Response {
           NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
             Actor:                   test_constants.Actor1,
-            TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular2,
+            TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular1,
             ActualMilestonePoints:   100,
-            EstimatedTokens:         10000,
+            EstimatedTokens:         2500,
             SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
             RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
               RedeemBlock:                  nextRedeemBlock,
-              TotalEnrolledMilestonePoints: 100,
+              TotalEnrolledMilestonePoints: 400,
               TokenPool:                    10000,
               ExecutedAt:                   executedAt,
             },
@@ -54,13 +54,13 @@ func TestHandler(t *testing.T) {
       response: lambda_get_next_redeem_config.Response {
         NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
           Actor:                   test_constants.Actor2,
-          TargetedMilestonePoints: test_constants.RedeemMiletonePointsMax,
-          ActualMilestonePoints:   0,
-          EstimatedTokens:         0,
-          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+          TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular2,
+          ActualMilestonePoints:   100,
+          EstimatedTokens:         2500,
+          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor2).SubmittedAt,
           RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
             RedeemBlock:                  nextRedeemBlock,
-            TotalEnrolledMilestonePoints: 100,
+            TotalEnrolledMilestonePoints: 400,
             TokenPool:                    10000,
             ExecutedAt:                   executedAt,
           },
@@ -76,13 +76,79 @@ func TestHandler(t *testing.T) {
       response: lambda_get_next_redeem_config.Response {
         NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
           Actor:                   test_constants.Actor3,
-          TargetedMilestonePoints: test_constants.RedeemMiletonePointsZero,
-          ActualMilestonePoints:   0,
-          EstimatedTokens:         0,
-          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+          TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular3,
+          ActualMilestonePoints:   100,
+          EstimatedTokens:         1250,
+          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor3).SubmittedAt,
           RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
             RedeemBlock:                  nextRedeemBlock,
-            TotalEnrolledMilestonePoints: 100,
+            TotalEnrolledMilestonePoints: 400,
+            TokenPool:                    10000,
+            ExecutedAt:                   executedAt,
+          },
+        },
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_get_next_redeem_config.Request {
+        Actor: test_constants.Actor4,
+      },
+      response: lambda_get_next_redeem_config.Response {
+        NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
+          Actor:                   test_constants.Actor4,
+          TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular4,
+          ActualMilestonePoints:   100,
+          EstimatedTokens:         1250,
+          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor4).SubmittedAt,
+          RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
+            RedeemBlock:                  nextRedeemBlock,
+            TotalEnrolledMilestonePoints: 400,
+            TokenPool:                    10000,
+            ExecutedAt:                   executedAt,
+          },
+        },
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_get_next_redeem_config.Request {
+        Actor: test_constants.Actor5,
+      },
+      response: lambda_get_next_redeem_config.Response {
+        NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
+          Actor:                   test_constants.Actor5,
+          TargetedMilestonePoints: test_constants.RedeemMiletonePointsMax,
+          ActualMilestonePoints:   100,
+          EstimatedTokens:         2500,
+          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor5).SubmittedAt,
+          RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
+            RedeemBlock:                  nextRedeemBlock,
+            TotalEnrolledMilestonePoints: 400,
+            TokenPool:                    10000,
+            ExecutedAt:                   executedAt,
+          },
+        },
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_get_next_redeem_config.Request {
+        Actor: test_constants.Actor6,
+      },
+      response: lambda_get_next_redeem_config.Response {
+        NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
+          Actor:                   test_constants.Actor6,
+          TargetedMilestonePoints: test_constants.RedeemMiletonePointsZero,
+          ActualMilestonePoints:   100,
+          EstimatedTokens:         0,
+          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor6).SubmittedAt,
+          RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
+            RedeemBlock:                  nextRedeemBlock,
+            TotalEnrolledMilestonePoints: 400,
             TokenPool:                    10000,
             ExecutedAt:                   executedAt,
           },
@@ -102,9 +168,10 @@ func TestHandler(t *testing.T) {
     assert.Equal(t, test.response.NextRedeem.TargetedMilestonePoints, result.NextRedeem.TargetedMilestonePoints)
     assert.Equal(t, test.response.NextRedeem.ActualMilestonePoints, result.NextRedeem.ActualMilestonePoints)
     assert.Equal(t, test.response.NextRedeem.EstimatedTokens, result.NextRedeem.EstimatedTokens)
-    assert.Equal(t, test.response.NextRedeem.SubmittedAt, result.NextRedeem.SubmittedAt)
+    assert.Equal(t, test.response.NextRedeem.SubmittedAt.Unix(), result.NextRedeem.SubmittedAt.Unix())
     assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.TokenPool, result.NextRedeem.RedeemBlockInfo.TokenPool)
     assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.RedeemBlock, result.NextRedeem.RedeemBlockInfo.RedeemBlock)
     assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.TotalEnrolledMilestonePoints, result.NextRedeem.RedeemBlockInfo.TotalEnrolledMilestonePoints)
+    assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.ExecutedAt.Unix(), result.NextRedeem.RedeemBlockInfo.ExecutedAt.Unix())
   }
 }

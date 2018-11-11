@@ -29,7 +29,7 @@ func TestHandler(t *testing.T) {
           RewardsInfo: &feed_attributes.RewardsInfo{
             Fuel: 80,
             Reputation: 100,
-            MilestonePoints: 0,
+            MilestonePoints: 100,
           },
           PostVoteCountInfo: &feed_attributes.VoteCountInfo{
             DownVoteCount: 1,
@@ -60,7 +60,7 @@ func TestHandler(t *testing.T) {
           RewardsInfo: &feed_attributes.RewardsInfo{
             Fuel: 80,
             Reputation: 100,
-            MilestonePoints: 0,
+            MilestonePoints: 100,
           },
           PostVoteCountInfo: &feed_attributes.VoteCountInfo{
             DownVoteCount: 1,
@@ -91,7 +91,7 @@ func TestHandler(t *testing.T) {
           RewardsInfo: &feed_attributes.RewardsInfo{
             Fuel: 63,
             Reputation: 100,
-            MilestonePoints: 0,
+            MilestonePoints: 100,
           },
           PostVoteCountInfo: &feed_attributes.VoteCountInfo{
             DownVoteCount: 1,

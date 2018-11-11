@@ -3,7 +3,8 @@ package actor_milestone_points_redeem_history_record_config
 
 const UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND = `
 INSERT INTO actor_milestone_points_redeem_history_records
-(
+(   
+    id,
     actor,
     redeem_block,
     token_pool,
@@ -17,6 +18,7 @@ INSERT INTO actor_milestone_points_redeem_history_records
 )
 VALUES 
 (
+    :id,
     :actor,
     :redeem_block,
     :token_pool,
@@ -46,7 +48,7 @@ const UPSERT_BATCH_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORDS_BY_REDEEM_BLOCK
 with updates as(
   INSERT INTO actor_milestone_points_redeem_history_records(
     SELECT
-      gen_random_uuid() as uuid,
+      concat(milestone_points_redeem_request_records.next_redeem_block::text, ':', milestone_points_redeem_request_records.actor) as id,
       milestone_points_redeem_request_records.actor as actor,
       milestone_points_redeem_request_records.next_redeem_block as redeem_block,
       redeem_block_info_records.token_pool as token_pool,
@@ -75,4 +77,22 @@ select exists(select 1 from actor_milestone_points_redeem_history_records where 
 
 const VERIFY_REDEEM_BLOCK_FOR_ACTOR_EXISTING_COMMAND = `
 select exists(select 1 from actor_milestone_points_redeem_history_records where actor = $1 and redeem_block = $2);
+`
+
+const PAGINATION_QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_COMMAND = `
+SELECT actor, redeem_block, token_pool, total_enrolled_milestone_points,  targeted_milestone_points, actual_milestone_points, 
+consumed_milestone_points, redeemed_tokens, submitted_at, executed_at
+FROM actor_milestone_points_redeem_history_records
+WHERE actor = $1 and id <= $2 
+ORDER BY id DESC
+LIMIT $3
+`
+
+const QUERY_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_WITH_LIMIT_COMMAND = `
+SELECT actor, redeem_block, token_pool, total_enrolled_milestone_points, targeted_milestone_points, actual_milestone_points, 
+consumed_milestone_points, redeemed_tokens, submitted_at, executed_at
+FROM actor_milestone_points_redeem_history_records
+WHERE actor = $1
+ORDER BY id DESC
+LIMIT $2;
 `

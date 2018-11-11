@@ -1,10 +1,14 @@
 package feed_attributes
 
-import "time"
+import (
+  "time"
+  "fmt"
+  "BigBang/internal/pkg/utils"
+)
 
 type MilestonePointsRedeemHistory struct {
   Actor           string                         `json:"actor" db:"actor"`
-  RedeemBlock  int64     `json:"redeemBlock" db:"redeem_block"`
+  RedeemBlock  RedeemBlock     `json:"redeemBlock" db:"redeem_block"`
   TokenPool  int64     `json:"tokenPool" db:"token_pool"`
   TotalEnrolledMilestonePoints MilestonePoint `json:"totalEnrolledMilestonePoints" db:"total_enrolled_milestone_points"`
   TargetedMilestonePoints MilestonePoint `json:"targetedMilestonePoints" db:"targeted_milestone_points"`
@@ -13,4 +17,10 @@ type MilestonePointsRedeemHistory struct {
   RedeemedTokens int64    `json:"redeemedTokens" db:"redeemed_tokens"`
   SubmittedAt time.Time   `json:"submittedAt" db:"submitted_at"`
   ExecutedAt  time.Time   `json:"executedAt" db:"executed_at"`
+}
+
+
+func (milestonePointsRedeemHistory MilestonePointsRedeemHistory) GenerateRecordID() string {
+  idStr := fmt.Sprintf("%d:%s", milestonePointsRedeemHistory.RedeemBlock, milestonePointsRedeemHistory.Actor)
+  return utils.Base64EncodeStr(idStr)
 }

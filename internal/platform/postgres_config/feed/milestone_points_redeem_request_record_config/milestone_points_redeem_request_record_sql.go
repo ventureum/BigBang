@@ -29,7 +29,7 @@ WHERE actor = $1;
 `
 
 const QUERY_MILESTONE_POINTS_REDEEM_REQUEST_COMMAND = `
-SELECT actor, next_redeem_block, targeted_milestone_points FROM milestone_points_redeem_request_records
+SELECT actor, next_redeem_block, targeted_milestone_points, updated_at FROM milestone_points_redeem_request_records
 WHERE actor = $1;
 `
 

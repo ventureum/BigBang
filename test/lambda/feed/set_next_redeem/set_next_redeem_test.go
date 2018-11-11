@@ -26,7 +26,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor1,
+        Actor: test_constants.Actor2,
         MilestonePoints: test_constants.RedeemMiletonePointsRegular2,
       },
       response: lambda_set_next_redeem_config.Response {
@@ -36,7 +36,27 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor2,
+        Actor: test_constants.Actor3,
+        MilestonePoints: test_constants.RedeemMiletonePointsRegular3,
+      },
+      response: lambda_set_next_redeem_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_set_next_redeem_config.Request {
+        Actor: test_constants.Actor4,
+        MilestonePoints: test_constants.RedeemMiletonePointsRegular4,
+      },
+      response: lambda_set_next_redeem_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_set_next_redeem_config.Request {
+        Actor: test_constants.Actor5,
         MilestonePoints: test_constants.RedeemMiletonePointsMax,
       },
       response: lambda_set_next_redeem_config.Response {
@@ -46,7 +66,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor3,
+        Actor: test_constants.Actor6,
         MilestonePoints: test_constants.RedeemMiletonePointsZero,
       },
       response: lambda_set_next_redeem_config.Response {
@@ -56,7 +76,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor3,
+        Actor: test_constants.Actor7,
         MilestonePoints: test_constants.RedeemMiletonePointsNegative,
       },
       response: lambda_set_next_redeem_config.Response {
@@ -64,7 +84,7 @@ func TestHandler(t *testing.T) {
         Message: &error_config.ErrorInfo{
           ErrorCode: error_config.InvalidMilestonePoints,
           ErrorData: map[string]interface{} {
-            "actor": test_constants.Actor3,
+            "actor": test_constants.Actor7,
             "milestonePoints": float64(test_constants.RedeemMiletonePointsNegative),
           },
           ErrorLocation: error_config.MilestonePointsRedeemRequestRecordLocation,

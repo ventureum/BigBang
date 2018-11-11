@@ -3,11 +3,13 @@ package actor_milestone_points_redeem_history_record_config
 import (
   "time"
   "BigBang/internal/app/feed_attributes"
+  "fmt"
 )
 
 type ActorMilestonePointsRedeemHistoryRecord struct {
-  Actor           string                         `db:"actor"`
-  RedeemBlock  int64     `db:"redeem_block"`
+  ID           string   `db:"id"`
+  Actor        string   `db:"actor"`
+  RedeemBlock  feed_attributes.RedeemBlock     `db:"redeem_block"`
   TokenPool  int64     `db:"token_pool"`
   TotalEnrolledMilestonePoints feed_attributes.MilestonePoint `db:"total_enrolled_milestone_points"`
   TargetedMilestonePoints feed_attributes.MilestonePoint `db:"targeted_milestone_points"`
@@ -18,4 +20,10 @@ type ActorMilestonePointsRedeemHistoryRecord struct {
   ExecutedAt  time.Time   `db:"executed_at"`
   CreatedAt   time.Time   `db:"created_at"`
   UpdatedAt   time.Time   `db:"updated_at"`
+}
+
+
+func (actorMilestonePointsRedeemHistoryRecord *ActorMilestonePointsRedeemHistoryRecord) GenerateID() {
+  idStr := fmt.Sprintf("%d:%s", actorMilestonePointsRedeemHistoryRecord.RedeemBlock, actorMilestonePointsRedeemHistoryRecord.Actor)
+  actorMilestonePointsRedeemHistoryRecord.ID = idStr
 }
