@@ -6,6 +6,7 @@ import (
   "BigBang/test/constants"
   "BigBang/cmd/lambda/feed/get_actor_private_key/config"
   "strings"
+  "BigBang/internal/pkg/error_config"
 )
 
 func TestHandler(t *testing.T) {
@@ -29,8 +30,14 @@ func TestHandler(t *testing.T) {
         Actor: test_constants.Actor6,
       },
       response: lambda_get_actor_private_key_config.Response {
-        PrivateKey: "",
-        Ok: true,
+        Ok: false,
+        Message: &error_config.ErrorInfo{
+          ErrorCode: error_config.NoPrivateKeyExistingForActor,
+          ErrorData: map[string]interface{} {
+           "actor": test_constants.Actor6,
+          },
+          ErrorLocation: error_config.ProfileAccountLocation,
+        },
       },
       err: nil,
     },

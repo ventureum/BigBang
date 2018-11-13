@@ -8,6 +8,7 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
   "log"
   "BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config"
+  "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
 )
 
 
@@ -38,6 +39,7 @@ func ProcessRequest(request Request, response *Response) {
   projectId := request.ProjectId
   proxyVotingList := request.ProxyVotingList
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
+  actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
   principalProxyVotesExecutor := principal_proxy_votes_config.PrincipalProxyVotesExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
@@ -85,9 +87,32 @@ func ProcessRequest(request Request, response *Response) {
     log.Panicln(errorInfo.Marshal())
   }
 
+  existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExistingTx(actor, projectId)
+
+  if !existing {
+    actorDelegateVotesAccountExecutor.UpsertActorDelegateVotesAccountRecordTx(&actor_delegate_votes_account_config.ActorDelegateVotesAccountRecord{
+      Actor:                  actor,
+      ProjectId:              projectId,
+      AvailableDelegateVotes: 0,
+      ReceivedDelegateVotes:  0,
+    })
+  }
+
   for _, proxyVoting := range proxyVotingList {
     votesInPercent := proxyVoting.VotesInPercent
     proxy := proxyVoting.Proxy
+
+    existing = actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExistingTx(proxy, projectId)
+
+    if !existing {
+      actorDelegateVotesAccountExecutor.UpsertActorDelegateVotesAccountRecordTx(&actor_delegate_votes_account_config.ActorDelegateVotesAccountRecord{
+        Actor:                  proxyVoting.Proxy,
+        ProjectId:              projectId,
+        AvailableDelegateVotes: 0,
+        ReceivedDelegateVotes:  0,
+      })
+    }
+
     if votesInPercent  > 0 {
       principalProxyVotesRecord := &principal_proxy_votes_config.PrincipalProxyVotesRecord{
         Actor:          actor,

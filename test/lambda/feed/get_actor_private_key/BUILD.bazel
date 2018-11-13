@@ -5,6 +5,7 @@ go_test(
     srcs = ["get_actor_private_key_test.go"],
     deps = [
         "//cmd/lambda/feed/get_actor_private_key/config:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
         "//test/constants:go_default_library",
         "//vendor/github.com/stretchr/testify/assert:go_default_library",
     ],

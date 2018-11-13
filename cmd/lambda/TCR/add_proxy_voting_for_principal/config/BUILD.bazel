@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//internal/app/tcr_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/actor_delegate_votes_account_config:go_default_library",
         "//internal/platform/postgres_config/TCR/principal_proxy_votes_config:go_default_library",
         "//internal/platform/postgres_config/TCR/proxy_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
