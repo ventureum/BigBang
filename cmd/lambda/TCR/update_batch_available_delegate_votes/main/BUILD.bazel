@@ -6,7 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/TCR/update_batch_available_delegate_votes/main",
     visibility = ["//visibility:private"],
     deps = [
-        "//cmd/lambda/TCR/update_available_delegate_votes/config:go_default_library",
+        "//cmd/lambda/TCR/update_batch_available_delegate_votes/config:go_default_library",
         "//vendor/github.com/aws/aws-lambda-go/lambda:go_default_library",
     ],
 )

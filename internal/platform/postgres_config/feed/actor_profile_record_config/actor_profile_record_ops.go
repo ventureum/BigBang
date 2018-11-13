@@ -79,6 +79,18 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorPrivateKey
     log.Printf("Failed to get actor private key for actor %s with error: %+v\n", actor, err)
     log.Panicln(errInfo.Marshal())
   }
+
+  if privateKey == "" {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoPrivateKeyExistingForActor,
+      ErrorData: map[string]interface{} {
+        "actor": actor,
+      },
+      ErrorLocation: error_config.ProfileAccountLocation,
+    }
+    log.Printf("No private key existing for actor %s", actor)
+    log.Panicln(errorInfo.Marshal())
+  }
   return privateKey
 }
 
@@ -138,6 +150,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
     log.Panicln(errorInfo.Marshal())
   }
 }
+
 
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorType(actor string, actorType string) bool {
   var match bool
