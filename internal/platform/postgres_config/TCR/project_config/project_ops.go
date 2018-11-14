@@ -127,7 +127,7 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursor(cursor string,
 }
 
 func (projectExecutor *ProjectExecutor) AddRatingAndWeightForProject(projectId string, deltaRating int64, deltaWeight int64) {
-  _, err := projectExecutor.C.Exec(ADD_RATING_AND_WEIGHT_FOR_PROJECT_COMMAND, projectId, deltaRating, deltaWeight)
+  _, err := projectExecutor.C.Exec(ADD_RATING_AND_WEIGHT_FOR_PROJECT_COMMAND, projectId, deltaRating * deltaWeight, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
@@ -291,7 +291,7 @@ func (projectExecutor *ProjectExecutor) GetProjectRecordsByCursorTx(cursor strin
 }
 
 func (projectExecutor *ProjectExecutor) AddRatingAndWeightForProjectTx(projectId string, deltaRating int64, deltaWeight int64) {
-  _, err := projectExecutor.Tx.Exec(ADD_RATING_AND_WEIGHT_FOR_PROJECT_COMMAND, projectId, deltaRating, deltaWeight)
+  _, err := projectExecutor.Tx.Exec(ADD_RATING_AND_WEIGHT_FOR_PROJECT_COMMAND, projectId, deltaRating * deltaWeight, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
