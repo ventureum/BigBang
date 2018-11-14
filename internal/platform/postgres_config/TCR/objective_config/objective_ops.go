@@ -155,7 +155,7 @@ func (objectiveExecutor *ObjectiveExecutor) CheckObjectiveRecordExisting (
 func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeightForObjective(
   projectId string, milestoneId int64, objectiveId int64, deltaRating int64, deltaWeight int64) {
   _, err := objectiveExecutor.C.Exec(
-    ADD_RATING_AND_WEIGHT_FOR_OBJECTIVE_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
+    ADD_RATING_AND_WEIGHT_FOR_OBJECTIVE_COMMAND, projectId, milestoneId, objectiveId, deltaRating * deltaWeight, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)
@@ -305,7 +305,7 @@ func (objectiveExecutor *ObjectiveExecutor) CheckObjectiveRecordExistingTx (
 func (objectiveExecutor *ObjectiveExecutor) AddRatingAndWeightForObjectiveTx(
     projectId string, milestoneId int64, objectiveId int64, deltaRating int64, deltaWeight int64) {
   _, err := objectiveExecutor.Tx.Exec(
-    ADD_RATING_AND_WEIGHT_FOR_OBJECTIVE_COMMAND, projectId, milestoneId, objectiveId, deltaRating, deltaWeight)
+    ADD_RATING_AND_WEIGHT_FOR_OBJECTIVE_COMMAND, projectId, milestoneId, objectiveId, deltaRating * deltaWeight, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "objectiveId", objectiveId, error_config.ObjectiveRecordLocation)

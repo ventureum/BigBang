@@ -175,7 +175,7 @@ func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectives(projectId stri
 func (milestoneExecutor *MilestoneExecutor) AddRatingAndWeightForMilestone(
     projectId string, milestoneId int64, deltaRating int64, deltaWeight int64) {
   _, err := milestoneExecutor.C.Exec(
-    ADD_RATING_AND_WEIGHT_FOR_MILESTONE_COMMAND, projectId, milestoneId, deltaRating, deltaWeight)
+    ADD_RATING_AND_WEIGHT_FOR_MILESTONE_COMMAND, projectId, milestoneId, deltaRating * deltaWeight, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.ObjectiveRecordLocation)
@@ -370,7 +370,7 @@ func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectivesTx(projectId st
 func (milestoneExecutor *MilestoneExecutor) AddRatingAndWeightForMilestoneTx(
     projectId string, milestoneId int64, deltaRating int64, deltaWeight int64) {
   _, err := milestoneExecutor.Tx.Exec(
-    ADD_RATING_AND_WEIGHT_FOR_MILESTONE_COMMAND, projectId, milestoneId, deltaRating, deltaWeight)
+    ADD_RATING_AND_WEIGHT_FOR_MILESTONE_COMMAND, projectId, milestoneId, deltaRating * deltaWeight, deltaWeight)
 
   if err != nil {
     errorInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.ObjectiveRecordLocation)
