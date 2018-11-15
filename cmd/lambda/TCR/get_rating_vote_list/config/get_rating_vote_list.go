@@ -19,10 +19,13 @@ type Request struct {
   Cursor string `json:"cursor,omitempty"`
 }
 
-
-type Response struct {
+type ResponseData struct {
   ObjectiveVotesInfo *tcr_attributes.ObjectiveVotesInfo `json:"objectiveVotesInfo,omitempty"`
   NextCursor string                              `json:"nextCursor,omitempty"`
+}
+
+type Response struct {
+  ResponseData *ResponseData`json:"responseData,omitempty"`
   Ok bool                                        `json:"ok"`
   Message *error_config.ErrorInfo                `json:"message,omitempty"`
 }
@@ -32,8 +35,7 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.ObjectiveVotesInfo = nil
-      response.NextCursor = ""
+      response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
     postgresBigBangClient.Close()
@@ -58,11 +60,13 @@ func ProcessRequest(request Request, response *Response) {
   ratingVoteRecords := ratingVoteExecutor.GetRatingVoteRecordsByCursor(
     projectId, milestoneId, objectiveId, cursor, limit + 1)
 
-  response.NextCursor = ""
-  response.ObjectiveVotesInfo = &tcr_attributes.ObjectiveVotesInfo{
-    ProjectId: projectId,
-    MilestoneId: milestoneId,
-    ObjectiveId: objectiveId,
+  response.ResponseData = &ResponseData{
+    NextCursor: "",
+    ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
+      ProjectId: projectId,
+      MilestoneId: milestoneId,
+      ObjectiveId: objectiveId,
+    },
   }
 
   var ratingVotes []tcr_attributes.RatingVote
@@ -76,12 +80,12 @@ func ProcessRequest(request Request, response *Response) {
       }
       ratingVotes = append(ratingVotes, ratingVote)
     } else {
-      response.NextCursor = ratingVoteRecord.EncodeID()
+      response.ResponseData.NextCursor = ratingVoteRecord.EncodeID()
     }
   }
 
 
-  response.ObjectiveVotesInfo.RatingVotes = &ratingVotes
+  response.ResponseData.ObjectiveVotesInfo.RatingVotes = &ratingVotes
 
   if cursorStr == "" {
     log.Printf("ObjectiveVotesInfo is loaded for first query with ProjectId %s, MilestoneId %d, ObjectiveId %d and limit %d\n",

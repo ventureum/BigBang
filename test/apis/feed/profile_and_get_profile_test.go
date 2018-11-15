@@ -11,7 +11,7 @@ import (
 )
 
 func TestProfileAndGetProfile(t *testing.T) {
-  requestProfile := profileConfig.Request{
+  requestProfile := profileConfig.Request {
     Actor: Actor001,
     UserType: string(feed_attributes.USER_ACTOR_TYPE),
     Username: UserName001,

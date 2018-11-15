@@ -34,12 +34,12 @@ type ResponseContent struct {
   DeltaMilestonePoints int64 `json:"deltaMilestonePoints"`
   WithdrawableMPs int64 `json:"withdrawableMPs"`
   RepliesLength int64 `json:"repliesLength"`
+  PostVoteCountInfo *feed_attributes.VoteCountInfo `json:"postVoteCountInfo,omitempty"`
+  RequestorVoteCountInfo *feed_attributes.VoteCountInfo `json:"requestorVoteCountInfo,omitempty"`
 }
 
 type Response struct {
   Post *ResponseContent `json:"post,omitempty"`
-  PostVoteCountInfo *feed_attributes.VoteCountInfo `json:"postVoteCountInfo,omitempty"`
-  RequestorVoteCountInfo *feed_attributes.VoteCountInfo `json:"requestorVoteCountInfo,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
@@ -60,8 +60,6 @@ func ProcessRequest(request Request, response *Response) {
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Post = nil
-      response.PostVoteCountInfo = nil
-      response.RequestorVoteCountInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
     postgresBigBangClient.Close()
@@ -101,7 +99,7 @@ func ProcessRequest(request Request, response *Response) {
   log.Printf("Post Content is loaded for postHash %s\n", postHash)
 
   postVotesCounterRecord := postVotesCounterRecordExecutor.GetPostVotesCountersRecordByPostHash(postHash)
-  response.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
+  response.Post.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
     DownVoteCount:  postVotesCounterRecord.DownVoteCount,
     UpVoteCount:    postVotesCounterRecord.UpVoteCount,
     TotalVoteCount: postVotesCounterRecord.TotalVoteCount,
@@ -111,7 +109,7 @@ func ProcessRequest(request Request, response *Response) {
 
   if requestor != "" {
     actorVotesCountersRecord := actorVotesCountersRecordExecutor.GetActorVotesCountersRecordByPostHashAndActor(postHash, requestor)
-    response.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
+    response.Post.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
       DownVoteCount:  actorVotesCountersRecord.DownVoteCount,
       UpVoteCount:    actorVotesCountersRecord.UpVoteCount,
       TotalVoteCount: actorVotesCountersRecord.TotalVoteCount,

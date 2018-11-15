@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-  lambda.Start(config.Handler)
+  lambda.Start(lambda_delete_proxy_config.Handler)
 }

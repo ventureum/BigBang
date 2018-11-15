@@ -17,9 +17,13 @@ type Request struct {
   Cursor string `json:"cursor,omitempty"`
 }
 
-type Response struct {
+type ResponseData struct {
   Redeems *[]feed_attributes.MilestonePointsRedeemHistory `json:"redeems,omitempty"`
   NextCursor string `json:"nextCursor,omitempty"`
+}
+
+type Response struct {
+  ResponseData *ResponseData`json:"responseData,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
@@ -28,8 +32,7 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.Redeems = nil
-      response.NextCursor = ""
+      response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
     postgresBigBangClient.Close()
@@ -53,18 +56,21 @@ func ProcessRequest(request Request, response *Response) {
   actorMilestonePointsRedeemHistory := actorMilestonePointsRedeemHistoryRecordExecutor.GetActorMilestonePointsRedeemHistoryByCursor(
     actor, cursor, limit + 1)
 
-  response.NextCursor = ""
+  response.ResponseData = &ResponseData{
+    NextCursor: "",
+    Redeems: nil,
+  }
 
   var redeems []feed_attributes.MilestonePointsRedeemHistory
   for index, redeem := range *actorMilestonePointsRedeemHistory {
     if index < int(limit) {
       redeems = append(redeems, redeem)
     } else {
-      response.NextCursor = redeem.GenerateRecordID()
+      response.ResponseData.NextCursor = redeem.GenerateRecordID()
     }
   }
 
-  response.Redeems = &redeems
+  response.ResponseData.Redeems = &redeems
 
   if cursorStr == "" {
     log.Printf("ActorMilestonePointsRedeemHistory is loaded for first query with actor %s and limit %d\n",

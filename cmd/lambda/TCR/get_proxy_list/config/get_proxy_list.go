@@ -1,4 +1,4 @@
-package config
+package lambda_get_proxy_list_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
@@ -14,9 +14,13 @@ type Request struct {
   Cursor string `json:"cursor,omitempty"`
 }
 
-type Response struct {
+type ResponseData struct {
   Proxies *[]string `json:"proxies,omitempty"`
   NextCursor string `json:"nextCursor,omitempty"`
+}
+
+type Response struct {
+  ResponseData *ResponseData `json:"responseData,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
@@ -25,8 +29,7 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.Proxies = nil
-      response.NextCursor = ""
+      response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
     postgresBigBangClient.Close()
@@ -44,18 +47,21 @@ func ProcessRequest(request Request, response *Response) {
 
   proxyRecords := proxyExecutor.GetListOfProxyByCursor(cursor, limit + 1)
 
-  response.NextCursor = ""
+  response.ResponseData = &ResponseData{
+    NextCursor: "",
+    Proxies: nil,
+  }
 
   var proxyUUIDList []string
   for index, proxyRecord := range *proxyRecords {
     if index < int(limit) {
       proxyUUIDList = append(proxyUUIDList, proxyRecord.UUID)
     } else {
-      response.NextCursor = utils.Base64EncodeInt64(proxyRecord.ID)
+      response.ResponseData.NextCursor = utils.Base64EncodeInt64(proxyRecord.ID)
     }
   }
 
-  response.Proxies = &proxyUUIDList
+  response.ResponseData.Proxies = &proxyUUIDList
 
   if cursorStr == "" {
     log.Printf("proxyUUIDList  is loaded for first query with limit %d\n", limit)
