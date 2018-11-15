@@ -2,6 +2,7 @@
 bazel test \
     --test_output=errors  \
     --sandbox_debug  \
+    --action_env="DEV_ENV" \
     --action_env="DB_USER" \
     --action_env="DB_PASSWORD" \
     --action_env="DB_HOST" \

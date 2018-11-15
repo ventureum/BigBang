@@ -16,9 +16,13 @@ type Request struct {
   Cursor string `json:"cursor,omitempty"`
 }
 
-type Response struct {
+type ResponseData struct{
   Projects *[]tcr_attributes.Project`json:"projects,omitempty"`
   NextCursor string `json:"nextCursor,omitempty"`
+}
+
+type Response struct {
+  ResponseData *ResponseData`json:"responseData,omitempty"`
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
@@ -27,8 +31,7 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.Projects = nil
-      response.NextCursor = ""
+      response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
     postgresBigBangClient.Close()
@@ -46,7 +49,10 @@ func ProcessRequest(request Request, response *Response) {
 
   projectRecords := projectExecutor.GetProjectRecordsByCursor(cursor, limit + 1)
 
-  response.NextCursor = ""
+  response.ResponseData = &ResponseData{
+    NextCursor: "",
+    Projects: nil,
+  }
 
   var projects []tcr_attributes.Project
   for index, projectRecord := range *projectRecords {
@@ -54,11 +60,11 @@ func ProcessRequest(request Request, response *Response) {
       project := common.ConstructProjectFromProjectRecord(&projectRecord, postgresBigBangClient)
       projects = append(projects, *project)
     } else {
-      response.NextCursor = utils.Base64EncodeStr(projectRecord.ID)
+      response.ResponseData.NextCursor = utils.Base64EncodeStr(projectRecord.ID)
     }
   }
 
-  response.Projects = &projects
+  response.ResponseData.Projects = &projects
   if cursorStr == "" {
     log.Printf("ProjectRecords is loaded for first query with limit %d\n", limit)
   } else {

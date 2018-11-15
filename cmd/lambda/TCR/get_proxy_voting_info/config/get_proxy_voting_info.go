@@ -20,10 +20,15 @@ type Request struct {
   Cursor string `json:"cursor,omitempty"`
 }
 
-
-type Response struct {
+type ResponseData struct {
   ProxyVotingInfo *tcr_attributes.ProxyVotingInfo `json:"proxyVotingInfo,omitempty"`
   NextCursor      string                          `json:"nextCursor,omitempty"`
+  Ok              bool                            `json:"ok"`
+  Message         *error_config.ErrorInfo         `json:"message,omitempty"`
+}
+
+type Response struct {
+  ResponseData *ResponseData `json:"responseData,omitempty"`
   Ok              bool                            `json:"ok"`
   Message         *error_config.ErrorInfo         `json:"message,omitempty"`
 }
@@ -33,8 +38,7 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient()
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
-      response.ProxyVotingInfo = nil
-      response.NextCursor = ""
+      response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
     }
     postgresBigBangClient.Close()
@@ -62,12 +66,14 @@ func ProcessRequest(request Request, response *Response) {
   actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
   principalProxyVotesRecordList := principalProxyVotesExecutor.GetPrincipalProxyVotesRecordListByCursor(actor, projectId, cursor, limit + 1)
 
-  response.NextCursor = ""
-  response.ProxyVotingInfo = &tcr_attributes.ProxyVotingInfo{
-    Actor: actor,
-    ProjectId: projectId,
-    AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
-    ReceivedDelegateVotes: actorDelegateVotesAccount.ReceivedDelegateVotes,
+  response.ResponseData = &ResponseData{
+    NextCursor: "",
+    ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
+      Actor:                  actor,
+      ProjectId:              projectId,
+      AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
+      ReceivedDelegateVotes:  actorDelegateVotesAccount.ReceivedDelegateVotes,
+    },
   }
 
   var proxyVotesList []tcr_attributes.ProxyVoting
@@ -80,12 +86,12 @@ func ProcessRequest(request Request, response *Response) {
       }
       proxyVotesList = append(proxyVotesList, ratingVote)
     } else {
-      response.NextCursor = principalProxyVotesRecord.EncodeID()
+      response.ResponseData.NextCursor = principalProxyVotesRecord.EncodeID()
     }
   }
 
 
-  response.ProxyVotingInfo.ProxyVotingList = &proxyVotesList
+  response.ResponseData.ProxyVotingInfo.ProxyVotingList = &proxyVotesList
 
   if cursorStr == "" {
     log.Printf("ProxyVotingInfo is loaded for first query with Actor %s, ProjectId %s and limit %d\n",

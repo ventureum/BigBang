@@ -23,14 +23,16 @@ func TestHandler(t *testing.T) {
         Limit: 0,
       },
       response: lambda_get_rating_vote_list_config.Response {
-        ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
-          ProjectId: test_constants.ProjectId1,
-          MilestoneId: 1,
-          ObjectiveId: 1,
-          RatingVotes:  &[]tcr_attributes.RatingVote{},
+        ResponseData: &lambda_get_rating_vote_list_config.ResponseData{
+          ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
+            ProjectId:   test_constants.ProjectId1,
+            MilestoneId: 1,
+            ObjectiveId: 1,
+            RatingVotes: &[]tcr_attributes.RatingVote{},
+          },
+          NextCursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
+            test_constants.ProjectId1, 1, 1, test_constants.Actor6, test_constants.RatingVoteBlockTimestamp5),
         },
-        NextCursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
-          test_constants.ProjectId1, 1, 1, test_constants.Actor6, test_constants.RatingVoteBlockTimestamp5),
         Ok: true,
       },
       err: nil,
@@ -43,27 +45,29 @@ func TestHandler(t *testing.T) {
         Limit: 2,
       },
       response: lambda_get_rating_vote_list_config.Response {
-        ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
-          ProjectId:   test_constants.ProjectId1,
-          MilestoneId: 1,
-          ObjectiveId: 1,
-          RatingVotes: &[]tcr_attributes.RatingVote{
-            {
-              Voter:  test_constants.Actor6,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
-            },
-            {
-              Voter:  test_constants.Actor5,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
+        ResponseData: &lambda_get_rating_vote_list_config.ResponseData{
+          ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
+            ProjectId:   test_constants.ProjectId1,
+            MilestoneId: 1,
+            ObjectiveId: 1,
+            RatingVotes: &[]tcr_attributes.RatingVote{
+              {
+                Voter:          test_constants.Actor6,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
+              },
+              {
+                Voter:          test_constants.Actor5,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
+              },
             },
           },
+          NextCursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
+            test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
         },
-        NextCursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
-          test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
         Ok: true,
       },
       err: nil,
@@ -78,27 +82,29 @@ func TestHandler(t *testing.T) {
           test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
       },
       response: lambda_get_rating_vote_list_config.Response {
-        ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
-          ProjectId:  test_constants.ProjectId1,
-          MilestoneId: 1,
-          ObjectiveId: 1,
-          RatingVotes: &[]tcr_attributes.RatingVote{
-            {
-              Voter:  test_constants.Actor4,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp4,
-            },
-            {
-              Voter:  test_constants.Actor3,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp3,
+        ResponseData: &lambda_get_rating_vote_list_config.ResponseData{
+          ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
+            ProjectId:   test_constants.ProjectId1,
+            MilestoneId: 1,
+            ObjectiveId: 1,
+            RatingVotes: &[]tcr_attributes.RatingVote{
+              {
+                Voter:          test_constants.Actor4,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp4,
+              },
+              {
+                Voter:          test_constants.Actor3,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp3,
+              },
             },
           },
+          NextCursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
+            test_constants.ProjectId1, 1, 1, test_constants.Actor2, test_constants.RatingVoteBlockTimestamp2),
         },
-        NextCursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
-          test_constants.ProjectId1, 1, 1, test_constants.Actor2, test_constants.RatingVoteBlockTimestamp2),
         Ok: true,
       },
       err: nil,
@@ -113,38 +119,40 @@ func TestHandler(t *testing.T) {
           test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
       },
       response: lambda_get_rating_vote_list_config.Response {
-        ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
-          ProjectId:   test_constants.ProjectId1,
-          MilestoneId: 1,
-          ObjectiveId: 1,
-          RatingVotes: &[]tcr_attributes.RatingVote{
-            {
-              Voter:  test_constants.Actor4,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp4,
-            },
-            {
-              Voter:  test_constants.Actor3,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp3,
-            },
-            {
-              Voter:  test_constants.Actor2,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
-            },
-            {
-              Voter:  test_constants.Actor1,
-              Rating: 20,
-              Weight: 30,
-              BlockTimestamp: test_constants.RatingVoteBlockTimestamp1,
+        ResponseData: &lambda_get_rating_vote_list_config.ResponseData{
+          ObjectiveVotesInfo: &tcr_attributes.ObjectiveVotesInfo{
+            ProjectId:   test_constants.ProjectId1,
+            MilestoneId: 1,
+            ObjectiveId: 1,
+            RatingVotes: &[]tcr_attributes.RatingVote{
+              {
+                Voter:          test_constants.Actor4,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp4,
+              },
+              {
+                Voter:          test_constants.Actor3,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp3,
+              },
+              {
+                Voter:          test_constants.Actor2,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
+              },
+              {
+                Voter:          test_constants.Actor1,
+                Rating:         20,
+                Weight:         30,
+                BlockTimestamp: test_constants.RatingVoteBlockTimestamp1,
+              },
             },
           },
+          NextCursor: "",
         },
-        NextCursor: "",
         Ok: true,
       },
       err: nil,
@@ -154,9 +162,9 @@ func TestHandler(t *testing.T) {
     result, err := lambda_get_rating_vote_list_config.Handler(test.request)
     assert.IsType(t, test.err, err)
     assert.Equal(t, test.response.Ok, result.Ok)
-    assert.Equal(t, test.response.NextCursor, result.NextCursor)
-    objVoteInfo := *result.ObjectiveVotesInfo
-    responseObjVoteInfo := *test.response.ObjectiveVotesInfo
+    assert.Equal(t, test.response.ResponseData.NextCursor, result.ResponseData.NextCursor)
+    objVoteInfo := *result.ResponseData.ObjectiveVotesInfo
+    responseObjVoteInfo := *test.response.ResponseData.ObjectiveVotesInfo
     assert.Equal(t, responseObjVoteInfo.ProjectId, objVoteInfo.ProjectId)
     assert.Equal(t, responseObjVoteInfo.MilestoneId, objVoteInfo.MilestoneId)
     assert.Equal(t, responseObjVoteInfo.ObjectiveId, objVoteInfo.ObjectiveId)

@@ -34,16 +34,16 @@ func TestHandler(t *testing.T) {
           DeltaMilestonePoints: 0,
           WithdrawableMPs: 0,
           RepliesLength: 0,
-        },
-        PostVoteCountInfo: &feed_attributes.VoteCountInfo{
-          DownVoteCount: 0,
-          UpVoteCount: 0,
-          TotalVoteCount: 0,
-        },
-        RequestorVoteCountInfo: &feed_attributes.VoteCountInfo{
-          DownVoteCount: 0,
-          UpVoteCount: 0,
-          TotalVoteCount: 0,
+          PostVoteCountInfo: &feed_attributes.VoteCountInfo{
+            DownVoteCount: 0,
+            UpVoteCount: 0,
+            TotalVoteCount: 0,
+          },
+          RequestorVoteCountInfo: &feed_attributes.VoteCountInfo{
+            DownVoteCount: 0,
+            UpVoteCount: 0,
+            TotalVoteCount: 0,
+          },
         },
         Ok: true,
       },
