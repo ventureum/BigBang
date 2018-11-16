@@ -23,8 +23,6 @@ type Request struct {
 type ResponseData struct {
   ProxyVotingInfo *tcr_attributes.ProxyVotingInfo `json:"proxyVotingInfo,omitempty"`
   NextCursor      string                          `json:"nextCursor,omitempty"`
-  Ok              bool                            `json:"ok"`
-  Message         *error_config.ErrorInfo         `json:"message,omitempty"`
 }
 
 type Response struct {
@@ -57,48 +55,62 @@ func ProcessRequest(request Request, response *Response) {
 
   principalProxyVotesExecutor := principal_proxy_votes_config.PrincipalProxyVotesExecutor{*postgresBigBangClient}
 
-  cursorStr := request.Cursor
-  var cursor string
-  if cursorStr != "" {
-    cursor = utils.Base64DecodeToString(cursorStr)
-  }
-
-  actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
-  principalProxyVotesRecordList := principalProxyVotesExecutor.GetPrincipalProxyVotesRecordListByCursor(actor, projectId, cursor, limit + 1)
-
-  response.ResponseData = &ResponseData{
-    NextCursor: "",
-    ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
-      Actor:                  actor,
-      ProjectId:              projectId,
-      AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
-      ReceivedDelegateVotes:  actorDelegateVotesAccount.ReceivedDelegateVotes,
-    },
-  }
-
-  var proxyVotesList []tcr_attributes.ProxyVoting
-  for index, principalProxyVotesRecord := range *principalProxyVotesRecordList {
-    if index < int(limit) {
-      ratingVote := tcr_attributes.ProxyVoting{
-        Proxy:          principalProxyVotesRecord.Proxy,
-        BlockTimestamp: principalProxyVotesRecord.BlockTimestamp,
-        VotesInPercent: principalProxyVotesRecord.VotesInPercent,
-      }
-      proxyVotesList = append(proxyVotesList, ratingVote)
-    } else {
-      response.ResponseData.NextCursor = principalProxyVotesRecord.EncodeID()
+  existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExisting(actor, projectId)
+  if !existing  {
+    response.ResponseData = &ResponseData{
+      NextCursor: "",
+      ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
+        Actor:                  actor,
+        ProjectId:              projectId,
+        AvailableDelegateVotes: 0,
+        ReceivedDelegateVotes: 0,
+        ProxyVotingList: nil,
+      },
     }
-  }
-
-
-  response.ResponseData.ProxyVotingInfo.ProxyVotingList = &proxyVotesList
-
-  if cursorStr == "" {
-    log.Printf("ProxyVotingInfo is loaded for first query with Actor %s, ProjectId %s and limit %d\n",
-      actor, projectId, limit)
   } else {
-    log.Printf("ProxyVotingInfo is loaded for query with Actor %s, ProjectId %s, cursor %s and limit %d\n",
-      actor, projectId, cursorStr, limit)
+
+    cursorStr := request.Cursor
+    var cursor string
+    if cursorStr != "" {
+      cursor = utils.Base64DecodeToString(cursorStr)
+    }
+
+    actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
+    principalProxyVotesRecordList := principalProxyVotesExecutor.GetPrincipalProxyVotesRecordListByCursor(actor, projectId, cursor, limit + 1)
+
+    response.ResponseData = &ResponseData{
+      NextCursor: "",
+      ProxyVotingInfo: &tcr_attributes.ProxyVotingInfo{
+        Actor:                  actor,
+        ProjectId:              projectId,
+        AvailableDelegateVotes: actorDelegateVotesAccount.AvailableDelegateVotes,
+        ReceivedDelegateVotes:  actorDelegateVotesAccount.ReceivedDelegateVotes,
+      },
+    }
+
+    var proxyVotesList []tcr_attributes.ProxyVoting
+    for index, principalProxyVotesRecord := range *principalProxyVotesRecordList {
+      if index < int(limit) {
+        ratingVote := tcr_attributes.ProxyVoting{
+          Proxy:          principalProxyVotesRecord.Proxy,
+          BlockTimestamp: principalProxyVotesRecord.BlockTimestamp,
+          VotesInPercent: principalProxyVotesRecord.VotesInPercent,
+        }
+        proxyVotesList = append(proxyVotesList, ratingVote)
+      } else {
+        response.ResponseData.NextCursor = principalProxyVotesRecord.EncodeID()
+      }
+    }
+
+    response.ResponseData.ProxyVotingInfo.ProxyVotingList = &proxyVotesList
+
+    if cursorStr == "" {
+      log.Printf("ProxyVotingInfo is loaded for first query with Actor %s, ProjectId %s and limit %d\n",
+        actor, projectId, limit)
+    } else {
+      log.Printf("ProxyVotingInfo is loaded for query with Actor %s, ProjectId %s, cursor %s and limit %d\n",
+        actor, projectId, cursorStr, limit)
+    }
   }
   response.Ok = true
 }

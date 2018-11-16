@@ -28,8 +28,6 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  postgresBigBangClient.Begin()
-
   publicKey := request.PublicKey
 
   if publicKey == "" {
