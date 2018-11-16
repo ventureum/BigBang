@@ -21,10 +21,6 @@ func ConnectPostgresClient() *PostgresBigBangClient {
   dbinfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
     dbHost, dbUser, dbPassword, dbName)
 
-  //if os.Getenv("DEV_ENV") == "local" {
-  //  dbinfo = fmt.Sprintf("postgres://%s:%s@postgres/%s", dbUser, dbPassword, dbName)
-  //}
-
   db, err := sqlx.Connect("postgres", dbinfo)
   if err != nil {
     log.Panicf("Failed to connect postgres with error: %+v\n", err)
