@@ -13,13 +13,17 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/milestone_validator_record_config"
 )
 
+type Request struct {
+  DBInfo *client_config.DBInfo `json:"dbInfo,omitempty"`
+}
+
 type Response struct {
   Ok bool `json:"ok"`
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
-func ProcessRequest(response *Response) {
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+func ProcessRequest(request Request, response *Response) {
+  postgresBigBangClient := client_config.ConnectPostgresClient(request.DBInfo)
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
@@ -62,8 +66,8 @@ func ProcessRequest(response *Response) {
   response.Ok = true
 }
 
-func Handler() (response Response, err error) {
+func Handler(request Request) (response Response, err error) {
   response.Ok = false
-  ProcessRequest(&response)
+  ProcessRequest(request, &response)
   return response, nil
 }

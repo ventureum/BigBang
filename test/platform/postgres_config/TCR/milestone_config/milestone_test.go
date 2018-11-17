@@ -36,7 +36,7 @@ type MilestoneTestSuite struct {
 }
 
 func (suite *MilestoneTestSuite) SetupSuite() {
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   suite.MilestoneExecutor = MilestoneExecutor{*postgresBigBangClient}
   suite.MilestoneExecutor.DeleteMilestoneTable()
   suite.MilestoneExecutor.CreateMilestoneTable()

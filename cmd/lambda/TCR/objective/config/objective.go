@@ -33,7 +33,7 @@ func (request *Request) ToObjectiveRecord() (record *objective_config.ObjectiveR
 }
 
 func ProcessRequest(request Request, response *Response) {
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)

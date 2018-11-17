@@ -27,7 +27,7 @@ func TestHandler(t *testing.T) {
     },
   }
 
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
 
   for _, test := range tests {

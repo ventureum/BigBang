@@ -70,7 +70,7 @@ type RatingVoteTestSuite struct {
 }
 
 func (suite *RatingVoteTestSuite) SetupSuite() {
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   suite.RatingVoteExecutor = RatingVoteExecutor{*postgresBigBangClient}
   suite.RatingVoteExecutor.DeleteRatingVoteTable()
   suite.RatingVoteExecutor.CreateRatingVoteTable()

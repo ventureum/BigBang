@@ -25,7 +25,7 @@ type ProxyTestSuite struct {
 }
 
 func (suite *ProxyTestSuite) SetupSuite() {
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   suite.ProxyExecutor = ProxyExecutor{*postgresBigBangClient}
   suite.ProxyExecutor.DeleteProxyTable()
   suite.ProxyExecutor.CreateProxyTable()

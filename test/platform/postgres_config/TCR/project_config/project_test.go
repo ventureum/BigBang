@@ -62,7 +62,7 @@ type ProjectTestSuite struct {
 }
 
 func (suite *ProjectTestSuite) SetupSuite() {
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   suite.ProjectExecutor = ProjectExecutor{*postgresBigBangClient}
   suite.ProjectExecutor.DeleteProjectTable()
   suite.ProjectExecutor.CreateProjectTable()

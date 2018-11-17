@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "client.go",
+        "db_info.go",
         "sql.go",
     ],
     importpath = "BigBang/internal/platform/postgres_config/client_config",

@@ -5,7 +5,6 @@ import (
   _ "github.com/lib/pq"
   "fmt"
   "github.com/jmoiron/sqlx"
-  "os"
 )
 
 type PostgresBigBangClient struct {
@@ -13,15 +12,12 @@ type PostgresBigBangClient struct {
   Tx *sqlx.Tx
 }
 
-func ConnectPostgresClient() *PostgresBigBangClient {
-  dbUser := os.Getenv("DB_USER")
-  dbPassword := os.Getenv("DB_PASSWORD")
-  dbName := os.Getenv("DB_NAME")
-  dbHost := os.Getenv("DB_HOST")
-  dbinfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-    dbHost, dbUser, dbPassword, dbName)
-
-  db, err := sqlx.Connect("postgres", dbinfo)
+func ConnectPostgresClient(dbInfo *DBInfo) *PostgresBigBangClient {
+  if dbInfo == nil {
+    dbInfo = CreateDefaultDBInfo()
+  }
+  dbInfoStr := dbInfo.ToString()
+  db, err := sqlx.Connect("postgres", dbInfoStr)
   if err != nil {
     log.Panicf("Failed to connect postgres with error: %+v\n", err)
   }

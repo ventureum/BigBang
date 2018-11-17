@@ -12,7 +12,7 @@ import (
   "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
 )
 
-var postgresBigBangClient = client_config.ConnectPostgresClient()
+var postgresBigBangClient = client_config.ConnectPostgresClient(nil)
 var redeemBlockInfoRecordExecutor = redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 
 var milestonePointsRedeemRequestRecordExecutor = milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}

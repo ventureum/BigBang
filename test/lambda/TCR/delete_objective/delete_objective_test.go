@@ -28,7 +28,7 @@ func TestHandler(t *testing.T) {
     },
   }
 
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
 
   for _, test := range tests {
