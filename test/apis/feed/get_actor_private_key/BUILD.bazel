@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["get_actor_private_key_test.go"],
+    deps = [
+        "//cmd/lambda/feed/get_actor_private_key/config:go_default_library",
+        "//internal/pkg/api:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/mitchellh/mapstructure:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)
