@@ -13,7 +13,7 @@ import (
   "log"
 )
 
-var postgresBigBangClient = client_config.ConnectPostgresClient()
+var postgresBigBangClient = client_config.ConnectPostgresClient(nil)
 var milestonePointsRedeemRequestRecordExecutor = milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
 var actorMilestonePointsRedeemHistoryRecordExecutor = actor_milestone_points_redeem_history_record_config.ActorMilestonePointsRedeemHistoryRecordExecutor{*postgresBigBangClient}
 

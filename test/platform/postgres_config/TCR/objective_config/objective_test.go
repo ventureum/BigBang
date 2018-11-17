@@ -36,7 +36,7 @@ type ObjectiveTestSuite struct {
 }
 
 func (suite *ObjectiveTestSuite) SetupSuite() {
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   suite.ObjectiveExecutor = ObjectiveExecutor{*postgresBigBangClient}
   suite.ObjectiveExecutor.DeleteObjectiveTable()
   suite.ObjectiveExecutor.CreateObjectiveTable()

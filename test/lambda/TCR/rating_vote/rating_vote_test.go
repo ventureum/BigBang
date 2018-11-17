@@ -136,7 +136,7 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
   }
-  postgresBigBangClient := client_config.ConnectPostgresClient()
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
   ratingVoteExecutor.ClearRatingVoteTable()
 
