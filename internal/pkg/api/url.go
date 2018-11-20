@@ -14,6 +14,14 @@ var GetActorUuidFromPublicKeyAlphaEndingPoint URL = BuildEndingPoint(FeedSystemB
 
 var FeedPostAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, FeedPost)
 var GetFeedPostAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, GetFeedPost)
+var GetBatchPostsAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, GetBatchPosts)
+var GetRecentPostsAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, GetRecentPosts)
+
+var AttachSessionAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, AttachSession)
+var GetSessionAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, GetSession)
+
+var RefuelAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, Refuel)
+var DevRefuelAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, DevRefuel)
 
 const TCRBaseURL URL = "https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com"
 

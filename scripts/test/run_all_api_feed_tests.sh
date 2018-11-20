@@ -19,10 +19,12 @@ bazel run //:gazelle
 ./run_api_test.sh  //test/apis/feed/attach_session:go_default_test
 ./run_api_test.sh  //test/apis/feed/get_session:go_default_test
 
-#./run_unit_test.sh  //test/lambda/feed/refuel:go_default_test
-#./run_unit_test.sh  //test/lambda/feed/dev_refuel:go_default_test
+./run_api_test.sh  //test/apis/feed/refuel:go_default_test
+./run_api_test.sh  //test/apis/feed/dev_refuel:go_default_test
+
 #./run_unit_test.sh  //test/lambda/feed/feed_upvote:go_default_test
 #./run_unit_test.sh  //test/lambda/feed/get_recent_votes:go_default_test
+
 #./run_unit_test.sh  //test/lambda/feed/feed_token_generator:go_default_test
 #./run_unit_test.sh  //test/lambda/feed/reset_actor_fuel:go_default_test
 #./run_unit_test.sh  //test/lambda/feed/add_tracked_wallet_addresses:go_default_test
