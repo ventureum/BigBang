@@ -37,6 +37,11 @@ SELECT * FROM projects
 WHERE project_id = $1;
 `
 
+const QUERY_PROJECT_ID_BY_ADMIN_COMMAND = `
+SELECT project_id FROM projects
+WHERE admin = $1;
+`
+
 const VERIFY_PROJECT_EXISTING_COMMAND = `
 select exists(select 1 from projects where project_id =$1);
 `
@@ -90,4 +95,8 @@ UPDATE projects
 SET
    current_milestone = $2
 WHERE project_id = $1;
+`
+
+const VERIFY_PROJECT_AND_ADMIN_EXISTING_COMMAND = `
+select exists (select 1 from projects where admin = $2 and project_id != $1);
 `

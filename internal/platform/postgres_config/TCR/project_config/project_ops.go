@@ -83,6 +83,22 @@ func (projectExecutor *ProjectExecutor) GetProjectRecord(projectId string) *Proj
   return &projectRecord
 }
 
+
+func (projectExecutor *ProjectExecutor) GetProjectIdByAdmin(admin string) string {
+  var projectId string
+  err := projectExecutor.C.Get(&projectId, QUERY_PROJECT_ID_BY_ADMIN_COMMAND, admin)
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "admin", admin, error_config.ProjectRecordLocation)
+    log.Printf("Failed to get project id for admin %s with error: %+v\n", admin, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  if err == sql.ErrNoRows {
+    projectId = ""
+  }
+  return projectId
+}
+
 func (projectExecutor *ProjectExecutor) VerifyProjectRecordExisting (projectId string) {
   existing := projectExecutor.CheckProjectRecordExisting(projectId)
   if !existing {
@@ -185,6 +201,20 @@ func (projectExecutor *ProjectExecutor) SetCurrentMilestone(projectId string, mi
 
   log.Printf("Successfully set current milestone %d for projectId %s\n", milestoneId, projectId)
 }
+
+func (projectExecutor *ProjectExecutor) VerifyAdminExisting (projectId string, admin string) bool {
+  var existing bool
+  err := projectExecutor.C.Get(&existing, VERIFY_PROJECT_AND_ADMIN_EXISTING_COMMAND, projectId, admin)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    errInfo.ErrorData["admin"] = admin
+    log.Printf("Failed to verify projectId %s and admin %s existing with error: %+v\n", projectId, admin, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  return existing
+}
+
 
 /*
  * Tx versions
@@ -348,4 +378,32 @@ func (projectExecutor *ProjectExecutor) SetCurrentMilestoneTx(projectId string, 
   }
 
   log.Printf("Successfully set current milestone %d for projectId %s\n", milestoneId, projectId)
+}
+
+func (projectExecutor *ProjectExecutor) VerifyAdminExistingTx (projectId string, admin string) bool {
+  var existing bool
+  err := projectExecutor.Tx.Get(&existing, VERIFY_PROJECT_AND_ADMIN_EXISTING_COMMAND, projectId, admin)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "projectId", projectId, error_config.ProjectRecordLocation)
+    errInfo.ErrorData["admin"] = admin
+    log.Printf("Failed to verify projectId %s and admin %s existing with error: %+v\n", projectId, admin, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  return existing
+}
+
+func (projectExecutor *ProjectExecutor) GetProjectIdByAdminTx(admin string) string {
+  var projectId string
+  err := projectExecutor.Tx.Get(&projectId, QUERY_PROJECT_ID_BY_ADMIN_COMMAND, admin)
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "admin", admin, error_config.ProjectRecordLocation)
+    log.Printf("Failed to get project id for admin %s with error: %+v\n", admin, err)
+    log.Panicln(errInfo.Marshal())
+  }
+
+  if err == sql.ErrNoRows {
+    projectId = ""
+  }
+  return projectId
 }

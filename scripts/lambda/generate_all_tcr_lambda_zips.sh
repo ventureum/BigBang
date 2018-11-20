@@ -88,8 +88,11 @@
 #.//generate_lambda_zip.sh TCR get_batch_rating_vote_list $1 $2
 
 
-echo "generating update_batch_received_delegate_votes zip"
-.//generate_lambda_zip.sh TCR update_batch_available_delegate_votes $1 $2
+#echo "generating update_batch_received_delegate_votes zip"
+#.//generate_lambda_zip.sh TCR update_batch_available_delegate_votes $1 $2
+#
+#echo "generating update_batch_received_delegate_votes zip"
+#.//generate_lambda_zip.sh TCR update_batch_received_delegate_votes $1 $2
 
-echo "generating update_batch_received_delegate_votes zip"
-.//generate_lambda_zip.sh TCR update_batch_received_delegate_votes $1 $2
+echo "generating get_project_id_by_admin zip"
+.//generate_lambda_zip.sh TCR get_project_id_by_admin $1 $2

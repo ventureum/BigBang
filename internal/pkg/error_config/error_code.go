@@ -39,6 +39,7 @@ const TotalProxyVotingPercentageExceeding100 ErrorCode = "TotalProxyVotingPercen
 const RatingVoteExceedingLimitedVotingTimes ErrorCode = "RatingVoteExceedingLimitedVotingTimes"
 const MilestoneIdAlreadyExisting ErrorCode = "MilestoneIdAlreadyExisting"
 const MilestoneValidatorAlreadyExisting ErrorCode = "MilestoneValidatorAlreadyExisting"
+const ProjectAdminReassign ErrorCode = "ProjectAdminReassign"
 func CreateNoExistingErrorCode(tag string) ErrorCode {
   errCodeStr := fmt.Sprintf("No%sExisting", strings.Title(tag))
   return ErrorCode(errCodeStr)

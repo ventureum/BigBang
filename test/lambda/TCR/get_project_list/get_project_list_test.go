@@ -37,13 +37,13 @@ func TestHandler(t *testing.T) {
          Projects: &[]tcr_attributes.Project{
            {
              ProjectId:      test_constants.ProjectId6,
-             Admin:          test_constants.ProjectAdmin1,
+             Admin:          test_constants.ProjectAdmin6,
              Content:        test_constants.ProjectContent1,
              BlockTimestamp: test_constants.ProjectBlockTimestamp5,
            },
            {
              ProjectId:      test_constants.ProjectId5,
-             Admin:          test_constants.ProjectAdmin1,
+             Admin:          test_constants.ProjectAdmin5,
              Content:        test_constants.ProjectContent1,
              BlockTimestamp: test_constants.ProjectBlockTimestamp5,
            },
@@ -64,13 +64,13 @@ func TestHandler(t *testing.T) {
          Projects: &[]tcr_attributes.Project{
            {
              ProjectId:      test_constants.ProjectId4,
-             Admin:          test_constants.ProjectAdmin1,
+             Admin:          test_constants.ProjectAdmin4,
              Content:        test_constants.ProjectContent1,
              BlockTimestamp: test_constants.ProjectBlockTimestamp4,
            },
            {
              ProjectId:      test_constants.ProjectId3,
-             Admin:          test_constants.ProjectAdmin1,
+             Admin:          test_constants.ProjectAdmin3,
              Content:        test_constants.ProjectContent1,
              BlockTimestamp: test_constants.ProjectBlockTimestamp3,
            },
@@ -91,19 +91,19 @@ func TestHandler(t *testing.T) {
          Projects: &[]tcr_attributes.Project{
            {
              ProjectId:      test_constants.ProjectId4,
-             Admin:          test_constants.ProjectAdmin1,
+             Admin:          test_constants.ProjectAdmin4,
              Content:        test_constants.ProjectContent1,
              BlockTimestamp: test_constants.ProjectBlockTimestamp4,
            },
            {
              ProjectId:      test_constants.ProjectId3,
-             Admin:          test_constants.ProjectAdmin1,
+             Admin:          test_constants.ProjectAdmin3,
              Content:        test_constants.ProjectContent1,
              BlockTimestamp: test_constants.ProjectBlockTimestamp3,
            },
            {
              ProjectId:      test_constants.ProjectId2,
-             Admin:          test_constants.ProjectAdmin1,
+             Admin:          test_constants.ProjectAdmin2,
              Content:        test_constants.ProjectContent1,
              BlockTimestamp: test_constants.ProjectBlockTimestamp2,
            },

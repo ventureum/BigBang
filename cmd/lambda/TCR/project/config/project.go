@@ -5,6 +5,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/pkg/utils"
+  "log"
 )
 
 
@@ -42,7 +43,25 @@ func ProcessRequest(request Request, response *Response) {
   }()
   postgresBigBangClient.Begin()
 
+  projectId := request.ProjectId
+  admin := request.Admin
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
+
+  existing := projectExecutor.VerifyAdminExistingTx(projectId, admin)
+
+  if existing {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.ProjectAdminReassign,
+      ErrorData: map[string]interface{} {
+        "projectId": projectId,
+        "admin": admin,
+      },
+      ErrorLocation: error_config.ProjectRecordLocation,
+    }
+    log.Printf("Admin %s has been assigned to project with projectId %s", projectId, admin)
+    log.Panicln(errorInfo.Marshal())
+  }
+
   projectExecutor.UpsertProjectRecordTx(request.ToProjectRecord())
 
   postgresBigBangClient.Commit()

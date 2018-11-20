@@ -42,4 +42,5 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/TCR/delete_project:go_default_test
 
 ./run_unit_test.sh  //test/lambda/TCR/get_proxy_list:go_default_test
+./run_unit_test.sh  //test/lambda/TCR/get_project_id_by_admin:go_default_test
 ./run_unit_test.sh  //test/lambda/TCR/delete_proxy:go_default_test
