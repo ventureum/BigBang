@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["get_project_id_by_admin.go"],
+    importpath = "BigBang/cmd/lambda/TCR/get_project_id_by_admin/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/project_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
+    ],
+)

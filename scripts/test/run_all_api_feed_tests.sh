@@ -2,22 +2,22 @@
 bazel clean
 bazel run //:gazelle
 ./run_api_test.sh  //test/apis/feed/feed_events_table_creator:go_default_test
-./run_unit_test.sh  //test/apis/feed/profile:go_default_test
-./run_unit_test.sh  //test/apis/feed/get_profile:go_default_test
-./run_unit_test.sh  //test/apis/feed/get_batch_profiles:go_default_test
+./run_api_test.sh  //test/apis/feed/profile:go_default_test
+./run_api_test.sh  //test/apis/feed/get_profile:go_default_test
+./run_api_test.sh  //test/apis/feed/get_batch_profiles:go_default_test
 
-./run_unit_test.sh  //test/apis/feed/set_actor_private_key:go_default_test
-./run_unit_test.sh  //test/apis/feed/get_actor_private_key:go_default_test
-./run_unit_test.sh  //test/apis/feed/get_actor_uuid_from_public_key:go_default_test
+./run_api_test.sh  //test/apis/feed/set_actor_private_key:go_default_test
+./run_api_test.sh  //test/apis/feed/get_actor_private_key:go_default_test
+./run_api_test.sh  //test/apis/feed/get_actor_uuid_from_public_key:go_default_test
 
-./run_unit_test.sh  //test/apis/feed/feed_post:go_default_test
-./run_unit_test.sh  //test/apis/feed/get_feed_post:go_default_test
-#./run_unit_test.sh  //test/lambda/feed/get_batch_posts:go_default_test
-#./run_unit_test.sh  //test/lambda/feed/get_recent_posts:go_default_test
+./run_api_test.sh  //test/apis/feed/feed_post:go_default_test
+./run_api_test.sh  //test/apis/feed/get_feed_post:go_default_test
+./run_api_test.sh  //test/apis/feed/get_batch_posts:go_default_test
+./run_api_test.sh //test/apis/feed/get_recent_posts:go_default_test
 
 
-#./run_unit_test.sh  //test/lambda/feed/attach_session:go_default_test
-#./run_unit_test.sh  //test/lambda/feed/get_session:go_default_test
+./run_api_test.sh  //test/apis/feed/attach_session:go_default_test
+./run_api_test.sh  //test/apis/feed/get_session:go_default_test
 
 #./run_unit_test.sh  //test/lambda/feed/refuel:go_default_test
 #./run_unit_test.sh  //test/lambda/feed/dev_refuel:go_default_test

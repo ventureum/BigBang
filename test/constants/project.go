@@ -14,5 +14,10 @@ const ProjectBlockTimestamp4 = 1539108004
 const ProjectBlockTimestamp5 = 1539108005
 
 const ProjectAdmin1 = "0xAdmin001"
+const ProjectAdmin2 = "0xAdmin002"
+const ProjectAdmin3 = "0xAdmin003"
+const ProjectAdmin4 = "0xAdmin004"
+const ProjectAdmin5 = "0xAdmin005"
+const ProjectAdmin6 = "0xAdmin006"
 
 const ProjectContent1 = "{offset: 0, length: 41, type: 'url'}"

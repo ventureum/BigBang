@@ -141,6 +141,96 @@ func TestHandler(t *testing.T) {
       },
       err: nil,
     },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.ProjectAdmin1,
+        UserType: "KOL",
+        Username: test_constants.ProjectAdmin1,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.ProjectAdmin1,
+        PhoneNumber: "5197290002",
+        PublicKey: test_constants.ProjectAdmin1,
+      },
+      response: lambda_profile_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.ProjectAdmin2,
+        UserType: "KOL",
+        Username: test_constants.ProjectAdmin2,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.ProjectAdmin2,
+        PhoneNumber: "5197290002",
+        PublicKey: test_constants.ProjectAdmin2,
+      },
+      response: lambda_profile_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.ProjectAdmin3,
+        UserType: "KOL",
+        Username: test_constants.ProjectAdmin3,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.ProjectAdmin3,
+        PhoneNumber: "5197290002",
+        PublicKey: test_constants.ProjectAdmin3,
+      },
+      response: lambda_profile_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.ProjectAdmin4,
+        UserType: "KOL",
+        Username: test_constants.ProjectAdmin4,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.ProjectAdmin4,
+        PhoneNumber: "5197290002",
+        PublicKey: test_constants.ProjectAdmin4,
+      },
+      response: lambda_profile_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.ProjectAdmin5,
+        UserType: "KOL",
+        Username: test_constants.ProjectAdmin5,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.ProjectAdmin5,
+        PhoneNumber: "5197290002",
+        PublicKey: test_constants.ProjectAdmin5,
+      },
+      response: lambda_profile_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_profile_config.Request {
+        Actor: test_constants.ProjectAdmin6,
+        UserType: "KOL",
+        Username: test_constants.ProjectAdmin6,
+        PhotoUrl: "http://567.com",
+        TelegramId: test_constants.ProjectAdmin6,
+        PhoneNumber: "5197290002",
+        PublicKey: test_constants.ProjectAdmin6,
+      },
+      response: lambda_profile_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
   }
   for _, test := range tests {
     result, err := lambda_profile_config.Handler(test.request)
