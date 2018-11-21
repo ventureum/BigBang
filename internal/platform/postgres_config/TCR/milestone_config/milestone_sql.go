@@ -58,6 +58,10 @@ const VERIFY_MILESTONE_EXISTING_COMMAND = `
 select exists(select 1 from milestones where project_id = $1 and milestone_id = $2);
 `
 
+const INVALID_MILESTONE_UPDATE_IF_EXISTING_COMMAND = `
+select exists(select 1 from milestones where project_id = $1 and milestone_id = $2 and state != 'PENDING');
+`
+
 const INCREASE_NUM_OBJECTIVES_COMMAND = `
 UPDATE milestones
 SET

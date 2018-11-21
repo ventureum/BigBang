@@ -144,6 +144,20 @@ func (milestoneExecutor *MilestoneExecutor) CheckMilestoneRecordExisting (
   return existing
 }
 
+func (milestoneExecutor *MilestoneExecutor) ValidateMilestoneRecordUpdating (
+    projectId string, milestoneId int64) bool {
+  var invalid bool
+  err := milestoneExecutor.C.Get(&invalid, INVALID_MILESTONE_UPDATE_IF_EXISTING_COMMAND, projectId, milestoneId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to validate milestone record update for projectId %s and milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+  return invalid
+}
+
 func (milestoneExecutor *MilestoneExecutor) IncreaseNumObjectives(projectId string, milestoneId int64) {
   _, err := milestoneExecutor.C.Exec(INCREASE_NUM_OBJECTIVES_COMMAND, projectId, milestoneId)
 
@@ -337,6 +351,20 @@ func (milestoneExecutor *MilestoneExecutor) CheckMilestoneRecordExistingTx (
     log.Panicln(errInfo.Marshal())
   }
   return existing
+}
+
+func (milestoneExecutor *MilestoneExecutor) ValidateMilestoneRecordUpdatingTx (
+    projectId string, milestoneId int64) bool {
+  var invalid bool
+  err := milestoneExecutor.Tx.Get(&invalid, INVALID_MILESTONE_UPDATE_IF_EXISTING_COMMAND, projectId, milestoneId)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "milestoneId", milestoneId, error_config.MilestoneRecordLocation)
+    log.Printf("Failed to validate milestone record update for projectId %s and milestoneId %d with error: %+v\n",
+      projectId, milestoneId, err)
+    errInfo.ErrorData["projectId"] = projectId
+    log.Panicln(errInfo.Marshal())
+  }
+  return invalid
 }
 
 func (milestoneExecutor *MilestoneExecutor) IncreaseNumObjectivesTx(projectId string, milestoneId int64) {

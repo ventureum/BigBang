@@ -52,18 +52,18 @@ func ProcessRequest(request Request, response *Response) {
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
 
-  existing := milestoneExecutor.CheckMilestoneRecordExistingTx(projectId, milestoneId)
+  invalid := milestoneExecutor.ValidateMilestoneRecordUpdatingTx(projectId, milestoneId)
 
-  if existing {
+  if invalid {
     errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.MilestoneIdAlreadyExisting,
+      ErrorCode: error_config.MilestoneInvalidForUpdating,
       ErrorData: map[string]interface{} {
         "milestoneId": milestoneId,
         "projectId": projectId,
       },
       ErrorLocation: error_config.MilestoneRecordLocation,
     }
-    log.Printf("Milestone record already exists for projectId %s and milestoneId %d", projectId, milestoneId)
+    log.Printf("Milestone is invalid for updating for projectId %s and milestoneId %d", projectId, milestoneId)
     log.Panicln(errorInfo.Marshal())
   }
 

@@ -15,6 +15,7 @@ const MilestoneBlockTimestamp5 = 1539108505
 const MilestoneBlockTimestamp6 = 1539108506
 
 const MilestoneContent1 = "{offset: 0, length: 41, type: 'url'}"
+const MilestoneContent2 = "{offset: 20, length: 41, type: 'url'}"
 
 const MilestoneStartTime1 = 1539108600
 const MilestoneEndTime1 = 1539108650
