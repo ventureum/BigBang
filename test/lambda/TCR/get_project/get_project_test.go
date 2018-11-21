@@ -60,7 +60,7 @@ func TestHandler(t *testing.T) {
               {
                 ProjectId: test_constants.ProjectId1,
                 MilestoneId: test_constants.MilestoneId2,
-                Content: test_constants.MilestoneContent1,
+                Content: test_constants.MilestoneContent2,
                 BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
                 StartTime: test_constants.MilestoneStartTime2,
                 EndTime: test_constants.MilestoneEndTime2,

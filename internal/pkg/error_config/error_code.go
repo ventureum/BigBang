@@ -38,6 +38,7 @@ const EmptyProxyVotingList ErrorCode = "EmptyProxyVotingList"
 const TotalProxyVotingPercentageExceeding100 ErrorCode = "TotalProxyVotingPercentageExceeding100"
 const RatingVoteExceedingLimitedVotingTimes ErrorCode = "RatingVoteExceedingLimitedVotingTimes"
 const MilestoneIdAlreadyExisting ErrorCode = "MilestoneIdAlreadyExisting"
+const MilestoneInvalidForUpdating ErrorCode = "MilestoneInvalidForUpdating"
 const MilestoneValidatorAlreadyExisting ErrorCode = "MilestoneValidatorAlreadyExisting"
 const ProjectAdminReassign ErrorCode = "ProjectAdminReassign"
 func CreateNoExistingErrorCode(tag string) ErrorCode {

@@ -40,6 +40,18 @@ func TestHandler(t *testing.T) {
     {
       request: lambda_add_milestone_config.Request {
         ProjectId: test_constants.ProjectId1,
+        MilestoneId: test_constants.MilestoneId2,
+        Content: test_constants.MilestoneContent2,
+        BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
+      },
+      response: lambda_add_milestone_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_add_milestone_config.Request {
+        ProjectId: test_constants.ProjectId1,
         MilestoneId: test_constants.MilestoneId3,
         Content: test_constants.MilestoneContent1,
         BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
@@ -79,6 +91,18 @@ func TestHandler(t *testing.T) {
         MilestoneId: test_constants.MilestoneId2,
         Content: test_constants.MilestoneContent1,
         BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
+      },
+      response: lambda_add_milestone_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_add_milestone_config.Request {
+        ProjectId: test_constants.ProjectId2,
+        MilestoneId: test_constants.MilestoneId2,
+        Content: test_constants.MilestoneContent2,
+        BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
       },
       response: lambda_add_milestone_config.Response {
         Ok: true,
