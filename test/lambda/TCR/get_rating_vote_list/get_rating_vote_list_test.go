@@ -16,11 +16,14 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_rating_vote_list_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Limit: 0,
+      request: lambda_get_rating_vote_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_rating_vote_list_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: 1,
+          ObjectiveId: 1,
+          Limit:       0,
+        },
       },
       response: lambda_get_rating_vote_list_config.Response {
         ResponseData: &lambda_get_rating_vote_list_config.ResponseData{
@@ -38,11 +41,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_rating_vote_list_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Limit: 2,
+      request: lambda_get_rating_vote_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_rating_vote_list_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: 1,
+          ObjectiveId: 1,
+          Limit:       2,
+        },
       },
       response: lambda_get_rating_vote_list_config.Response {
         ResponseData: &lambda_get_rating_vote_list_config.ResponseData{
@@ -73,13 +79,16 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_rating_vote_list_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Limit: 2,
-        Cursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
-          test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
+      request: lambda_get_rating_vote_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_rating_vote_list_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: 1,
+          ObjectiveId: 1,
+          Limit:       2,
+          Cursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
+            test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
+        },
       },
       response: lambda_get_rating_vote_list_config.Response {
         ResponseData: &lambda_get_rating_vote_list_config.ResponseData{
@@ -110,13 +119,16 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_rating_vote_list_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Limit: 5,
-        Cursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
-          test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
+      request: lambda_get_rating_vote_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_rating_vote_list_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: 1,
+          ObjectiveId: 1,
+          Limit:       5,
+          Cursor: rating_vote_config.GenerateEncodedRatingVoteRecordID(
+            test_constants.ProjectId1, 1, 1, test_constants.Actor4, test_constants.RatingVoteBlockTimestamp4),
+        },
       },
       response: lambda_get_rating_vote_list_config.Response {
         ResponseData: &lambda_get_rating_vote_list_config.ResponseData{

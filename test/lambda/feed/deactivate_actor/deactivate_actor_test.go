@@ -14,8 +14,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_deactivate_actor_config.Request {
-        Actor: test_constants.Actor2,
+      request: lambda_deactivate_actor_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_deactivate_actor_config.RequestContent{
+          Actor: test_constants.Actor2,
+        },
       },
       response: lambda_deactivate_actor_config.Response {
         Ok: true,

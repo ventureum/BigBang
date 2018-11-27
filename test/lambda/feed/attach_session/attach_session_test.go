@@ -14,12 +14,15 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_attach_session_config.Request {
-        Actor: test_constants.Actor1,
-        PostHash: test_constants.PostHash1,
-        StartTime: test_constants.SessionStartTime1,
-        EndTime: test_constants.SessionEndTime1,
-        Content: test_constants.SessionContent1,
+      request: lambda_attach_session_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_attach_session_config.RequestContent{
+          Actor:     test_constants.Actor1,
+          PostHash:  test_constants.PostHash1,
+          StartTime: test_constants.SessionStartTime1,
+          EndTime:   test_constants.SessionEndTime1,
+          Content:   test_constants.SessionContent1,
+        },
       },
       response: lambda_attach_session_config.Response {
         Ok: true,
@@ -27,12 +30,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_attach_session_config.Request {
-        Actor: test_constants.Actor1,
-        PostHash: test_constants.PostHash2,
-        StartTime: test_constants.SessionStartTime2,
-        EndTime: test_constants.SessionEndTime2,
-        Content: test_constants.SessionContent2,
+      request: lambda_attach_session_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_attach_session_config.RequestContent{
+          Actor:     test_constants.Actor1,
+          PostHash:  test_constants.PostHash2,
+          StartTime: test_constants.SessionStartTime2,
+          EndTime:   test_constants.SessionEndTime2,
+          Content:   test_constants.SessionContent2,
+        },
       },
       response: lambda_attach_session_config.Response {
         Ok: true,

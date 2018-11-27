@@ -7,6 +7,9 @@ import (
 
 type ErrorCode string
 
+const InvalidAuthAccess ErrorCode = "InvalidAuthAccess"
+const InvalidAuthRegister ErrorCode = "InvalidAuthRegister"
+
 // For feed
 const GetStreamClientConnectionError ErrorCode = "GetStreamClientConnectionError"
 const InsufficientWaitingTimeToRefuel ErrorCode = "InsufficientWaitingTimeToRefuel"

@@ -10,10 +10,15 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
   "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
 }
 
@@ -42,7 +47,9 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  actor := request.Actor
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExisting(actor)
   milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}

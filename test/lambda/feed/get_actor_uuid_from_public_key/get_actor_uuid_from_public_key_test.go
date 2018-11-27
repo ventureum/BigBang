@@ -16,8 +16,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_actor_uuid_from_public_key_config.Request {
-        PublicKey: test_constants.PublicKey1,
+      request: lambda_get_actor_uuid_from_public_key_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_actor_uuid_from_public_key_config.RequestContent{
+          PublicKey: test_constants.PublicKey1,
+        },
       },
       response: lambda_get_actor_uuid_from_public_key_config.Response {
         Actor: test_constants.Actor1,
@@ -26,8 +29,11 @@ func TestHandler(t *testing.T) {
        err: nil,
     },
     {
-      request: lambda_get_actor_uuid_from_public_key_config.Request {
-        PublicKey: "0xInvalidPublicKey",
+      request: lambda_get_actor_uuid_from_public_key_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_actor_uuid_from_public_key_config.RequestContent{
+          PublicKey: "0xInvalidPublicKey",
+        },
       },
       response: lambda_get_actor_uuid_from_public_key_config.Response {
         Actor: "",

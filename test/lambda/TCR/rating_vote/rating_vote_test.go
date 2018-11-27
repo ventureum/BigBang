@@ -16,14 +16,17 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Voter: test_constants.Actor1,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp1,
-        Rating: 20,
-        Weight: 30,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    1,
+          Voter:          test_constants.Actor1,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp1,
+          Rating:         20,
+          Weight:         30,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,
@@ -31,14 +34,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Voter: test_constants.Actor2,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
-        Rating: 20,
-        Weight: 30,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    1,
+          Voter:          test_constants.Actor2,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
+          Rating:         20,
+          Weight:         30,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,
@@ -46,14 +52,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Voter: test_constants.Actor3,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp3,
-        Rating: 20,
-        Weight: 30,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    1,
+          Voter:          test_constants.Actor3,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp3,
+          Rating:         20,
+          Weight:         30,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,
@@ -61,14 +70,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Voter: test_constants.Actor4,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp4,
-        Rating: 20,
-        Weight: 30,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    1,
+          Voter:          test_constants.Actor4,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp4,
+          Rating:         20,
+          Weight:         30,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,
@@ -76,14 +88,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Voter: test_constants.Actor5,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
-        Rating: 20,
-        Weight: 30,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    1,
+          Voter:          test_constants.Actor5,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
+          Rating:         20,
+          Weight:         30,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,
@@ -91,14 +106,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 1,
-        Voter: test_constants.Actor6,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
-        Rating: 20,
-        Weight: 30,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    1,
+          Voter:          test_constants.Actor6,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp5,
+          Rating:         20,
+          Weight:         30,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,
@@ -106,14 +124,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 2,
-        Voter: test_constants.Actor1,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
-        Rating: 25,
-        Weight: 35,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    2,
+          Voter:          test_constants.Actor1,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
+          Rating:         25,
+          Weight:         35,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,
@@ -121,14 +142,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_rating_vote_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: 1,
-        ObjectiveId: 2,
-        Voter: test_constants.Actor2,
-        BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
-        Rating: 30,
-        Weight: 40,
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    1,
+          ObjectiveId:    2,
+          Voter:          test_constants.Actor2,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp2,
+          Rating:         30,
+          Weight:         40,
+        },
       },
       response: lambda_rating_vote_config.Response {
         Ok: true,

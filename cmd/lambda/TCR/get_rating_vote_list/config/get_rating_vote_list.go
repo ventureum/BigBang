@@ -8,10 +8,15 @@ import (
   "BigBang/internal/app/tcr_attributes"
   "BigBang/internal/platform/postgres_config/TCR/rating_vote_config"
   "BigBang/internal/platform/postgres_config/TCR/objective_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId     string         `json:"projectId,required"`
   MilestoneId   int64          `json:"milestoneId,required"`
   ObjectiveId   int64          `json:"objectiveId,required"`
@@ -41,15 +46,17 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  projectId := request.ProjectId
-  milestoneId := request.MilestoneId
-  objectiveId := request.ObjectiveId
-  limit := request.Limit
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  projectId := request.Body.ProjectId
+  milestoneId := request.Body.MilestoneId
+  objectiveId := request.Body.ObjectiveId
+  limit := request.Body.Limit
 
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
   objectiveExecutor.VerifyObjectiveRecordExisting(projectId, milestoneId, objectiveId)
 
-  cursorStr := request.Cursor
+  cursorStr := request.Body.Cursor
   var cursor string
   if cursorStr != "" {
     cursor = utils.Base64DecodeToString(cursorStr)

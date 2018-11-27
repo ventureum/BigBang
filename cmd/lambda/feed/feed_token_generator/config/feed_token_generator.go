@@ -6,10 +6,15 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/pkg/error_config"
   "log"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   FeedSlug string `json:"feedSlug,required"`
   UserId string `json:"userId,required"`
   GetStreamApiKey string `json:"getStreamApiKey,omitEmpty"`
@@ -25,20 +30,21 @@ type Response struct {
 func ProcessRequest(request Request, response *Response) {
   defer func() {
    if errPanic := recover(); errPanic != nil { //catch
-     log.Printf("errPanic %+v", errPanic)
      response.FeedToken  = ""
      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
    }
   }()
 
+  auth.AuthProcess(request.PrincipalId, "", nil)
+
   var client *stream.Client
   var err error
-  if request.GetStreamApiKey != "" && request.GetStreamApiSecret != "" {
-    client, err = stream.NewClient(request.GetStreamApiKey, request.GetStreamApiSecret)
+  if request.Body.GetStreamApiKey != "" && request.Body.GetStreamApiSecret != "" {
+    client, err = stream.NewClient(request.Body.GetStreamApiKey, request.Body.GetStreamApiSecret)
   } else {
     client, err = stream.NewClientFromEnv()
-    request.GetStreamApiSecret = os.Getenv("STREAM_API_SECRET")
-    request.GetStreamApiKey = os.Getenv("STREAM_API_KEY")
+    request.Body.GetStreamApiSecret = os.Getenv("STREAM_API_SECRET")
+    request.Body.GetStreamApiKey = os.Getenv("STREAM_API_KEY")
   }
 
   if err != nil {
@@ -49,9 +55,9 @@ func ProcessRequest(request Request, response *Response) {
    log.Panicln(errorInfo.Marshal())
   }
 
-  client.FlatFeed(request.FeedSlug, request.UserId)
-  feedID := feed_attributes.CreateFeedId(request.FeedSlug, request.UserId)
-  response.FeedToken = feedID.FeedToken(request.GetStreamApiSecret)
+  client.FlatFeed(request.Body.FeedSlug, request.Body.UserId)
+  feedID := feed_attributes.CreateFeedId(request.Body.FeedSlug, request.Body.UserId)
+  response.FeedToken = feedID.FeedToken(request.Body.GetStreamApiSecret)
   response.Ok = true
 }
 

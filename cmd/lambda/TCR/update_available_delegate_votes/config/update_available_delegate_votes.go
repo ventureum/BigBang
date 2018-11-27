@@ -6,10 +6,15 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor                  string `json:"actor,required"`
   ProjectId              string `json:"projectId,required"`
   AvailableDelegateVotes int64  `json:"availableDelegateVotes,required"`
@@ -29,25 +34,31 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  actor := request.Body.Actor
+  projectId := request.Body.ProjectId
+
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
   postgresBigBangClient.Begin()
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
-  actorProfileRecordExecutor.VerifyActorExistingTx(request.Actor)
-  projectExecutor.VerifyProjectRecordExistingTx(request.ProjectId)
+  actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+  projectExecutor.VerifyProjectRecordExistingTx(projectId)
 
-  existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExistingTx(request.Actor, request.ProjectId)
+  existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExistingTx(actor, projectId)
 
   if !existing {
     actorDelegateVotesAccountExecutor.UpsertActorDelegateVotesAccountRecordTx(&actor_delegate_votes_account_config.ActorDelegateVotesAccountRecord{
-      Actor: request.Actor,
-      ProjectId: request.ProjectId,
-      AvailableDelegateVotes: request.AvailableDelegateVotes,
+      Actor: actor,
+      ProjectId: projectId,
+      AvailableDelegateVotes: request.Body.AvailableDelegateVotes,
       ReceivedDelegateVotes: 0,
     })
   } else {
-    actorDelegateVotesAccountExecutor.UpdateAvailableDelegateVotesTx(request.Actor, request.ProjectId, request.AvailableDelegateVotes)
+    actorDelegateVotesAccountExecutor.UpdateAvailableDelegateVotesTx(actor, projectId, request.Body.AvailableDelegateVotes)
   }
 
   postgresBigBangClient.Commit()

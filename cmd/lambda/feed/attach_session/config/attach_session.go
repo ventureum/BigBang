@@ -12,10 +12,15 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
   "BigBang/internal/platform/eth_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   PostHash string `json:"postHash,required"`
   StartTime int64 `json:"startTime,required"`
@@ -32,11 +37,11 @@ type Response struct {
 
 func (request *Request) ToSessionRecord() (*session_record_config.SessionRecord) {
   return &session_record_config.SessionRecord{
-    Actor:      request.Actor,
-    PostHash:   request.PostHash,
-    StartTime:  request.StartTime,
-    EndTime:    request.EndTime,
-    Content:    request.Content.ToJsonText(),
+    Actor:      request.Body.Actor,
+    PostHash:   request.Body.PostHash,
+    StartTime:  request.Body.StartTime,
+    EndTime:    request.Body.EndTime,
+    Content:    request.Body.Content.ToJsonText(),
   }
 }
 
@@ -50,10 +55,12 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  auth.AuthProcess(request.PrincipalId, request.Body.Actor, postgresBigBangClient)
+
   var err error
   var getStreamIOClient *stream.Client
-  if request.GetStreamApiKey != "" && request.GetStreamApiSecret != "" {
-    getStreamIOClient, err = stream.NewClient(request.GetStreamApiKey, request.GetStreamApiSecret)
+  if request.Body.GetStreamApiKey != "" && request.Body.GetStreamApiSecret != "" {
+    getStreamIOClient, err = stream.NewClient(request.Body.GetStreamApiKey, request.Body.GetStreamApiSecret)
   } else {
     getStreamIOClient, err = stream.NewClientFromEnv()
   }

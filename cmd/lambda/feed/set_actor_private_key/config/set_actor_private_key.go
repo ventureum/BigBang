@@ -5,10 +5,15 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "strings"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   PrivateKey string `json:"privateKey,required"`
 }
@@ -30,10 +35,12 @@ func ProcessRequest(request Request, response *Response) {
 
   postgresBigBangClient.Begin()
 
-  actor := request.Actor
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
-  actorProfileRecordExecutor.SetActorPrivateKeyTx(actor, strings.ToLower(request.PrivateKey))
+  actorProfileRecordExecutor.SetActorPrivateKeyTx(actor, strings.ToLower(request.Body.PrivateKey))
 
   postgresBigBangClient.Commit()
   response.Ok = true

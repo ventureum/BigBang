@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
+
+export AUTH_LEVEL=$2
+
 bazel test \
     --test_output=errors  \
     --sandbox_debug  \
+    --action_env="AUTH_LEVEL" \
     --action_env="DEV_ENV" \
     --action_env="DB_USER" \
     --action_env="DB_PASSWORD" \

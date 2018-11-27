@@ -6,9 +6,15 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/eth_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   PostHash string `json:"postHash,required"`
   Value int64 `json:"value,required"`
@@ -26,17 +32,20 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.VoteInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      if feed_attributes.CreateVoteTypeFromValue(request.Value) != feed_attributes.LOOKUP_VOTE_TYPE {
+      if feed_attributes.CreateVoteTypeFromValue(request.Body.Value) != feed_attributes.LOOKUP_VOTE_TYPE {
         postgresBigBangClient.RollBack()
       }
     }
     postgresBigBangClient.Close()
   }()
 
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
   postVotesRecord := post_votes_record_config.PostVotesRecord {
-    Actor: request.Actor,
-    PostHash: request.PostHash,
-    VoteType: feed_attributes.CreateVoteTypeFromValue(request.Value),
+    Actor: request.Body.Actor,
+    PostHash: request.Body.PostHash,
+    VoteType: feed_attributes.CreateVoteTypeFromValue(request.Body.Value),
   }
 
   if postVotesRecord.VoteType == feed_attributes.LOOKUP_VOTE_TYPE {

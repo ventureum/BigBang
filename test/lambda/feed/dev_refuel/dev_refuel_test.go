@@ -14,11 +14,14 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_dev_refuel_config.Request {
-        Actor: test_constants.Actor1,
-        Fuel: 100,
-        Reputation: 100,
-        MilestonePoints: 100,
+      request: lambda_dev_refuel_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_dev_refuel_config.RequestContent{
+          Actor:           test_constants.Actor1,
+          Fuel:            100,
+          Reputation:      100,
+          MilestonePoints: 100,
+        },
       },
       response: lambda_dev_refuel_config.Response {
         Ok: true,
@@ -26,11 +29,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_dev_refuel_config.Request {
-        Actor: test_constants.Actor2,
-        Fuel: 100,
-        Reputation: 100,
-        MilestonePoints: 100,
+      request: lambda_dev_refuel_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_dev_refuel_config.RequestContent{
+          Actor:           test_constants.Actor2,
+          Fuel:            100,
+          Reputation:      100,
+          MilestonePoints: 100,
+        },
       },
       response: lambda_dev_refuel_config.Response {
         Ok: true,
@@ -38,11 +44,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_dev_refuel_config.Request {
-        Actor: test_constants.Actor3,
-        Fuel: 100,
-        Reputation: 100,
-        MilestonePoints: 100,
+      request: lambda_dev_refuel_config.Request{
+        PrincipalId: test_constants.Actor3,
+        Body: lambda_dev_refuel_config.RequestContent{
+          Actor:           test_constants.Actor3,
+          Fuel:            100,
+          Reputation:      100,
+          MilestonePoints: 100,
+        },
       },
       response: lambda_dev_refuel_config.Response {
         Ok: true,
@@ -50,11 +59,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_dev_refuel_config.Request {
-        Actor: test_constants.Actor4,
-        Fuel: 100,
-        Reputation: 100,
-        MilestonePoints: 100,
+      request: lambda_dev_refuel_config.Request{
+        PrincipalId: test_constants.Actor4,
+        Body: lambda_dev_refuel_config.RequestContent{
+          Actor:           test_constants.Actor4,
+          Fuel:            100,
+          Reputation:      100,
+          MilestonePoints: 100,
+        },
       },
       response: lambda_dev_refuel_config.Response {
         Ok: true,
@@ -62,11 +74,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_dev_refuel_config.Request {
-        Actor: test_constants.Actor5,
-        Fuel: 100,
-        Reputation: 100,
-        MilestonePoints: 100,
+      request: lambda_dev_refuel_config.Request{
+        PrincipalId: test_constants.Actor5,
+        Body: lambda_dev_refuel_config.RequestContent{
+          Actor:           test_constants.Actor5,
+          Fuel:            100,
+          Reputation:      100,
+          MilestonePoints: 100,
+        },
       },
       response: lambda_dev_refuel_config.Response {
         Ok: true,
@@ -74,11 +89,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_dev_refuel_config.Request {
-        Actor: test_constants.Actor6,
-        Fuel: 100,
-        Reputation: 100,
-        MilestonePoints: 100,
+      request: lambda_dev_refuel_config.Request{
+        PrincipalId: test_constants.Actor6,
+        Body: lambda_dev_refuel_config.RequestContent{
+          Actor:           test_constants.Actor6,
+          Fuel:            100,
+          Reputation:      100,
+          MilestonePoints: 100,
+        },
       },
       response: lambda_dev_refuel_config.Response {
         Ok: true,
@@ -86,11 +104,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_dev_refuel_config.Request {
-        Actor: test_constants.Actor7,
-        Fuel: 100,
-        Reputation: 100,
-        MilestonePoints: 100,
+      request: lambda_dev_refuel_config.Request{
+        PrincipalId: test_constants.Actor7,
+        Body: lambda_dev_refuel_config.RequestContent{
+          Actor:           test_constants.Actor7,
+          Fuel:            100,
+          Reputation:      100,
+          MilestonePoints: 100,
+        },
       },
       response: lambda_dev_refuel_config.Response {
         Ok: true,

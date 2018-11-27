@@ -9,10 +9,15 @@ import (
   "BigBang/internal/platform/postgres_config/feed/post_rewards_record_config"
   "BigBang/internal/platform/postgres_config/feed/post_replies_record_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   PostHashes []string `json:"postHashes,required"`
 }
 
@@ -59,8 +64,8 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  postHashes := request.PostHashes
-
+  postHashes := request.Body.PostHashes
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   postExecutor := post_config.PostExecutor{*postgresBigBangClient}
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}

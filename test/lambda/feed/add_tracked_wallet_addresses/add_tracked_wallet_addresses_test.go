@@ -14,11 +14,14 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_add_tracked_wallet_addresses_config.Request {
-        Actor:          test_constants.Actor1,
-        WalletAddressList: []string {
-          test_constants.WalletAddress1,
-          test_constants.WalletAddress2,
+      request: lambda_add_tracked_wallet_addresses_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_tracked_wallet_addresses_config.RequestContent{
+          Actor: test_constants.Actor1,
+          WalletAddressList: []string{
+            test_constants.WalletAddress1,
+            test_constants.WalletAddress2,
+          },
         },
       },
       response: lambda_add_tracked_wallet_addresses_config.Response {

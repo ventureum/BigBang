@@ -10,10 +10,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config"
   "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string  `json:"actor,required"`
   ProjectId     string    `json:"projectId,required"`
   Limit  int64  `json:"limit,required"`
@@ -42,9 +47,11 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  actor := request.Actor
-  projectId := request.ProjectId
-  limit := request.Limit
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
+  projectId := request.Body.ProjectId
+  limit := request.Body.Limit
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
@@ -69,7 +76,7 @@ func ProcessRequest(request Request, response *Response) {
     }
   } else {
 
-    cursorStr := request.Cursor
+    cursorStr := request.Body.Cursor
     var cursor string
     if cursorStr != "" {
       cursor = utils.Base64DecodeToString(cursorStr)

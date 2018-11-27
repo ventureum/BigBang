@@ -16,9 +16,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_delete_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
+      request: lambda_delete_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_delete_milestone_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: test_constants.MilestoneId1,
+        },
       },
       response: lambda_delete_milestone_config.Response {
         Ok: true,
@@ -37,6 +40,6 @@ func TestHandler(t *testing.T) {
     assert.False(
       t,
       milestoneExecutor.CheckMilestoneRecordExisting(
-        test.request.ProjectId, test.request.MilestoneId))
+        test.request.Body.ProjectId, test.request.Body.MilestoneId))
   }
 }

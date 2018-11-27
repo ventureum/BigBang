@@ -8,10 +8,15 @@ import (
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/actor_milestone_points_redeem_history_record_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   Limit int64 `json:"limit,required"`
   Cursor string `json:"cursor,omitempty"`
@@ -40,9 +45,10 @@ func ProcessRequest(request Request, response *Response) {
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
-  actor := request.Actor
-  limit := request.Limit
-  cursorStr := request.Cursor
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+  limit := request.Body.Limit
+  cursorStr := request.Body.Cursor
 
   actorProfileRecordExecutor.VerifyActorExisting(actor)
 

@@ -6,10 +6,15 @@ import (
   "log"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   RedeemBlockTimestamp int64 `json:"redeemBlockTimestamp,required"`
 }
 
@@ -28,10 +33,10 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
-
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
   redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 
-  redeemBlockTimestamp := request.RedeemBlockTimestamp
+  redeemBlockTimestamp := request.Body.RedeemBlockTimestamp
   redeemBlock := feed_attributes.CreateRedeemBlockFromUnix(redeemBlockTimestamp)
   redeemBlockInfoRecordExecutor.VerifyRedeemBlockInfoExisting(redeemBlock)
 

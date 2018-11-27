@@ -15,12 +15,15 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_finalize_validators_config.Request {
-        ProjectId:  test_constants.ProjectId1,
-        MilestoneId:  test_constants.MilestoneId1,
-        Validators: []string {
-          test_constants.Actor1,
-          test_constants.Actor2,
+      request: lambda_finalize_validators_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_validators_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: test_constants.MilestoneId1,
+          Validators: []string{
+            test_constants.Actor1,
+            test_constants.Actor2,
+          },
         },
       },
       response: lambda_finalize_validators_config.Response {
@@ -29,12 +32,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_finalize_validators_config.Request {
-        ProjectId:  test_constants.ProjectId1,
-        MilestoneId:  test_constants.MilestoneId1,
-        Validators: []string {
-          test_constants.Actor3,
-          test_constants.Actor2,
+      request: lambda_finalize_validators_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_validators_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: test_constants.MilestoneId1,
+          Validators: []string{
+            test_constants.Actor3,
+            test_constants.Actor2,
+          },
         },
       },
       response: lambda_finalize_validators_config.Response {

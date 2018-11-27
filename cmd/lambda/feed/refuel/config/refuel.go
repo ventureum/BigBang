@@ -12,9 +12,15 @@ import (
   "os"
   "time"
   "math"
+  "BigBang/cmd/lambda/common/auth"
 )
 
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
 }
 
@@ -35,7 +41,8 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  actor := request.Actor
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
   debugMode, _ := strconv.ParseInt(os.Getenv("DEBUG_MODE"), 10, 64)
   refuelInterval, _ := strconv.ParseInt(os.Getenv("REFUEL_INTERVAL"), 10, 64)

@@ -15,11 +15,14 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_batch_finalized_validators_config.Request {
-        MilestoneValidatorsInfoKeyList: []tcr_attributes.MilestoneValidatorsInfoKey {
-          {
-            ProjectId:  test_constants.ProjectId1,
-            MilestoneId:  test_constants.MilestoneId1,
+      request: lambda_get_batch_finalized_validators_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_batch_finalized_validators_config.RequestContent{
+          MilestoneValidatorsInfoKeyList: []tcr_attributes.MilestoneValidatorsInfoKey{
+            {
+              ProjectId:   test_constants.ProjectId1,
+              MilestoneId: test_constants.MilestoneId1,
+            },
           },
         },
       },

@@ -14,17 +14,20 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_update_batch_received_delegate_votes_config.Request {
-        RequestList: []lambda_update_batch_received_delegate_votes_config.RequestContent{
-          {
-            Actor:                  test_constants.Actor1,
-            ProjectId:              test_constants.ProjectId1,
-            ReceivedDelegateVotesDelta: 60,
-          },
-          {
-            Actor:                  test_constants.Actor2,
-            ProjectId:              test_constants.ProjectId1,
-            ReceivedDelegateVotesDelta: 60,
+      request: lambda_update_batch_received_delegate_votes_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_update_batch_received_delegate_votes_config.RequestBody{
+          RequestList: []lambda_update_batch_received_delegate_votes_config.RequestContent{
+            {
+              Actor:                      test_constants.Actor1,
+              ProjectId:                  test_constants.ProjectId1,
+              ReceivedDelegateVotesDelta: 60,
+            },
+            {
+              Actor:                      test_constants.Actor2,
+              ProjectId:                  test_constants.ProjectId1,
+              ReceivedDelegateVotesDelta: 60,
+            },
           },
         },
       },

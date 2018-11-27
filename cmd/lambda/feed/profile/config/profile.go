@@ -10,10 +10,15 @@ import (
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
   "strings"
   "BigBang/internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   UserType string `json:"userType,required"`
   Username string `json:"username,required"`
@@ -30,13 +35,13 @@ type Response struct {
 
 func (request *Request) ToActorProfileRecord() (*actor_profile_record_config.ActorProfileRecord) {
   return &actor_profile_record_config.ActorProfileRecord{
-    Actor:      request.Actor,
-    ActorType: feed_attributes.ValidateAndCreateActorType(request.UserType),
-    Username: request.Username,
-    PhotoUrl: request.PhotoUrl,
-    TelegramId: request.TelegramId,
-    PhoneNumber: request.PhoneNumber,
-    PublicKey: strings.ToLower(request.PublicKey),
+    Actor:      request.Body.Actor,
+    ActorType: auth.ValidateAndCreateActorTypeWithAuthLevel(request.Body.UserType),
+    Username: request.Body.Username,
+    PhotoUrl: request.Body.PhotoUrl,
+    TelegramId: request.Body.TelegramId,
+    PhoneNumber: request.Body.PhoneNumber,
+    PublicKey: strings.ToLower(request.Body.PublicKey),
   }
 }
 
@@ -49,6 +54,9 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  actor := request.Body.Actor
+  auth.RegisterAuth(request.PrincipalId, actor, postgresBigBangClient)
 
   postgresBigBangClient.Begin()
 
@@ -66,7 +74,7 @@ func ProcessRequest(request Request, response *Response) {
     initReputation := feed_attributes.Reputation(initFuel)
 
     actorReputationsRecord := actor_rewards_info_record_config.ActorRewardsInfoRecord{
-      Actor:           request.Actor,
+      Actor:           actor,
       Reputation:      initReputation,
       Fuel:            initFuel,
       MilestonePointsFromVotes: 0,
@@ -76,17 +84,17 @@ func ProcessRequest(request Request, response *Response) {
     }
     actorReputationsRecordExecutor.UpsertActorRewardsInfoRecordTx(&actorReputationsRecord)
     refuelRecordExecutor.UpsertRefuelRecordTx(&refuel_record_config.RefuelRecord{
-      Actor: request.Actor,
+      Actor: actor,
       Fuel: initFuel,
       Reputation: initReputation,
       MilestonePoints: 0,
     })
-    log.Printf("Created Actor Fuel Account for actor %s", request.Actor)
+    log.Printf("Created Actor Fuel Account for actor %s", actor)
 
 
     milestonePointsRedeemRequestRecordExecutor.UpsertMilestonePointsRedeemRequestRecordTx(
       &milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecord {
-        Actor: request.Actor,
+        Actor: actor,
         NextRedeemBlock: 0,
         TargetedMilestonePoints: 0,
     })
@@ -95,9 +103,9 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient.Commit()
 
   if inserted {
-    log.Printf("Created Profile for actor %s", request.Actor)
+    log.Printf("Created Profile for actor %s", actor)
   } else {
-    log.Printf("Updated Profile for actor %s", request.Actor)
+    log.Printf("Updated Profile for actor %s", actor)
   }
 
   response.Ok = true

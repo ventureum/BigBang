@@ -6,10 +6,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/app/tcr_attributes"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId   string                  `json:"projectId,required"`
   MilestoneId int64                   `json:"milestoneId,required"`
   Content     string                  `json:"content,required"`
@@ -26,13 +31,13 @@ type Response struct {
 
 func (request *Request) ToMilestoneRecord() (record *milestone_config.MilestoneRecord) {
   milestoneRecord := &milestone_config.MilestoneRecord{
-    ProjectId:     request.ProjectId,
-    MilestoneId: request.MilestoneId,
-    Content:       request.Content,
-    BlockTimestamp: request.BlockTimestamp,
-    StartTime: request.StartTime,
-    EndTime: request.EndTime,
-    State: request.State,
+    ProjectId:     request.Body.ProjectId,
+    MilestoneId: request.Body.MilestoneId,
+    Content:       request.Body.Content,
+    BlockTimestamp: request.Body.BlockTimestamp,
+    StartTime: request.Body.StartTime,
+    EndTime: request.Body.EndTime,
+    State: request.Body.State,
   }
   return milestoneRecord
 }
@@ -46,6 +51,10 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  projectId := request.Body.ProjectId
   postgresBigBangClient.Begin()
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
@@ -53,14 +62,14 @@ func ProcessRequest(request Request, response *Response) {
   inserted := milestoneExecutor.UpsertMilestoneRecordTx(request.ToMilestoneRecord())
 
   if inserted {
-    projectExecutor.IncreaseNumMilestonesTx(request.ProjectId)
+    projectExecutor.IncreaseNumMilestonesTx(projectId)
   }
 
-  switch state := request.State; state {
+  switch state := request.Body.State; state {
     case tcr_attributes.CompleteMilestoneState:
-      projectExecutor.IncreaseNumMilestonesCompletedTx(request.ProjectId)
+      projectExecutor.IncreaseNumMilestonesCompletedTx(projectId)
     case tcr_attributes.InProgressMilestoneState:
-      projectExecutor.SetCurrentMilestoneTx(request.ProjectId, request.MilestoneId)
+      projectExecutor.SetCurrentMilestoneTx(projectId, request.Body.MilestoneId)
   }
 
   postgresBigBangClient.Commit()

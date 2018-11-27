@@ -26,8 +26,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_next_redeem_config.Request {
-        Actor: test_constants.Actor1,
+      request: lambda_get_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_next_redeem_config.RequestContent{
+          Actor: test_constants.Actor1,
+        },
       },
       response: lambda_get_next_redeem_config.Response {
           NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
@@ -48,8 +51,11 @@ func TestHandler(t *testing.T) {
        err: nil,
     },
     {
-      request: lambda_get_next_redeem_config.Request {
-        Actor: test_constants.Actor2,
+      request: lambda_get_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_get_next_redeem_config.RequestContent{
+          Actor: test_constants.Actor2,
+        },
       },
       response: lambda_get_next_redeem_config.Response {
         NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
@@ -70,8 +76,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_next_redeem_config.Request {
-        Actor: test_constants.Actor3,
+      request: lambda_get_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor3,
+        Body: lambda_get_next_redeem_config.RequestContent{
+          Actor: test_constants.Actor3,
+        },
       },
       response: lambda_get_next_redeem_config.Response {
         NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
@@ -92,8 +101,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_next_redeem_config.Request {
-        Actor: test_constants.Actor4,
+      request: lambda_get_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_get_next_redeem_config.RequestContent{
+          Actor: test_constants.Actor4,
+        },
       },
       response: lambda_get_next_redeem_config.Response {
         NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
@@ -114,8 +126,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_next_redeem_config.Request {
-        Actor: test_constants.Actor5,
+      request: lambda_get_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_get_next_redeem_config.RequestContent{
+          Actor: test_constants.Actor5,
+        },
       },
       response: lambda_get_next_redeem_config.Response {
         NextRedeem: &lambda_get_next_redeem_config.ResponseContent{
@@ -136,8 +151,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_next_redeem_config.Request {
-        Actor: test_constants.Actor6,
+      request: lambda_get_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_get_next_redeem_config.RequestContent{
+          Actor: test_constants.Actor6,
+        },
       },
       response: lambda_get_next_redeem_config.Response {
         NextRedeem: &lambda_get_next_redeem_config.ResponseContent{

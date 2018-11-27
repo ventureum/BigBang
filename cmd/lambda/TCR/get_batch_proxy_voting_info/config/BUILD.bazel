@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/TCR/get_batch_proxy_voting_info/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/lambda/common/auth:go_default_library",
         "//internal/app/tcr_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/TCR/actor_delegate_votes_account_config:go_default_library",

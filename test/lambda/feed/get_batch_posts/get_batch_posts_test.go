@@ -16,9 +16,12 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_get_batch_posts_config.Request {
-        PostHashes: []string{
-          test_constants.PostHash1,
-          test_constants.PostHash2,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_batch_posts_config.RequestContent{
+          PostHashes: []string{
+            test_constants.PostHash1,
+            test_constants.PostHash2,
+          },
         },
       },
 

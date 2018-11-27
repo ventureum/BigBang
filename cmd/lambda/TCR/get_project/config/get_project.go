@@ -7,10 +7,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/app/tcr_attributes"
   "BigBang/cmd/lambda/TCR/common"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId string `json:"projectId,required"`
 }
 
@@ -30,7 +35,9 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  projectId := request.ProjectId
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  projectId := request.Body.ProjectId
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
 

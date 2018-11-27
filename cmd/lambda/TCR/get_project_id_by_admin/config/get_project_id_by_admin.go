@@ -5,10 +5,16 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
 
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Admin string `json:"admin,required"`
 }
 
@@ -27,7 +33,9 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  admin := request.Admin
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  admin := request.Body.Admin
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExisting(admin)
 

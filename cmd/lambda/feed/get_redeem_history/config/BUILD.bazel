@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/feed/get_redeem_history/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/lambda/common/auth:go_default_library",
         "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/pkg/utils:go_default_library",

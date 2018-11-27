@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/TCR/update_batch_received_delegate_votes/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/lambda/common/auth:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/TCR/actor_delegate_votes_account_config:go_default_library",
         "//internal/platform/postgres_config/TCR/project_config:go_default_library",

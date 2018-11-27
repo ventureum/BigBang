@@ -16,8 +16,11 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor1,
-        MilestonePoints: test_constants.RedeemMiletonePointsRegular1,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_set_next_redeem_config.RequestContent{
+          Actor:           test_constants.Actor1,
+          MilestonePoints: test_constants.RedeemMiletonePointsRegular1,
+        },
       },
       response: lambda_set_next_redeem_config.Response {
           Ok: true,
@@ -25,9 +28,12 @@ func TestHandler(t *testing.T) {
        err: nil,
     },
     {
-      request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor2,
-        MilestonePoints: test_constants.RedeemMiletonePointsRegular2,
+      request: lambda_set_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_set_next_redeem_config.RequestContent{
+          Actor:           test_constants.Actor2,
+          MilestonePoints: test_constants.RedeemMiletonePointsRegular2,
+        },
       },
       response: lambda_set_next_redeem_config.Response {
         Ok: true,
@@ -35,9 +41,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor3,
-        MilestonePoints: test_constants.RedeemMiletonePointsRegular3,
+      request: lambda_set_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor3,
+        Body: lambda_set_next_redeem_config.RequestContent{
+          Actor:           test_constants.Actor3,
+          MilestonePoints: test_constants.RedeemMiletonePointsRegular3,
+        },
       },
       response: lambda_set_next_redeem_config.Response {
         Ok: true,
@@ -45,9 +54,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor4,
-        MilestonePoints: test_constants.RedeemMiletonePointsRegular4,
+      request: lambda_set_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor4,
+        Body: lambda_set_next_redeem_config.RequestContent{
+          Actor:           test_constants.Actor4,
+          MilestonePoints: test_constants.RedeemMiletonePointsRegular4,
+        },
       },
       response: lambda_set_next_redeem_config.Response {
         Ok: true,
@@ -55,9 +67,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor5,
-        MilestonePoints: test_constants.RedeemMiletonePointsMax,
+      request: lambda_set_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor5,
+        Body: lambda_set_next_redeem_config.RequestContent{
+          Actor:           test_constants.Actor5,
+          MilestonePoints: test_constants.RedeemMiletonePointsMax,
+        },
       },
       response: lambda_set_next_redeem_config.Response {
         Ok: true,
@@ -65,9 +80,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor6,
-        MilestonePoints: test_constants.RedeemMiletonePointsZero,
+      request: lambda_set_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor6,
+        Body: lambda_set_next_redeem_config.RequestContent{
+          Actor:           test_constants.Actor6,
+          MilestonePoints: test_constants.RedeemMiletonePointsZero,
+        },
       },
       response: lambda_set_next_redeem_config.Response {
         Ok: true,
@@ -75,9 +93,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_next_redeem_config.Request {
-        Actor: test_constants.Actor7,
-        MilestonePoints: test_constants.RedeemMiletonePointsNegative,
+      request: lambda_set_next_redeem_config.Request{
+        PrincipalId: test_constants.Actor7,
+        Body: lambda_set_next_redeem_config.RequestContent{
+          Actor:           test_constants.Actor7,
+          MilestonePoints: test_constants.RedeemMiletonePointsNegative,
+        },
       },
       response: lambda_set_next_redeem_config.Response {
         Ok: false,

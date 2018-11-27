@@ -15,10 +15,13 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_objective_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
-        ObjectiveId: test_constants.ObjectiveId1,
+      request: lambda_get_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_objective_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: test_constants.MilestoneId1,
+          ObjectiveId: test_constants.ObjectiveId1,
+        },
       },
       response: lambda_get_objective_config.Response {
         Objective: &tcr_attributes.Objective{

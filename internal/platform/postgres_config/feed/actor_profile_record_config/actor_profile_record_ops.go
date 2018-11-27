@@ -5,6 +5,7 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "database/sql"
+  "BigBang/internal/app/feed_attributes"
 )
 
 type ActorProfileRecordExecutor struct {
@@ -129,15 +130,19 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) SetActorPrivateKey
   log.Printf("Sucessfully updated private keyfor actor %s\n", actor)
 }
 
-func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExisting (actor string) {
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorExisting(actor string) bool {
   var existing bool
   err := actorProfileRecordExecutor.C.Get(&existing, VERIFY_ACTOR_EXISTING_COMMAND, actor)
   if err != nil {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
-    log.Printf("Failed to verify actor existing for actor %s with error: %+v\n", actor, err)
+    log.Printf("Failed to check actor existing for actor %s with error: %+v\n", actor, err)
     log.Panicln(errInfo.Marshal())
   }
+  return existing
+}
 
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExisting(actor string) {
+  existing := actorProfileRecordExecutor.CheckActorExisting(actor)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoActorExisting,
@@ -151,8 +156,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
   }
 }
 
-
-func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorType(actor string, actorType string) bool {
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorType(actor string, actorType feed_attributes.ActorType) bool {
   var match bool
   err := actorProfileRecordExecutor.C.Get(&match, VERIFY_ACTOR_TYPE_COMMAND, actor, actorType)
   if err != nil {
@@ -162,6 +166,21 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorType(act
     log.Panicln(errInfo.Marshal())
   }
   return match
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorType(actor string) feed_attributes.ActorType {
+  var actorType feed_attributes.ActorType
+  err := actorProfileRecordExecutor.C.Get(&actorType, QUERY_ACTOR_TYPE_COMMAND, actor)
+  if err == sql.ErrNoRows {
+    return feed_attributes.ActorType("")
+  }
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    errInfo.ErrorData["actorType"] = actorType
+    log.Printf("Failed to get ActorType for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return actorType
 }
 
 /*
@@ -261,15 +280,19 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorUuidFromPu
   return actor
 }
 
-func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistingTx (actor string) {
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorExistingTx(actor string) bool {
   var existing bool
   err := actorProfileRecordExecutor.Tx.Get(&existing, VERIFY_ACTOR_EXISTING_COMMAND, actor)
   if err != nil {
     errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
-    log.Printf("Failed to verify actor existing for actor %s with error: %+v\n", actor, err)
+    log.Printf("Failed to check actor existing for actor %s with error: %+v\n", actor, err)
     log.Panicln(errInfo.Marshal())
   }
+  return existing
+}
 
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistingTx(actor string) {
+  existing := actorProfileRecordExecutor.CheckActorExisting(actor)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoActorExisting,
@@ -283,7 +306,7 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) VerifyActorExistin
   }
 }
 
-func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorTypeTx(actor string, actorType string) bool {
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorTypeTx(actor string, actorType feed_attributes.ActorType) bool {
   var match bool
   err := actorProfileRecordExecutor.Tx.Get(&match, VERIFY_ACTOR_TYPE_COMMAND, actor, actorType)
   if err != nil {
@@ -293,4 +316,19 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) CheckActorTypeTx(a
     log.Panicln(errInfo.Marshal())
   }
   return match
+}
+
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) GetActorTypeTx(actor string) feed_attributes.ActorType {
+  var actorType feed_attributes.ActorType
+  err := actorProfileRecordExecutor.Tx.Get(&actorType, QUERY_ACTOR_TYPE_COMMAND, actor)
+  if err == sql.ErrNoRows {
+    return feed_attributes.ActorType("")
+  }
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.ProfileAccountLocation)
+    errInfo.ErrorData["actorType"] = actorType
+    log.Printf("Failed to get ActorType for actor %s with error: %+v\n", actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return actorType
 }

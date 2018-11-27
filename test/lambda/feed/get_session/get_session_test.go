@@ -15,8 +15,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_session_config.Request {
-        PostHash: test_constants.PostHash2,
+      request: lambda_get_session_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_session_config.RequestContent{
+          PostHash: test_constants.PostHash2,
+        },
       },
       response: lambda_get_session_config.Response {
         Session: &session_record_config.SessionRecordResult{

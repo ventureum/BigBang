@@ -28,9 +28,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_redeem_history_config.Request {
-        Actor: test_constants.Actor1,
-        Limit: 0,
+      request: lambda_get_redeem_history_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_redeem_history_config.RequestContent{
+          Actor: test_constants.Actor1,
+          Limit: 0,
+        },
       },
       response: lambda_get_redeem_history_config.Response {
         ResponseData: &lambda_get_redeem_history_config.ResponseData {
@@ -42,9 +45,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_redeem_history_config.Request {
-        Actor: test_constants.Actor1,
-        Limit: 2,
+      request: lambda_get_redeem_history_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_redeem_history_config.RequestContent{
+          Actor: test_constants.Actor1,
+          Limit: 2,
+        },
       },
       response: lambda_get_redeem_history_config.Response {
         ResponseData: &lambda_get_redeem_history_config.ResponseData {
@@ -82,9 +88,12 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_get_redeem_history_config.Request {
-        Actor: test_constants.Actor1,
-        Cursor: utils.Base64EncodeIdByInt64AndStr(int64(feed_attributes.MoveToNextNRedeemBlock(4)), test_constants.Actor1),
-        Limit: 2,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_redeem_history_config.RequestContent{
+          Actor:  test_constants.Actor1,
+          Cursor: utils.Base64EncodeIdByInt64AndStr(int64(feed_attributes.MoveToNextNRedeemBlock(4)), test_constants.Actor1),
+          Limit:  2,
+        },
       },
       response: lambda_get_redeem_history_config.Response {
         ResponseData: &lambda_get_redeem_history_config.ResponseData{
@@ -121,10 +130,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_redeem_history_config.Request {
-        Actor: test_constants.Actor1,
-        Cursor: utils.Base64EncodeIdByInt64AndStr(int64(feed_attributes.MoveToNextNRedeemBlock(4)), test_constants.Actor1),
-        Limit: 5,
+      request: lambda_get_redeem_history_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_redeem_history_config.RequestContent{
+          Actor:  test_constants.Actor1,
+          Cursor: utils.Base64EncodeIdByInt64AndStr(int64(feed_attributes.MoveToNextNRedeemBlock(4)), test_constants.Actor1),
+          Limit:  5,
+        },
       },
       response: lambda_get_redeem_history_config.Response {
         ResponseData: &lambda_get_redeem_history_config.ResponseData{

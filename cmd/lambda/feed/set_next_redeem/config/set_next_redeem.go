@@ -7,10 +7,15 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config"
   "BigBang/internal/app/feed_attributes"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   MilestonePoints int64 `json:"milestonePoints,required"`
 }
@@ -32,12 +37,14 @@ func ProcessRequest(request Request, response *Response) {
 
   postgresBigBangClient.Begin()
 
-  actor := request.Actor
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
 
   nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
-  milestonePoints := request.MilestonePoints
+  milestonePoints := request.Body.MilestonePoints
 
   if milestonePoints < 0 {
     errorInfo := error_config.ErrorInfo{
@@ -58,7 +65,7 @@ func ProcessRequest(request Request, response *Response) {
 
   milestonePointsRedeemRequestRecordExecutor.UpsertMilestonePointsRedeemRequestRecordTx(
     &milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecord {
-      Actor: request.Actor,
+      Actor: actor,
       NextRedeemBlock: nextRedeemBlock,
       TargetedMilestonePoints: feed_attributes.MilestonePoint(milestonePoints),})
 

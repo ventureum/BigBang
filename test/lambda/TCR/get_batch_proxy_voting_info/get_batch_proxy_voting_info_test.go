@@ -15,11 +15,14 @@ func TestHandler(t *testing.T) {
     err      error
   }{
     {
-      request: lambda_get_batch_proxy_voting_info_config.Request {
-        ProxyVotingInfoKeyList: []tcr_attributes.ProxyVotingInfoKey {
-          {
-            Actor: test_constants.Actor1,
-            ProjectId: test_constants.ProjectId1,
+      request: lambda_get_batch_proxy_voting_info_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_batch_proxy_voting_info_config.RequestContent{
+          ProxyVotingInfoKeyList: []tcr_attributes.ProxyVotingInfoKey{
+            {
+              Actor:     test_constants.Actor1,
+              ProjectId: test_constants.ProjectId1,
+            },
           },
         },
       },

@@ -1,0 +1,103 @@
+package auth
+
+import (
+  "os"
+  "BigBang/internal/pkg/error_config"
+  "log"
+  "BigBang/internal/platform/postgres_config/client_config"
+  "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
+  "BigBang/internal/app/feed_attributes"
+)
+
+
+func RegisterAuth(principalId string, actor string, postgresBigBangClient *client_config.PostgresBigBangClient) {
+  auth := os.Getenv("AUTH_LEVEL")
+  if  postgresBigBangClient == nil {
+    postgresBigBangClient = client_config.ConnectPostgresClient(nil)
+  }
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+
+  if principalId != "" && AuthLevel(auth) == AdminAuth {
+    match := actorProfileRecordExecutor.CheckActorType(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
+    if match {
+      return
+    }
+  } else if principalId != "" && AuthLevel(auth) == UserAuth {
+    match := actorProfileRecordExecutor.CheckActorType(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
+    if match || (actor != "" && principalId == actor) {
+      return
+    }
+  } else if principalId != "" && AuthLevel(auth) == NoAuth {
+    return
+  } else {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.InvalidAuthRegister,
+      ErrorData: error_config.ErrorData {
+        "principalId": principalId,
+        "actor": actor,
+      },
+      ErrorLocation: error_config.Auth,
+    }
+    log.Printf("Invalid Auth Register for principalId %s and actor %s", principalId, actor)
+    log.Panicln(errorInfo.Marshal())
+  }
+}
+
+func AuthProcess(principalId string, actor string, postgresBigBangClient *client_config.PostgresBigBangClient) {
+  auth := os.Getenv("AUTH_LEVEL")
+
+  if  postgresBigBangClient == nil {
+    postgresBigBangClient = client_config.ConnectPostgresClient(nil)
+  }
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+
+  if principalId != "" && AuthLevel(auth) == AdminAuth {
+    match := actorProfileRecordExecutor.CheckActorType(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
+    if match {
+      return
+    }
+  } else if principalId != "" && AuthLevel(auth) == UserAuth {
+    actorType := actorProfileRecordExecutor.GetActorType(principalId)
+    if actorType != feed_attributes.ActorType("") &&
+      (actor == "" || (actor != "" &&
+          ((actorType == feed_attributes.ADMIN_ACTOR_TYPE) ||
+              (actorType != feed_attributes.ADMIN_ACTOR_TYPE && principalId == actor)))) {
+      return
+    }
+  } else if principalId != "" && AuthLevel(auth) == NoAuth {
+    return
+  } else {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.InvalidAuthAccess,
+      ErrorData: error_config.ErrorData {
+        "principalId": principalId,
+      },
+      ErrorLocation: error_config.Auth,
+    }
+    log.Printf("Invalid Auth Access for principalId %s", actor)
+    log.Panicln(errorInfo.Marshal())
+  }
+}
+
+func ValidateAndCreateActorTypeWithAuthLevel (actorTypeStr string) feed_attributes.ActorType {
+  var actorType  feed_attributes.ActorType
+  auth := os.Getenv("AUTH_LEVEL")
+  if AuthLevel(auth) == NoAuth && feed_attributes.ActorType(actorTypeStr) == feed_attributes.ADMIN_ACTOR_TYPE{
+    return feed_attributes.ADMIN_ACTOR_TYPE
+  }
+  switch feed_attributes.ActorType(actorTypeStr) {
+    case feed_attributes.USER_ACTOR_TYPE, feed_attributes.KOL_ACTOR_TYPE, feed_attributes.PF_ACTOR_TYPE:
+      actorType = feed_attributes.ActorType(actorTypeStr)
+    default:
+      errorInfo := error_config.ErrorInfo {
+        ErrorCode: error_config.InvalidActorType,
+        ErrorData: error_config.ErrorData {
+          "actorType": actorTypeStr,
+        },
+        ErrorLocation: error_config.ActorTypeLocation,
+      }
+      log.Printf("Invalid actorType: %s", actorTypeStr)
+      log.Panicln(errorInfo.Marshal())
+  }
+  return actorType
+}

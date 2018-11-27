@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/TCR/activate_milestone/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/lambda/common/auth:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/TCR/milestone_config:go_default_library",
         "//internal/platform/postgres_config/TCR/project_config:go_default_library",

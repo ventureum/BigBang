@@ -8,9 +8,15 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/feed/refuel_record_config"
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   Fuel int64 `json:"fuel,required"`
   Reputation int64 `json:"reputation,required"`
@@ -32,11 +38,12 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  fuel := feed_attributes.Fuel(request.Fuel)
-  reputation := feed_attributes.Reputation(request.Reputation)
-  milestonePoints := feed_attributes.MilestonePoint(request.MilestonePoints)
-  actor := request.Actor
+  fuel := feed_attributes.Fuel(request.Body.Fuel)
+  reputation := feed_attributes.Reputation(request.Body.Reputation)
+  milestonePoints := feed_attributes.MilestonePoint(request.Body.MilestonePoints)
+  actor := request.Body.Actor
 
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
 
   postgresBigBangClient.Begin()

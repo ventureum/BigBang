@@ -16,14 +16,17 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_batch_profiles_config.Request {
-        Actors: []string{test_constants.Actor1},
+      request: lambda_get_batch_profiles_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_batch_profiles_config.RequestContent{
+          Actors: []string{test_constants.Actor1},
+        },
       },
       response: lambda_get_batch_profiles_config.Response{
         Profiles: &[]lambda_get_batch_profiles_config.ResponseContent{
           {
             Actor:       test_constants.Actor1,
-            ActorType:   "KOL",
+            ActorType:   "ADMIN",
             Username:    test_constants.UserName1,
             PhotoUrl:    "http://123.com",
             TelegramId:  test_constants.TelegramId1,
