@@ -5,9 +5,15 @@ import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   PostHash string `json:"postHash,required"`
 }
 
@@ -27,7 +33,8 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  postHash := request.PostHash
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+  postHash := request.Body.PostHash
 
   postExecutor := post_config.PostExecutor{*postgresBigBangClient}
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}

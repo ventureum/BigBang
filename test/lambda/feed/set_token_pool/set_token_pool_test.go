@@ -20,9 +20,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_set_token_pool_config.Request {
-        RedeemBlockTimestamp: NextRedeemBlock.ConvertToTime().Unix(),
-        TokenPool: test_constants.TokenPoolSize1,
+      request: lambda_set_token_pool_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_set_token_pool_config.RequestContent{
+          RedeemBlockTimestamp: NextRedeemBlock.ConvertToTime().Unix(),
+          TokenPool:            test_constants.TokenPoolSize1,
+        },
       },
       response: lambda_set_token_pool_config.Response {
           Ok: true,
@@ -30,9 +33,12 @@ func TestHandler(t *testing.T) {
        err: nil,
     },
     {
-      request: lambda_set_token_pool_config.Request {
-        RedeemBlockTimestamp: NextNRedeemBlock.ConvertToTime().Unix(),
-        TokenPool: test_constants.TokenPoolSize1,
+      request: lambda_set_token_pool_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_set_token_pool_config.RequestContent{
+          RedeemBlockTimestamp: NextNRedeemBlock.ConvertToTime().Unix(),
+          TokenPool:            test_constants.TokenPoolSize1,
+        },
       },
       response: lambda_set_token_pool_config.Response {
         Ok: false,

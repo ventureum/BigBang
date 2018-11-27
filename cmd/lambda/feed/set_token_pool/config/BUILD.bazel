@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/feed/set_token_pool/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/lambda/common/auth:go_default_library",
         "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",

@@ -14,9 +14,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_set_actor_private_key_config.Request {
-        Actor: test_constants.Actor1,
-        PrivateKey: test_constants.PrivateKey1,
+      request: lambda_set_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_set_actor_private_key_config.RequestContent{
+          Actor:      test_constants.Actor1,
+          PrivateKey: test_constants.PrivateKey1,
+        },
       },
       response: lambda_set_actor_private_key_config.Response {
           Ok: true,
@@ -24,9 +27,12 @@ func TestHandler(t *testing.T) {
        err: nil,
     },
     {
-      request: lambda_set_actor_private_key_config.Request {
-        Actor: test_constants.Actor2,
-        PrivateKey: test_constants.PrivateKey2,
+      request: lambda_set_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_set_actor_private_key_config.RequestContent{
+          Actor:      test_constants.Actor2,
+          PrivateKey: test_constants.PrivateKey2,
+        },
       },
       response: lambda_set_actor_private_key_config.Response {
         Ok: true,
@@ -34,9 +40,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_actor_private_key_config.Request {
-        Actor: test_constants.Actor3,
-        PrivateKey: test_constants.PrivateKey3,
+      request: lambda_set_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor3,
+        Body: lambda_set_actor_private_key_config.RequestContent{
+          Actor:      test_constants.Actor3,
+          PrivateKey: test_constants.PrivateKey3,
+        },
       },
       response: lambda_set_actor_private_key_config.Response {
         Ok: true,
@@ -44,9 +53,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_actor_private_key_config.Request {
-        Actor: test_constants.Actor4,
-        PrivateKey: test_constants.PrivateKey4,
+      request: lambda_set_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor4,
+        Body: lambda_set_actor_private_key_config.RequestContent{
+          Actor:      test_constants.Actor4,
+          PrivateKey: test_constants.PrivateKey4,
+        },
       },
       response: lambda_set_actor_private_key_config.Response {
         Ok: true,
@@ -54,9 +66,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_actor_private_key_config.Request {
-        Actor: test_constants.Actor5,
-        PrivateKey: test_constants.PrivateKey5,
+      request: lambda_set_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor5,
+        Body: lambda_set_actor_private_key_config.RequestContent{
+          Actor:      test_constants.Actor5,
+          PrivateKey: test_constants.PrivateKey5,
+        },
       },
       response: lambda_set_actor_private_key_config.Response {
         Ok: true,
@@ -64,9 +79,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_actor_private_key_config.Request {
-        Actor: test_constants.Actor6,
-        PrivateKey: test_constants.PrivateKey6,
+      request: lambda_set_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor6,
+        Body: lambda_set_actor_private_key_config.RequestContent{
+          Actor:      test_constants.Actor6,
+          PrivateKey: test_constants.PrivateKey6,
+        },
       },
       response: lambda_set_actor_private_key_config.Response {
         Ok: true,
@@ -74,9 +92,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_set_actor_private_key_config.Request {
-        Actor: test_constants.Actor6,
-        PrivateKey: "",
+      request: lambda_set_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor6,
+        Body: lambda_set_actor_private_key_config.RequestContent{
+          Actor:      test_constants.Actor6,
+          PrivateKey: "",
+        },
       },
       response: lambda_set_actor_private_key_config.Response {
         Ok: true,

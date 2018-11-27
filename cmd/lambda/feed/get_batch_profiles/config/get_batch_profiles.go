@@ -8,10 +8,15 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
   "BigBang/internal/app/feed_attributes"
   "math"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actors []string `json:"actors,required"`
 }
 
@@ -55,9 +60,11 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresBigBangClient}
-  actors := request.Actors
+  actors := request.Body.Actors
 
   for _ , actor := range actors {
     actorProfileRecordExecutor.VerifyActorExisting(actor)

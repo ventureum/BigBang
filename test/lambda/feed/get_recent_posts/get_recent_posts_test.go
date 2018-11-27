@@ -16,9 +16,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_recent_posts_config.Request {
-        Actor: test_constants.Actor1,
-        TypeHash: test_constants.PostTypeHash,
+      request: lambda_get_recent_posts_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_recent_posts_config.RequestContent{
+          Actor:    test_constants.Actor1,
+          TypeHash: test_constants.PostTypeHash,
+        },
       },
       response: lambda_get_recent_posts_config.Response {
         RecentPosts: &[]post_rewards_record_config.PostRewardsRecord{

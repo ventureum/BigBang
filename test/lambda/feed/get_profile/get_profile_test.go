@@ -16,13 +16,16 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_profile_config.Request {
-        Actor: test_constants.Actor1,
+      request: lambda_get_profile_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_profile_config.RequestContent{
+          Actor: test_constants.Actor1,
+        },
       },
       response: lambda_get_profile_config.Response {
         Profile: &lambda_get_profile_config.ResponseContent{
           Actor: test_constants.Actor1,
-          ActorType: "KOL",
+          ActorType: "ADMIN",
           Username:test_constants.UserName1,
           PhotoUrl: "http://123.com",
           TelegramId: test_constants.TelegramId1,

@@ -18,7 +18,10 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_get_project_id_by_admin_config.Request{
-        Admin: test_constants.Actor1,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_project_id_by_admin_config.RequestContent{
+          Admin: test_constants.Actor1,
+        },
       },
       response: lambda_get_project_id_by_admin_config.Response{
         ProjectId: "",
@@ -28,7 +31,10 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_get_project_id_by_admin_config.Request{
-        Admin: test_constants.ProjectAdmin1,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_project_id_by_admin_config.RequestContent{
+          Admin: test_constants.ProjectAdmin1,
+        },
       },
       response: lambda_get_project_id_by_admin_config.Response{
         ProjectId: test_constants.ProjectId1,

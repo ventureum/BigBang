@@ -17,8 +17,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_project_config.Request {
-        ProjectId: test_constants.ProjectId1,
+      request: lambda_get_project_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_project_config.RequestContent{
+          ProjectId: test_constants.ProjectId1,
+        },
       },
       response: lambda_get_project_config.Response {
         Project: &tcr_attributes.Project{

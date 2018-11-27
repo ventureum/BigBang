@@ -7,9 +7,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/platform/postgres_config/TCR/milestone_validator_record_config"
   "BigBang/internal/app/tcr_attributes"
+  "BigBang/cmd/lambda/common/auth"
 )
 
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   MilestoneValidatorsInfoKeyList []tcr_attributes.MilestoneValidatorsInfoKey `json:"milestoneValidatorsInfoKeyList,required"`
 }
 
@@ -29,10 +35,12 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   milestoneValidatorRecordExecutor := milestone_validator_record_config.MilestoneValidatorRecordExecutor{*postgresBigBangClient}
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
 
-  milestoneValidatorsInfoKeyList := request.MilestoneValidatorsInfoKeyList
+  milestoneValidatorsInfoKeyList := request.Body.MilestoneValidatorsInfoKeyList
 
   for _ , milestoneValidatorsInfoKey := range milestoneValidatorsInfoKeyList {
     projectId := milestoneValidatorsInfoKey.ProjectId

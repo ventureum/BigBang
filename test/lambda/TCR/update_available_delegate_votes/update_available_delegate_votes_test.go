@@ -14,10 +14,13 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_update_available_delegate_votes_config.Request {
-        Actor:                  test_constants.Actor3,
-        ProjectId:              test_constants.ProjectId1,
-        AvailableDelegateVotes: 50,
+      request: lambda_update_available_delegate_votes_config.Request{
+        PrincipalId: test_constants.Actor3,
+        Body: lambda_update_available_delegate_votes_config.RequestContent{
+          Actor:                  test_constants.Actor3,
+          ProjectId:              test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+        },
       },
       response: lambda_update_available_delegate_votes_config.Response {
         Ok: true,
@@ -25,10 +28,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_update_available_delegate_votes_config.Request {
-        Actor:                  test_constants.Actor4,
-        ProjectId:              test_constants.ProjectId1,
-        AvailableDelegateVotes: 50,
+      request: lambda_update_available_delegate_votes_config.Request{
+        PrincipalId: test_constants.Actor4,
+        Body: lambda_update_available_delegate_votes_config.RequestContent{
+          Actor:                  test_constants.Actor4,
+          ProjectId:              test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+        },
       },
       response: lambda_update_available_delegate_votes_config.Response {
         Ok: true,
@@ -36,10 +42,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_update_available_delegate_votes_config.Request {
-        Actor:                  test_constants.Actor5,
-        ProjectId:              test_constants.ProjectId1,
-        AvailableDelegateVotes: 50,
+      request: lambda_update_available_delegate_votes_config.Request{
+        PrincipalId: test_constants.Actor5,
+        Body: lambda_update_available_delegate_votes_config.RequestContent{
+          Actor:                  test_constants.Actor5,
+          ProjectId:              test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+        },
       },
       response: lambda_update_available_delegate_votes_config.Response {
         Ok: true,
@@ -47,10 +56,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_update_available_delegate_votes_config.Request {
-        Actor:                  test_constants.Actor6,
-        ProjectId:              test_constants.ProjectId1,
-        AvailableDelegateVotes: 50,
+      request: lambda_update_available_delegate_votes_config.Request{
+        PrincipalId: test_constants.Actor6,
+        Body: lambda_update_available_delegate_votes_config.RequestContent{
+          Actor:                  test_constants.Actor6,
+          ProjectId:              test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+        },
       },
       response: lambda_update_available_delegate_votes_config.Response {
         Ok: true,
@@ -58,10 +70,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_update_available_delegate_votes_config.Request {
-        Actor:                  test_constants.Actor7,
-        ProjectId:              test_constants.ProjectId1,
-        AvailableDelegateVotes: 50,
+      request: lambda_update_available_delegate_votes_config.Request{
+        PrincipalId: test_constants.Actor7,
+        Body: lambda_update_available_delegate_votes_config.RequestContent{
+          Actor:                  test_constants.Actor7,
+          ProjectId:              test_constants.ProjectId1,
+          AvailableDelegateVotes: 50,
+        },
       },
       response: lambda_update_available_delegate_votes_config.Response {
         Ok: true,

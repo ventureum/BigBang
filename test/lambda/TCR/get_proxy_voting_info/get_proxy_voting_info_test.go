@@ -18,10 +18,13 @@ func TestHandler(t *testing.T) {
     err      error
   }{
     {
-      request: lambda_get_proxy_voting_info_config.Request {
-        Actor: test_constants.Actor1,
-        ProjectId: test_constants.ProjectId1,
-        Limit: 0,
+      request: lambda_get_proxy_voting_info_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_voting_info_config.RequestContent{
+          Actor:     test_constants.Actor1,
+          ProjectId: test_constants.ProjectId1,
+          Limit:     0,
+        },
       },
       response: lambda_get_proxy_voting_info_config.Response {
         ResponseData: &lambda_get_proxy_voting_info_config.ResponseData{
@@ -40,10 +43,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_voting_info_config.Request {
-        Actor: test_constants.Actor1,
-        ProjectId: test_constants.ProjectId1,
-        Limit: 2,
+      request: lambda_get_proxy_voting_info_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_voting_info_config.RequestContent{
+          Actor:     test_constants.Actor1,
+          ProjectId: test_constants.ProjectId1,
+          Limit:     2,
+        },
       },
       response: lambda_get_proxy_voting_info_config.Response {
         ResponseData: &lambda_get_proxy_voting_info_config.ResponseData{
@@ -73,12 +79,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_voting_info_config.Request {
-        Actor: test_constants.Actor1,
-        ProjectId: test_constants.ProjectId1,
-        Limit: 2,
-        Cursor:  principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
-          test_constants.Actor1, test_constants.ProjectId1, test_constants.Actor5, test_constants.ProxyVotesBlockTimestamp4),
+      request: lambda_get_proxy_voting_info_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_voting_info_config.RequestContent{
+          Actor:     test_constants.Actor1,
+          ProjectId: test_constants.ProjectId1,
+          Limit:     2,
+          Cursor: principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
+            test_constants.Actor1, test_constants.ProjectId1, test_constants.Actor5, test_constants.ProxyVotesBlockTimestamp4),
+        },
       },
       response: lambda_get_proxy_voting_info_config.Response {
         ResponseData: &lambda_get_proxy_voting_info_config.ResponseData{
@@ -108,12 +117,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_voting_info_config.Request {
-        Actor: test_constants.Actor1,
-        ProjectId: test_constants.ProjectId1,
-        Limit: 5,
-        Cursor: principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
-          test_constants.Actor1, test_constants.ProjectId1, test_constants.Actor5, test_constants.ProxyVotesBlockTimestamp4),
+      request: lambda_get_proxy_voting_info_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_voting_info_config.RequestContent{
+          Actor:     test_constants.Actor1,
+          ProjectId: test_constants.ProjectId1,
+          Limit:     5,
+          Cursor: principal_proxy_votes_config.GenerateEncodedPrincipalProxyVotesRecordID(
+            test_constants.Actor1, test_constants.ProjectId1, test_constants.Actor5, test_constants.ProxyVotesBlockTimestamp4),
+        },
       },
       response: lambda_get_proxy_voting_info_config.Response {
         ResponseData: &lambda_get_proxy_voting_info_config.ResponseData{

@@ -14,8 +14,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_delete_proxy_config.Request {
-        Proxy: test_constants.Actor7,
+      request: lambda_delete_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_delete_proxy_config.RequestContent{
+          Proxy: test_constants.Actor7,
+        },
       },
       response: lambda_delete_proxy_config.Response {
         Ok: true,

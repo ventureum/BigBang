@@ -14,11 +14,14 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_finalize_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
-        EndTime: test_constants.MilestoneEndTime1,
+      request: lambda_finalize_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
+          EndTime:        test_constants.MilestoneEndTime1,
+        },
       },
       response: lambda_finalize_milestone_config.Response {
         Ok: true,
@@ -26,11 +29,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_finalize_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId2,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
-        EndTime: test_constants.MilestoneEndTime2,
+      request: lambda_finalize_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId2,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
+          EndTime:        test_constants.MilestoneEndTime2,
+        },
       },
       response: lambda_finalize_milestone_config.Response {
         Ok: true,
@@ -38,11 +44,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_finalize_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId3,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
-        EndTime: test_constants.MilestoneEndTime3,
+      request: lambda_finalize_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId3,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
+          EndTime:        test_constants.MilestoneEndTime3,
+        },
       },
       response: lambda_finalize_milestone_config.Response {
         Ok: true,
@@ -50,11 +59,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_finalize_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId4,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
-        EndTime: test_constants.MilestoneEndTime4,
+      request: lambda_finalize_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId4,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
+          EndTime:        test_constants.MilestoneEndTime4,
+        },
       },
       response: lambda_finalize_milestone_config.Response {
         Ok: true,
@@ -62,11 +74,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_finalize_milestone_config.Request {
-        ProjectId: test_constants.ProjectId2,
-        MilestoneId: test_constants.MilestoneId1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
-        EndTime: test_constants.MilestoneEndTime1,
+      request: lambda_finalize_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId2,
+          MilestoneId:    test_constants.MilestoneId1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
+          EndTime:        test_constants.MilestoneEndTime1,
+        },
       },
       response: lambda_finalize_milestone_config.Response {
         Ok: true,
@@ -74,11 +89,14 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_finalize_milestone_config.Request {
-        ProjectId: test_constants.ProjectId2,
-        MilestoneId: test_constants.MilestoneId2,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
-        EndTime: test_constants.MilestoneEndTime2,
+      request: lambda_finalize_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_finalize_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId2,
+          MilestoneId:    test_constants.MilestoneId2,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
+          EndTime:        test_constants.MilestoneEndTime2,
+        },
       },
       response: lambda_finalize_milestone_config.Response {
         Ok: true,

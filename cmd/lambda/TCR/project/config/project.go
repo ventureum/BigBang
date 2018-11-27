@@ -6,10 +6,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/pkg/utils"
   "log"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId   string  `json:"projectId,required"`
   Admin       string  `json:"admin,required"`
   Content     string  `json:"content,required"`
@@ -23,11 +28,11 @@ type Response struct {
 
 func (request *Request) ToProjectRecord() (record *project_config.ProjectRecord) {
   projectRecord := &project_config.ProjectRecord{
-    ID: utils.GenerateIdByInt64AndStr(request.BlockTimestamp, request.ProjectId),
-    ProjectId:     request.ProjectId,
-    Admin:         request.Admin,
-    Content:       request.Content,
-    BlockTimestamp: request.BlockTimestamp,
+    ID: utils.GenerateIdByInt64AndStr(request.Body.BlockTimestamp, request.Body.ProjectId),
+    ProjectId:     request.Body.ProjectId,
+    Admin:         request.Body.Admin,
+    Content:       request.Body.Content,
+    BlockTimestamp: request.Body.BlockTimestamp,
   }
   return projectRecord
 }
@@ -41,10 +46,13 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   postgresBigBangClient.Begin()
 
-  projectId := request.ProjectId
-  admin := request.Admin
+  projectId := request.Body.ProjectId
+  admin := request.Body.Admin
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
 
   existing := projectExecutor.VerifyAdminExistingTx(projectId, admin)

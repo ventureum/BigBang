@@ -55,9 +55,17 @@ WHERE actor = $1;
 const VERIFY_ACTOR_EXISTING_COMMAND = `
 select exists(select 1 from actor_profile_records where actor = $1 and actor_profile_status = 'ACTIVATED');
 `
+const VERIFY_ACTOR_NO_ADMIN_TYPE_COMMAND = `
+select exists(select 1 from actor_profile_records where actor = $1 and actor_profile_status = 'ACTIVATED' and actor_type != 'ADMIN');
+`
+
+const QUERY_ACTOR_TYPE_COMMAND = `
+SELECT actor_type FROM actor_profile_records
+WHERE actor = $1 and actor_profile_status = 'ACTIVATED';
+`
 
 const VERIFY_ACTOR_TYPE_COMMAND = `
-select exists(select 1 from actor_profile_records where actor = $1 and and actor_type = $2 and actor_profile_status = 'ACTIVATED');
+select exists(select 1 from actor_profile_records where actor = $1 and actor_type = $2 and actor_profile_status = 'ACTIVATED');
 `
 
 const UPDATE_ACTOR_PRIVATE_KEY_COMMAND = `

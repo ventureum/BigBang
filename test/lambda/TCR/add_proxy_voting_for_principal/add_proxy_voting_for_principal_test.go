@@ -15,56 +15,42 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_add_proxy_voting_for_principal_config.Request {
-        Actor:          test_constants.Actor1,
-        ProjectId:      test_constants.ProjectId1,
-        ProxyVotingList: []tcr_attributes.ProxyVoting {
-          {
-            Proxy:          test_constants.Actor2,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp1,
-            VotesInPercent: 20,
-          },
-          {
-            Proxy:          test_constants.Actor3,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp2,
-            VotesInPercent: 20,
-          },
-          {
-            Proxy:          test_constants.Actor4,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
-            VotesInPercent: 20,
-          },
-          {
-            Proxy:          test_constants.Actor5,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp4,
-            VotesInPercent: 20,
-          },
-          {
-            Proxy:          test_constants.Actor6,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
-            VotesInPercent: 10,
-          },
-          {
-            Proxy:          test_constants.Actor7,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
-            VotesInPercent: 10,
-          },
-        },
-      },
-      response: lambda_add_proxy_voting_for_principal_config.Response {
-        Ok: true,
-      },
-      err: nil,
-    },
-    {
-      request: lambda_add_proxy_voting_for_principal_config.Request {
-        Actor:          test_constants.Actor6,
-        ProjectId:      test_constants.ProjectId1,
-        ProxyVotingList: []tcr_attributes.ProxyVoting {
-          {
-            Proxy:          test_constants.Actor2,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp1,
-            VotesInPercent: 20,
+      request: lambda_add_proxy_voting_for_principal_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_voting_for_principal_config.RequestContent{
+          Actor:     test_constants.Actor1,
+          ProjectId: test_constants.ProjectId1,
+          ProxyVotingList: []tcr_attributes.ProxyVoting{
+            {
+              Proxy:          test_constants.Actor2,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp1,
+              VotesInPercent: 20,
+            },
+            {
+              Proxy:          test_constants.Actor3,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp2,
+              VotesInPercent: 20,
+            },
+            {
+              Proxy:          test_constants.Actor4,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
+              VotesInPercent: 20,
+            },
+            {
+              Proxy:          test_constants.Actor5,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp4,
+              VotesInPercent: 20,
+            },
+            {
+              Proxy:          test_constants.Actor6,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
+              VotesInPercent: 10,
+            },
+            {
+              Proxy:          test_constants.Actor7,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp5,
+              VotesInPercent: 10,
+            },
           },
         },
       },
@@ -75,13 +61,16 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_add_proxy_voting_for_principal_config.Request {
-        Actor:          test_constants.Actor7,
-        ProjectId:      test_constants.ProjectId1,
-        ProxyVotingList: []tcr_attributes.ProxyVoting {
-          {
-            Proxy:          test_constants.Actor2,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp2,
-            VotesInPercent: 20,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_voting_for_principal_config.RequestContent{
+          Actor:     test_constants.Actor6,
+          ProjectId: test_constants.ProjectId1,
+          ProxyVotingList: []tcr_attributes.ProxyVoting{
+            {
+              Proxy:          test_constants.Actor2,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp1,
+              VotesInPercent: 20,
+            },
           },
         },
       },
@@ -92,13 +81,36 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_add_proxy_voting_for_principal_config.Request {
-        Actor:          test_constants.Actor7,
-        ProjectId:      test_constants.ProjectId1,
-        ProxyVotingList: []tcr_attributes.ProxyVoting {
-          {
-            Proxy:          test_constants.Actor2,
-            BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
-            VotesInPercent: 0,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_voting_for_principal_config.RequestContent{
+          Actor:     test_constants.Actor7,
+          ProjectId: test_constants.ProjectId1,
+          ProxyVotingList: []tcr_attributes.ProxyVoting{
+            {
+              Proxy:          test_constants.Actor2,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp2,
+              VotesInPercent: 20,
+            },
+          },
+        },
+      },
+      response: lambda_add_proxy_voting_for_principal_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_add_proxy_voting_for_principal_config.Request {
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_voting_for_principal_config.RequestContent{
+          Actor:     test_constants.Actor7,
+          ProjectId: test_constants.ProjectId1,
+          ProxyVotingList: []tcr_attributes.ProxyVoting{
+            {
+              Proxy:          test_constants.Actor2,
+              BlockTimestamp: test_constants.ProxyVotesBlockTimestamp3,
+              VotesInPercent: 0,
+            },
           },
         },
       },

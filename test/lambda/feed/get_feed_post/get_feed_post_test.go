@@ -15,9 +15,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_feed_post_config.Request {
-        PostHash: test_constants.PostHash1,
-        Requestor: test_constants.Actor1,
+      request: lambda_get_feed_post_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_feed_post_config.RequestContent{
+          PostHash:  test_constants.PostHash1,
+          Requestor: test_constants.Actor1,
+        },
       },
       response: lambda_get_feed_post_config.Response {
         Post: &lambda_get_feed_post_config.ResponseContent {

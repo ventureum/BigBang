@@ -16,8 +16,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_delete_project_config.Request {
-        ProjectId: test_constants.ProjectId2,
+      request: lambda_delete_project_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_delete_project_config.RequestContent{
+          ProjectId: test_constants.ProjectId2,
+        },
       },
       response: lambda_delete_project_config.Response {
         Ok: true,
@@ -35,6 +38,6 @@ func TestHandler(t *testing.T) {
     assert.Equal(t, test.response.Ok, result.Ok)
     assert.False(
       t,
-      projectExecutor.CheckProjectRecordExisting(test.request.ProjectId))
+      projectExecutor.CheckProjectRecordExisting(test.request.Body.ProjectId))
   }
 }

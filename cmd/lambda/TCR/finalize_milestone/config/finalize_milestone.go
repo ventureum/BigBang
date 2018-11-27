@@ -6,10 +6,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "log"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId   string                  `json:"projectId,required"`
   MilestoneId int64                   `json:"milestoneId,required"`
   BlockTimestamp  int64               `json:"blockTimestamp,required"`
@@ -31,8 +36,10 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  projectId := request.ProjectId
-  milestoneId := request.MilestoneId
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  projectId := request.Body.ProjectId
+  milestoneId := request.Body.MilestoneId
   postgresBigBangClient.Begin()
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
@@ -53,7 +60,7 @@ func ProcessRequest(request Request, response *Response) {
     log.Panicln(errorInfo.Marshal())
   }
 
-   milestoneExecutor.FinalizeMilestoneTx(projectId, milestoneId, request.BlockTimestamp, request.EndTime)
+   milestoneExecutor.FinalizeMilestoneTx(projectId, milestoneId, request.Body.BlockTimestamp, request.Body.EndTime)
    projectExecutor.SetCurrentMilestoneTx(projectId, 0)
    projectExecutor.IncreaseNumMilestonesCompletedTx(projectId)
 

@@ -14,13 +14,16 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_feed_post_config.Request {
-        Actor: test_constants.Actor1,
-        BoardId: test_constants.BoardId1,
-        ParentHash: test_constants.EmptyParentHash,
-        PostHash: test_constants.PostHash1,
-        TypeHash: test_constants.PostTypeHash,
-        Content: test_constants.PostContent1,
+      request: lambda_feed_post_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_feed_post_config.RequestContent{
+          Actor:      test_constants.Actor1,
+          BoardId:    test_constants.BoardId1,
+          ParentHash: test_constants.EmptyParentHash,
+          PostHash:   test_constants.PostHash1,
+          TypeHash:   test_constants.PostTypeHash,
+          Content:    test_constants.PostContent1,
+        },
       },
       response: lambda_feed_post_config.Response {
         Ok: true,
@@ -28,13 +31,16 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_feed_post_config.Request {
-        Actor: test_constants.Actor1,
-        BoardId: test_constants.BoardId1,
-        ParentHash: test_constants.EmptyParentHash,
-        PostHash: test_constants.PostHash2,
-        TypeHash: test_constants.PostTypeHash,
-        Content: test_constants.PostContent2,
+      request: lambda_feed_post_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_feed_post_config.RequestContent{
+          Actor:      test_constants.Actor1,
+          BoardId:    test_constants.BoardId1,
+          ParentHash: test_constants.EmptyParentHash,
+          PostHash:   test_constants.PostHash2,
+          TypeHash:   test_constants.PostTypeHash,
+          Content:    test_constants.PostContent2,
+        },
       },
       response: lambda_feed_post_config.Response {
         Ok: true,

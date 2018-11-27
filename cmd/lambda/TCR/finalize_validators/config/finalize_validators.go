@@ -6,10 +6,15 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/platform/postgres_config/TCR/milestone_validator_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId   string  `json:"projectId,required"`
   MilestoneId  int64  `json:"milestoneId,required"`
   Validators []string `json:"validators,required"`
@@ -29,12 +34,14 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   postgresBigBangClient.Begin()
 
-
-  projectId := request.ProjectId
-  milestoneId := request.MilestoneId
-  validators := request.Validators
+  projectId := request.Body.ProjectId
+  milestoneId := request.Body.MilestoneId
+  validators := request.Body.Validators
   milestoneValidatorRecordExecutor := milestone_validator_record_config.MilestoneValidatorRecordExecutor{*postgresBigBangClient}
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
   milestoneExecutor.VerifyMilestoneRecordExistingTx(projectId, milestoneId)

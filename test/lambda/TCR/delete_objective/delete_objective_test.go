@@ -16,10 +16,13 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_delete_objective_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
-        ObjectiveId: test_constants.ObjectiveId1,
+      request: lambda_delete_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_delete_objective_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: test_constants.MilestoneId1,
+          ObjectiveId: test_constants.ObjectiveId1,
+        },
       },
       response: lambda_delete_objective_config.Response {
         Ok: true,
@@ -38,6 +41,6 @@ func TestHandler(t *testing.T) {
     assert.False(
       t,
       objectiveExecutor.CheckObjectiveRecordExisting(
-        test.request.ProjectId, test.request.MilestoneId, test.request.ObjectiveId))
+        test.request.Body.ProjectId, test.request.Body.MilestoneId, test.request.Body.ObjectiveId))
   }
 }

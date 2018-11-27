@@ -16,8 +16,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_actor_private_key_config.Request {
-        Actor: test_constants.Actor1,
+      request: lambda_get_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_actor_private_key_config.RequestContent{
+          Actor: test_constants.Actor1,
+        },
       },
       response: lambda_get_actor_private_key_config.Response {
         PrivateKey: strings.ToLower(test_constants.PrivateKey1),
@@ -26,8 +29,11 @@ func TestHandler(t *testing.T) {
        err: nil,
     },
     {
-      request: lambda_get_actor_private_key_config.Request {
-        Actor: test_constants.Actor6,
+      request: lambda_get_actor_private_key_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_actor_private_key_config.RequestContent{
+          Actor: test_constants.Actor6,
+        },
       },
       response: lambda_get_actor_private_key_config.Response {
         Ok: false,

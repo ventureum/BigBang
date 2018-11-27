@@ -16,8 +16,11 @@ func TestHandlerWithoutDebugMode(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_refuel_config.Request {
-        Actor: test_constants.Actor1,
+      request: lambda_refuel_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_refuel_config.RequestContent{
+          Actor: test_constants.Actor1,
+        },
       },
       response: lambda_refuel_config.Response {
           Message: &error_config.ErrorInfo{
@@ -46,8 +49,11 @@ func TestHandlerWithDebugMode(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_refuel_config.Request {
-        Actor: test_constants.Actor1,
+      request: lambda_refuel_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_refuel_config.RequestContent{
+          Actor: test_constants.Actor1,
+        },
       },
       response: lambda_refuel_config.Response {
         Ok: true,

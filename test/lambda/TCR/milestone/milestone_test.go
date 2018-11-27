@@ -15,14 +15,17 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
-        Content: test_constants.MilestoneContent1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
-        StartTime: test_constants.MilestoneStartTime1,
-        EndTime: test_constants.MilestoneEndTime1,
-        State: tcr_attributes.CompleteMilestoneState,
+      request: lambda_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId1,
+          Content:        test_constants.MilestoneContent1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
+          StartTime:      test_constants.MilestoneStartTime1,
+          EndTime:        test_constants.MilestoneEndTime1,
+          State:          tcr_attributes.CompleteMilestoneState,
+        },
       },
       response: lambda_milestone_config.Response {
         Ok: true,
@@ -30,14 +33,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId2,
-        Content: test_constants.MilestoneContent1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
-        StartTime: test_constants.MilestoneStartTime2,
-        EndTime: test_constants.MilestoneEndTime2,
-        State: tcr_attributes.InProgressMilestoneState,
+      request: lambda_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId2,
+          Content:        test_constants.MilestoneContent1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
+          StartTime:      test_constants.MilestoneStartTime2,
+          EndTime:        test_constants.MilestoneEndTime2,
+          State:          tcr_attributes.InProgressMilestoneState,
+        },
       },
       response: lambda_milestone_config.Response {
         Ok: true,
@@ -45,14 +51,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId3,
-        Content: test_constants.MilestoneContent1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
-        StartTime: test_constants.MilestoneStartTime3,
-        EndTime: test_constants.MilestoneEndTime3,
-        State: tcr_attributes.PendingMilestoneState,
+      request: lambda_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId3,
+          Content:        test_constants.MilestoneContent1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
+          StartTime:      test_constants.MilestoneStartTime3,
+          EndTime:        test_constants.MilestoneEndTime3,
+          State:          tcr_attributes.PendingMilestoneState,
+        },
       },
       response: lambda_milestone_config.Response {
         Ok: true,
@@ -60,14 +69,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId4,
-        Content: test_constants.MilestoneContent1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
-        StartTime: test_constants.MilestoneStartTime4,
-        EndTime: test_constants.MilestoneEndTime4,
-        State: tcr_attributes.PendingMilestoneState,
+      request: lambda_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId4,
+          Content:        test_constants.MilestoneContent1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp3,
+          StartTime:      test_constants.MilestoneStartTime4,
+          EndTime:        test_constants.MilestoneEndTime4,
+          State:          tcr_attributes.PendingMilestoneState,
+        },
       },
       response: lambda_milestone_config.Response {
         Ok: true,
@@ -75,14 +87,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_milestone_config.Request {
-        ProjectId: test_constants.ProjectId2,
-        MilestoneId: test_constants.MilestoneId1,
-        Content: test_constants.MilestoneContent1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
-        StartTime: test_constants.MilestoneStartTime1,
-        EndTime: test_constants.MilestoneEndTime1,
-        State: tcr_attributes.PendingMilestoneState,
+      request: lambda_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId2,
+          MilestoneId:    test_constants.MilestoneId1,
+          Content:        test_constants.MilestoneContent1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp1,
+          StartTime:      test_constants.MilestoneStartTime1,
+          EndTime:        test_constants.MilestoneEndTime1,
+          State:          tcr_attributes.PendingMilestoneState,
+        },
       },
       response: lambda_milestone_config.Response {
         Ok: true,
@@ -90,14 +105,17 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_milestone_config.Request {
-        ProjectId: test_constants.ProjectId2,
-        MilestoneId: test_constants.MilestoneId2,
-        Content: test_constants.MilestoneContent1,
-        BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
-        StartTime: test_constants.MilestoneStartTime2,
-        EndTime: test_constants.MilestoneEndTime2,
-        State: tcr_attributes.PendingMilestoneState,
+      request: lambda_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_milestone_config.RequestContent{
+          ProjectId:      test_constants.ProjectId2,
+          MilestoneId:    test_constants.MilestoneId2,
+          Content:        test_constants.MilestoneContent1,
+          BlockTimestamp: test_constants.MilestoneBlockTimestamp2,
+          StartTime:      test_constants.MilestoneStartTime2,
+          EndTime:        test_constants.MilestoneEndTime2,
+          State:          tcr_attributes.PendingMilestoneState,
+        },
       },
       response: lambda_milestone_config.Response {
         Ok: true,

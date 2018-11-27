@@ -9,10 +9,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "log"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId     string         `json:"projectId,required"`
   MilestoneId   int64          `json:"milestoneId,required"`
   ObjectiveId   int64          `json:"objectiveId,required"`
@@ -36,14 +41,17 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   postgresBigBangClient.Begin()
 
-  projectId := request.ProjectId
-  milestoneId := request.MilestoneId
-  objectiveId := request.ObjectiveId
-  voter := request.Voter
-  rating := request.Rating
-  weight := request.Weight
+  projectId := request.Body.ProjectId
+  milestoneId := request.Body.MilestoneId
+  objectiveId := request.Body.ObjectiveId
+  voter := request.Body.Voter
+  rating := request.Body.Rating
+  weight := request.Body.Weight
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
@@ -74,8 +82,8 @@ func ProcessRequest(request Request, response *Response) {
     ProjectId: projectId,
     MilestoneId: milestoneId,
     ObjectiveId: objectiveId,
-    Voter: request.Voter,
-    BlockTimestamp: request.BlockTimestamp,
+    Voter: voter,
+    BlockTimestamp: request.Body.BlockTimestamp,
     Rating: rating,
     Weight: weight,
   }

@@ -23,6 +23,9 @@ var GetSessionAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaSt
 var RefuelAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, Refuel)
 var DevRefuelAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, DevRefuel)
 
+var FeedUpvoteAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, FeedUpvote)
+var GetRecentVotesAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, AlphaStage, GetRecentVotes)
+
 const TCRBaseURL URL = "https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com"
 
 

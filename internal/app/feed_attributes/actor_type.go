@@ -19,10 +19,10 @@ const PF_ACTOR_TYPE ActorType = "PF"
 func ValidateAndCreateActorType (actorTypeStr string) ActorType {
   var actorType  ActorType
   switch ActorType(actorTypeStr) {
-     case USER_ACTOR_TYPE, KOL_ACTOR_TYPE, ADMIN_ACTOR_TYPE, PF_ACTOR_TYPE:
+     case USER_ACTOR_TYPE, KOL_ACTOR_TYPE, PF_ACTOR_TYPE:
          actorType = ActorType(actorTypeStr)
      default:
-         errorInfo := error_config.ErrorInfo{
+         errorInfo := error_config.ErrorInfo {
            ErrorCode: error_config.InvalidActorType,
            ErrorData: error_config.ErrorData {
              "actorType": actorTypeStr,

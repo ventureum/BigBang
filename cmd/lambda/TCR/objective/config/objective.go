@@ -5,10 +5,15 @@ import (
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/TCR/objective_config"
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId   string  `json:"projectId,required"`
   MilestoneId int64  `json:"milestoneId,required"`
   ObjectiveId int64 `json:"objectiveId,required"`
@@ -23,11 +28,11 @@ type Response struct {
 
 func (request *Request) ToObjectiveRecord() (record *objective_config.ObjectiveRecord) {
   objectiveRecord := &objective_config.ObjectiveRecord{
-    ProjectId:     request.ProjectId,
-    MilestoneId: request.MilestoneId,
-    ObjectiveId: request.ObjectiveId,
-    Content:       request.Content,
-    BlockTimestamp: request.BlockTimestamp,
+    ProjectId:     request.Body.ProjectId,
+    MilestoneId: request.Body.MilestoneId,
+    ObjectiveId: request.Body.ObjectiveId,
+    Content:       request.Body.Content,
+    BlockTimestamp: request.Body.BlockTimestamp,
   }
   return objectiveRecord
 }
@@ -41,13 +46,15 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   postgresBigBangClient.Begin()
 
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
   inserted := objectiveExecutor.UpsertObjectiveRecordTx(request.ToObjectiveRecord())
   if inserted {
-    milestoneExecutor.IncreaseNumObjectivesTx(request.ProjectId, request.MilestoneId)
+    milestoneExecutor.IncreaseNumObjectivesTx(request.Body.ProjectId, request.Body.MilestoneId)
   }
   postgresBigBangClient.Commit()
   response.Ok = true

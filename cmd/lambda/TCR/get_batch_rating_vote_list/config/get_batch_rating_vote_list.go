@@ -7,10 +7,15 @@ import (
   "BigBang/internal/app/tcr_attributes"
   "BigBang/internal/platform/postgres_config/TCR/rating_vote_config"
   "BigBang/internal/platform/postgres_config/TCR/objective_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ObjectiveVotesInfoKeyList []tcr_attributes.ObjectiveVotesInfoKey `json:"objectiveVotesInfoKeyList,required"`
 }
 
@@ -32,10 +37,12 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
 
-  objectiveVotesInfoKeyList := request.ObjectiveVotesInfoKeyList
+  objectiveVotesInfoKeyList := request.Body.ObjectiveVotesInfoKeyList
 
   for _ , objectiveVotesInfoKey := range objectiveVotesInfoKeyList {
     projectId := objectiveVotesInfoKey.ProjectId

@@ -2,6 +2,8 @@ package error_config
 
 type ErrorLocation string
 
+const Auth ErrorLocation = "Auth"
+
 // For feed
 const ReputationsAccountLocation ErrorLocation = "ReputationsAccount"
 const ActorRewardsInfoRecordLocation ErrorLocation = "ActorRewardsInfoRecordLocation"

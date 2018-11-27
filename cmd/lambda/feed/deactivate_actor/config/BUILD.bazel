@@ -6,6 +6,7 @@ go_library(
     importpath = "BigBang/cmd/lambda/feed/deactivate_actor/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/lambda/common/auth:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",

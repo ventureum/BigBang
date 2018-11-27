@@ -14,8 +14,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_add_proxy_config.Request {
-        Proxy: test_constants.Actor1,
+      request: lambda_add_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_config.RequestContent{
+          Proxy: test_constants.Actor1,
+        },
       },
       response: lambda_add_proxy_config.Response {
         Ok: true,
@@ -23,8 +26,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_add_proxy_config.Request {
-        Proxy: test_constants.Actor2,
+      request: lambda_add_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_config.RequestContent{
+          Proxy: test_constants.Actor2,
+        },
       },
       response: lambda_add_proxy_config.Response {
         Ok: true,
@@ -32,8 +38,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_add_proxy_config.Request {
-        Proxy: test_constants.Actor3,
+      request: lambda_add_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_config.RequestContent{
+          Proxy: test_constants.Actor3,
+        },
       },
       response: lambda_add_proxy_config.Response {
         Ok: true,
@@ -41,8 +50,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_add_proxy_config.Request {
-        Proxy: test_constants.Actor4,
+      request: lambda_add_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_config.RequestContent{
+          Proxy: test_constants.Actor4,
+        },
       },
       response: lambda_add_proxy_config.Response {
         Ok: true,
@@ -50,16 +62,22 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_add_proxy_config.Request {
-        Proxy: test_constants.Actor5,
+      request: lambda_add_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_config.RequestContent{
+          Proxy: test_constants.Actor5,
+        },
       },
       response: lambda_add_proxy_config.Response {
         Ok: true,
       },
       err: nil,
     },    {
-      request: lambda_add_proxy_config.Request {
-        Proxy: test_constants.Actor6,
+      request: lambda_add_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_config.RequestContent{
+          Proxy: test_constants.Actor6,
+        },
       },
       response: lambda_add_proxy_config.Response {
         Ok: true,
@@ -67,8 +85,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_add_proxy_config.Request {
-        Proxy: test_constants.Actor7,
+      request: lambda_add_proxy_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_add_proxy_config.RequestContent{
+          Proxy: test_constants.Actor7,
+        },
       },
       response: lambda_add_proxy_config.Response {
         Ok: true,

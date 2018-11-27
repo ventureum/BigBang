@@ -6,10 +6,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
   "log"
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Proxy   string  `json:"proxy,required"`
 }
 
@@ -27,23 +32,27 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  proxy := request.Body.Proxy
   postgresBigBangClient.Begin()
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
-  actorProfileRecordExecutor.VerifyActorExistingTx(request.Proxy)
-  existing := proxyExecutor.VerifyProxyRecordExisting(request.Proxy)
+  actorProfileRecordExecutor.VerifyActorExistingTx(proxy)
+  existing := proxyExecutor.VerifyProxyRecordExisting(proxy)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoProxyUUIDExisting,
       ErrorData: map[string]interface{} {
-        "uuid": request.Proxy,
+        "uuid": proxy,
       },
       ErrorLocation: error_config.ProxyRecordLocation,
     }
-    log.Printf("No proxy record for uuid %s", request.Proxy)
+    log.Printf("No proxy record for uuid %s", proxy)
     log.Panicln(errorInfo.Marshal())
   }
-  proxyExecutor.DeleteProxyRecord(request.Proxy)
+  proxyExecutor.DeleteProxyRecord(proxy)
 
   postgresBigBangClient.Commit()
   response.Ok = true

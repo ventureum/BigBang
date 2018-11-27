@@ -6,10 +6,15 @@ import (
   "log"
   "BigBang/internal/platform/postgres_config/TCR/objective_config"
   "BigBang/internal/platform/postgres_config/TCR/milestone_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   ProjectId   string  `json:"projectId,required"`
   MilestoneId int64  `json:"milestoneId,required"`
   ObjectiveId int64 `json:"objectiveId,required"`
@@ -30,9 +35,11 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  projectId := request.ProjectId
-  milestoneId := request.MilestoneId
-  objectiveId := request.ObjectiveId
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  projectId := request.Body.ProjectId
+  milestoneId := request.Body.MilestoneId
+  objectiveId := request.Body.ObjectiveId
   postgresBigBangClient.Begin()
 
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}

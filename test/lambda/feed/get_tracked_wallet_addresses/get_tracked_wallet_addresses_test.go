@@ -15,7 +15,10 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_get_tracked_wallet_addresses_config.Request {
-        Actor:          test_constants.Actor1,
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_tracked_wallet_addresses_config.RequestContent{
+          Actor: test_constants.Actor1,
+        },
       },
       response: lambda_get_tracked_wallet_addresses_config.Response {
         Ok: true,

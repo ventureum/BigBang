@@ -6,10 +6,15 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "strings"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   PublicKey string `json:"publicKey,required"`
 }
 
@@ -28,7 +33,9 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  publicKey := request.PublicKey
+  publicKey := request.Body.PublicKey
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
 
   if publicKey == "" {
     errorInfo := error_config.ErrorInfo{

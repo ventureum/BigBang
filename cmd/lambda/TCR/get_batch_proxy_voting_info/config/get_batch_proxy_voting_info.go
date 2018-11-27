@@ -9,10 +9,16 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/project_config"
   "BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config"
   "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+
+type RequestContent struct {
   ProxyVotingInfoKeyList []tcr_attributes.ProxyVotingInfoKey `json:"proxyVotingInfoKeyList,required"`
 }
 
@@ -34,12 +40,14 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
   principalProxyVotesExecutor := principal_proxy_votes_config.PrincipalProxyVotesExecutor{*postgresBigBangClient}
 
-  proxyVotingInfoKeyList := request.ProxyVotingInfoKeyList
+  proxyVotingInfoKeyList := request.Body.ProxyVotingInfoKeyList
 
   for _ , proxyVotingInfoKey := range proxyVotingInfoKeyList {
     actor := proxyVotingInfoKey.Actor

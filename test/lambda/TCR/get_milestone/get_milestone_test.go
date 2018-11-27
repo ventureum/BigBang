@@ -15,9 +15,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_milestone_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
+      request: lambda_get_milestone_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_milestone_config.RequestContent{
+          ProjectId:   test_constants.ProjectId1,
+          MilestoneId: test_constants.MilestoneId1,
+        },
       },
       response: lambda_get_milestone_config.Response {
         Milestone: &tcr_attributes.Milestone{

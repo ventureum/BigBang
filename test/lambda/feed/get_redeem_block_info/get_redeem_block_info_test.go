@@ -21,8 +21,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_redeem_block_info_config.Request {
-        RedeemBlockTimestamp: NextRedeemBlock.ConvertToTime().Unix(),
+      request: lambda_get_redeem_block_info_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_redeem_block_info_config.RequestContent{
+          RedeemBlockTimestamp: NextRedeemBlock.ConvertToTime().Unix(),
+        },
       },
       response: lambda_get_redeem_block_info_config.Response {
         RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
@@ -36,8 +39,11 @@ func TestHandler(t *testing.T) {
        err: nil,
     },
     {
-      request: lambda_get_redeem_block_info_config.Request {
-        RedeemBlockTimestamp: NextNRedeemBlock.ConvertToTime().Unix(),
+      request: lambda_get_redeem_block_info_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_redeem_block_info_config.RequestContent{
+          RedeemBlockTimestamp: NextNRedeemBlock.ConvertToTime().Unix(),
+        },
       },
       response: lambda_get_redeem_block_info_config.Response {
         Ok: false,

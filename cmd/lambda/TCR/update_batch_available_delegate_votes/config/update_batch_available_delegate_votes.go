@@ -6,7 +6,13 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
   "BigBang/internal/platform/postgres_config/TCR/project_config"
+  "BigBang/cmd/lambda/common/auth"
 )
+
+type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestBody `json:"body,required"`
+}
 
 type RequestContent struct {
   Actor                  string `json:"actor,required"`
@@ -14,7 +20,7 @@ type RequestContent struct {
   AvailableDelegateVotes int64  `json:"availableDelegateVotes,required"`
 }
 
-type Request struct {
+type RequestBody struct {
   RequestList []RequestContent  `json:"requestList,required"`
 }
 
@@ -32,10 +38,11 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   postgresBigBangClient.Begin()
-
-
-  requestList := request.RequestList
+  requestList := request.Body.RequestList
 
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}

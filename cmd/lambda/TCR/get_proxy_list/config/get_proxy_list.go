@@ -6,10 +6,15 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/proxy_config"
   "BigBang/internal/pkg/utils"
   "log"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Limit int64 `json:"limit,required"`
   Cursor string `json:"cursor,omitempty"`
 }
@@ -35,8 +40,10 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  limit := request.Limit
-  cursorStr := request.Cursor
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  limit := request.Body.Limit
+  cursorStr := request.Body.Cursor
 
   var cursor int64
   if cursorStr != "" {

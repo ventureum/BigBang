@@ -16,10 +16,13 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_feed_upvote_config.Request {
-        Actor: test_constants.Actor2,
-        PostHash: test_constants.PostHash1,
-        Value: -1,
+      request: lambda_feed_upvote_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_feed_upvote_config.RequestContent{
+          Actor:    test_constants.Actor2,
+          PostHash: test_constants.PostHash1,
+          Value:    -1,
+        },
       },
       response: lambda_feed_upvote_config.Response {
         VoteInfo: &feed_attributes.VoteInfo{
@@ -47,16 +50,19 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_feed_upvote_config.Request {
-        Actor: test_constants.Actor2,
-        PostHash: test_constants.PostHash1,
-        Value: 0,
+      request: lambda_feed_upvote_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_feed_upvote_config.RequestContent{
+          Actor:    test_constants.Actor2,
+          PostHash: test_constants.PostHash1,
+          Value:    0,
+        },
       },
       response: lambda_feed_upvote_config.Response {
         VoteInfo: &feed_attributes.VoteInfo{
           Actor: test_constants.Actor2,
           PostHash: test_constants.PostHash1,
-          FuelCost: 17,
+          FuelCost: 18,
           RewardsInfo: &feed_attributes.RewardsInfo{
             Fuel: 80,
             Reputation: 100,
@@ -78,18 +84,21 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_feed_upvote_config.Request {
-        Actor: test_constants.Actor2,
-        PostHash: test_constants.PostHash1,
-        Value: 1,
+      request: lambda_feed_upvote_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_feed_upvote_config.RequestContent{
+          Actor:    test_constants.Actor2,
+          PostHash: test_constants.PostHash1,
+          Value:    1,
+        },
       },
       response: lambda_feed_upvote_config.Response {
         VoteInfo: &feed_attributes.VoteInfo{
           Actor: test_constants.Actor2,
           PostHash: test_constants.PostHash1,
-          FuelCost: 17,
+          FuelCost: 18,
           RewardsInfo: &feed_attributes.RewardsInfo{
-            Fuel: 63,
+            Fuel: 62,
             Reputation: 100,
             MilestonePoints: 100,
           },
@@ -109,10 +118,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_feed_upvote_config.Request {
-        Actor: test_constants.Actor2,
-        PostHash: test_constants.PostHash1,
-        Value: 1,
+      request: lambda_feed_upvote_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_feed_upvote_config.RequestContent{
+          Actor:    test_constants.Actor2,
+          PostHash: test_constants.PostHash1,
+          Value:    1,
+        },
       },
       response: lambda_feed_upvote_config.Response {
         Message: &error_config.ErrorInfo{
@@ -128,10 +140,13 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_feed_upvote_config.Request {
-        Actor: test_constants.Actor2,
-        PostHash: test_constants.PostHash1,
-        Value: -1,
+      request: lambda_feed_upvote_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_feed_upvote_config.RequestContent{
+          Actor:    test_constants.Actor2,
+          PostHash: test_constants.PostHash1,
+          Value:    -1,
+        },
       },
       response: lambda_feed_upvote_config.Response {
         Message: &error_config.ErrorInfo{

@@ -6,10 +6,15 @@ import (
   "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
   "BigBang/internal/platform/postgres_config/feed/wallet_address_record_config"
   "log"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor   string  `json:"actor,required"`
   WalletAddressList []string `json:"walletAddressList,required"`
 }
@@ -31,8 +36,10 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient.Begin()
 
 
-  actor := request.Actor
-  walletAddressList := request.WalletAddressList
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
+  walletAddressList := request.Body.WalletAddressList
   walletAddressRecordExecutor := wallet_address_record_config.WalletAddressRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)

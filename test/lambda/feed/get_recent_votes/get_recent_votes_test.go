@@ -1,4 +1,4 @@
-package config
+package get_recent_votes
 
 import (
   "github.com/stretchr/testify/assert"
@@ -15,9 +15,12 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_recent_votes_config.Request {
-        Actor: test_constants.Actor2,
-        Limit: 20,
+      request: lambda_get_recent_votes_config.Request{
+        PrincipalId: test_constants.Actor2,
+        Body: lambda_get_recent_votes_config.RequestContent{
+          Actor: test_constants.Actor2,
+          Limit: 20,
+        },
       },
       response: lambda_get_recent_votes_config.Response {
         RecentVotes: &[]post_votes_record_config.PostVotesRecord{
@@ -26,7 +29,7 @@ func TestHandler(t *testing.T) {
             Actor: test_constants.Actor2,
             PostType: "POST",
             VoteType: "UP",
-            DeltaFuel: -17,
+            DeltaFuel: -18,
             DeltaReputation: 0,
             DeltaMilestonePoints: 0,
             SignedReputation: 100,

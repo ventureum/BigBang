@@ -9,10 +9,15 @@ import (
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/platform/eth_config"
   "BigBang/internal/pkg/error_config"
+  "BigBang/cmd/lambda/common/auth"
 )
 
-
 type Request struct {
+  PrincipalId string `json:"principalId,required"`
+  Body RequestContent `json:"body,required"`
+}
+
+type RequestContent struct {
   Actor string `json:"actor,required"`
   BoardId string `json:"boardId,required"`
   ParentHash string `json:"parentHash,required"`
@@ -30,12 +35,12 @@ type Response struct {
 
 func (request *Request) ToPostRecord() (*post_config.PostRecord) {
   return &post_config.PostRecord{
-    Actor:      request.Actor,
-    BoardId:    request.BoardId,
-    ParentHash: request.ParentHash,
-    PostHash:   request.PostHash,
-    PostType:   feed_attributes.CreatePostTypeFromHashStr(request.TypeHash).Value(),
-    Content:    request.Content.ToJsonText(),
+    Actor:      request.Body.Actor,
+    BoardId:    request.Body.BoardId,
+    ParentHash: request.Body.ParentHash,
+    PostHash:   request.Body.PostHash,
+    PostType:   feed_attributes.CreatePostTypeFromHashStr(request.Body.TypeHash).Value(),
+    Content:    request.Body.Content.ToJsonText(),
   }
 }
 
@@ -49,10 +54,13 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  actor := request.Body.Actor
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
   var err error
   var getStreamIOClient *stream.Client
-  if request.GetStreamApiKey != "" && request.GetStreamApiSecret != "" {
-    getStreamIOClient, err = stream.NewClient(request.GetStreamApiKey, request.GetStreamApiSecret)
+  if request.Body.GetStreamApiKey != "" && request.Body.GetStreamApiSecret != "" {
+    getStreamIOClient, err = stream.NewClient(request.Body.GetStreamApiKey, request.Body.GetStreamApiSecret)
   } else {
     getStreamIOClient, err = stream.NewClientFromEnv()
   }

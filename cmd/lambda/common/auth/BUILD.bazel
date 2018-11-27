@@ -2,14 +2,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["delete_tracked_wallet_addresses.go"],
-    importpath = "BigBang/cmd/lambda/feed/delete_tracked_wallet_addresses/config",
+    srcs = [
+        "auth.go",
+        "auth_level.go",
+    ],
+    importpath = "BigBang/cmd/lambda/common/auth",
     visibility = ["//visibility:public"],
     deps = [
-        "//cmd/lambda/common/auth:go_default_library",
+        "//internal/app/feed_attributes:go_default_library",
         "//internal/pkg/error_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
-        "//internal/platform/postgres_config/feed/wallet_address_record_config:go_default_library",
     ],
 )

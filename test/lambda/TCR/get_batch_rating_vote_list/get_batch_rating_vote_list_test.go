@@ -15,12 +15,15 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_batch_rating_vote_list_config.Request {
-        ObjectiveVotesInfoKeyList: []tcr_attributes.ObjectiveVotesInfoKey {
-          {
-            ProjectId: test_constants.ProjectId1,
-            MilestoneId: 1,
-            ObjectiveId: 1,
+      request: lambda_get_batch_rating_vote_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_batch_rating_vote_list_config.RequestContent{
+          ObjectiveVotesInfoKeyList: []tcr_attributes.ObjectiveVotesInfoKey{
+            {
+              ProjectId:   test_constants.ProjectId1,
+              MilestoneId: 1,
+              ObjectiveId: 1,
+            },
           },
         },
       },

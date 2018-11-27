@@ -14,12 +14,15 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_objective_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
-        ObjectiveId: test_constants.ObjectiveId1,
-        Content: test_constants.ObjectiveContent1,
-        BlockTimestamp: test_constants.ObjectiveBlockTimestamp1,
+      request: lambda_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_objective_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId1,
+          ObjectiveId:    test_constants.ObjectiveId1,
+          Content:        test_constants.ObjectiveContent1,
+          BlockTimestamp: test_constants.ObjectiveBlockTimestamp1,
+        },
       },
       response: lambda_objective_config.Response {
         Ok: true,
@@ -27,12 +30,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_objective_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId1,
-        ObjectiveId: test_constants.ObjectiveId2,
-        Content: test_constants.ObjectiveContent1,
-        BlockTimestamp: test_constants.ObjectiveBlockTimestamp2,
+      request: lambda_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_objective_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId1,
+          ObjectiveId:    test_constants.ObjectiveId2,
+          Content:        test_constants.ObjectiveContent1,
+          BlockTimestamp: test_constants.ObjectiveBlockTimestamp2,
+        },
       },
       response: lambda_objective_config.Response {
         Ok: true,
@@ -40,12 +46,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_objective_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId2,
-        ObjectiveId: test_constants.ObjectiveId1,
-        Content: test_constants.ObjectiveContent1,
-        BlockTimestamp: test_constants.ObjectiveBlockTimestamp3,
+      request: lambda_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_objective_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId2,
+          ObjectiveId:    test_constants.ObjectiveId1,
+          Content:        test_constants.ObjectiveContent1,
+          BlockTimestamp: test_constants.ObjectiveBlockTimestamp3,
+        },
       },
       response: lambda_objective_config.Response {
         Ok: true,
@@ -53,12 +62,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_objective_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId2,
-        ObjectiveId: test_constants.ObjectiveId2,
-        Content: test_constants.ObjectiveContent1,
-        BlockTimestamp: test_constants.ObjectiveBlockTimestamp4,
+      request: lambda_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_objective_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId2,
+          ObjectiveId:    test_constants.ObjectiveId2,
+          Content:        test_constants.ObjectiveContent1,
+          BlockTimestamp: test_constants.ObjectiveBlockTimestamp4,
+        },
       },
       response: lambda_objective_config.Response {
         Ok: true,
@@ -66,12 +78,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_objective_config.Request {
-        ProjectId: test_constants.ProjectId1,
-        MilestoneId: test_constants.MilestoneId2,
-        ObjectiveId: test_constants.ObjectiveId3,
-        Content: test_constants.ObjectiveContent1,
-        BlockTimestamp: test_constants.ObjectiveBlockTimestamp5,
+      request: lambda_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_objective_config.RequestContent{
+          ProjectId:      test_constants.ProjectId1,
+          MilestoneId:    test_constants.MilestoneId2,
+          ObjectiveId:    test_constants.ObjectiveId3,
+          Content:        test_constants.ObjectiveContent1,
+          BlockTimestamp: test_constants.ObjectiveBlockTimestamp5,
+        },
       },
       response: lambda_objective_config.Response {
         Ok: true,
@@ -79,12 +94,15 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_objective_config.Request {
-        ProjectId: test_constants.ProjectId2,
-        MilestoneId: test_constants.MilestoneId1,
-        ObjectiveId: test_constants.ObjectiveId1,
-        Content: test_constants.ObjectiveContent1,
-        BlockTimestamp: test_constants.ObjectiveBlockTimestamp2,
+      request: lambda_objective_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_objective_config.RequestContent{
+          ProjectId:      test_constants.ProjectId2,
+          MilestoneId:    test_constants.MilestoneId1,
+          ObjectiveId:    test_constants.ObjectiveId1,
+          Content:        test_constants.ObjectiveContent1,
+          BlockTimestamp: test_constants.ObjectiveBlockTimestamp2,
+        },
       },
       response: lambda_objective_config.Response {
         Ok: true,

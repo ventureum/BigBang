@@ -17,8 +17,11 @@ func TestHandler(t *testing.T) {
     err    error
   }{
     {
-      request: lambda_get_proxy_list_config.Request {
-        Limit: 0,
+      request: lambda_get_proxy_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_list_config.RequestContent{
+          Limit: 0,
+        },
       },
       response: lambda_get_proxy_list_config.Response {
         ResponseData: &lambda_get_proxy_list_config.ResponseData{
@@ -30,8 +33,11 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_list_config.Request {
-        Limit: 2,
+      request: lambda_get_proxy_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_list_config.RequestContent{
+          Limit: 2,
+        },
       },
       response: lambda_get_proxy_list_config.Response {
         ResponseData: &lambda_get_proxy_list_config.ResponseData{
@@ -46,9 +52,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_list_config.Request {
-        Limit: 2,
-        Cursor: utils.Base64EncodeInt64(4),
+      request: lambda_get_proxy_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_list_config.RequestContent{
+          Limit:  2,
+          Cursor: utils.Base64EncodeInt64(4),
+        },
       },
       response: lambda_get_proxy_list_config.Response {
         ResponseData: &lambda_get_proxy_list_config.ResponseData{
@@ -63,9 +72,12 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
     {
-      request: lambda_get_proxy_list_config.Request {
-        Limit: 5,
-        Cursor: utils.Base64EncodeInt64(4),
+      request: lambda_get_proxy_list_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_get_proxy_list_config.RequestContent{
+          Limit:  5,
+          Cursor: utils.Base64EncodeInt64(4),
+        },
       },
       response: lambda_get_proxy_list_config.Response {
         ResponseData: &lambda_get_proxy_list_config.ResponseData{
