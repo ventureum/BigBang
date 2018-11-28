@@ -90,5 +90,11 @@
 #echo "adding lambda permission for update_batch_received_delegate_votes"
 #.//add_tcr_lambda_permission.sh update_batch_received_delegate_votes $1 $2 update-batch-received-delegate-votes
 
-echo "adding lambda permission for get_project_id_by_admin"
-.//add_tcr_lambda_permission.sh get_project_id_by_admin $1 $2 get-project-id-by-admin
+#echo "adding lambda permission for get_project_id_by_admin"
+#.//add_tcr_lambda_permission.sh get_project_id_by_admin $1 $2 get-project-id-by-admin
+
+echo "adding lambda permission for delete_batch_objectives"
+.//add_tcr_lambda_permission.sh delete_batch_objectives $1 $2 delete-batch-objectives
+
+echo "adding lambda permission for batch_objectives"
+.//add_tcr_lambda_permission.sh batch_objectives $1 $2 batch-objectives

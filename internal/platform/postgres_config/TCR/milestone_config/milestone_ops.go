@@ -169,7 +169,7 @@ func (milestoneExecutor *MilestoneExecutor) IncreaseNumObjectives(projectId stri
     log.Panic(errorInfo.Marshal())
   }
 
-  log.Printf("Successfully increased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
+  log.Printf("Successfully increased numObjectives for projectId %s and milestoneId %d\n", projectId, milestoneId)
 }
 
 func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectives(projectId string, milestoneId int64) {
@@ -378,7 +378,7 @@ func (milestoneExecutor *MilestoneExecutor) IncreaseNumObjectivesTx(projectId st
     log.Panic(errorInfo.Marshal())
   }
 
-  log.Printf("Successfully increased numObjectives for projectId %s and and milestoneId %d\n", projectId, milestoneId)
+  log.Printf("Successfully increased numObjectives for projectId %s and milestoneId %d\n", projectId, milestoneId)
 }
 
 func (milestoneExecutor *MilestoneExecutor) DecreaseNumObjectivesTx(projectId string, milestoneId int64) {

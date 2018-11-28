@@ -1,4 +1,4 @@
-package lambda_objective_config
+package lambda_batch_objectives_config
 
 import (
   "BigBang/internal/platform/postgres_config/client_config"
@@ -10,8 +10,13 @@ import (
 
 type Request struct {
   PrincipalId string `json:"principalId,required"`
-  Body RequestContent `json:"body,required"`
+  Body RequestBody `json:"body,required"`
 }
+
+type RequestBody struct {
+  RequestList []RequestContent  `json:"requestList,required"`
+}
+
 
 type RequestContent struct {
   ProjectId   string  `json:"projectId,required"`
@@ -26,17 +31,6 @@ type Response struct {
   Message *error_config.ErrorInfo `json:"message,omitempty"`
 }
 
-func (request *Request) ToObjectiveRecord() (record *objective_config.ObjectiveRecord) {
-  objectiveRecord := &objective_config.ObjectiveRecord{
-    ProjectId:     request.Body.ProjectId,
-    MilestoneId: request.Body.MilestoneId,
-    ObjectiveId: request.Body.ObjectiveId,
-    Content:       request.Body.Content,
-    BlockTimestamp: request.Body.BlockTimestamp,
-  }
-  return objectiveRecord
-}
-
 func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   defer func() {
@@ -46,19 +40,35 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
-  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
+  requestList := request.Body.RequestList
 
   postgresBigBangClient.Begin()
+
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
+
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
 
-  projectId := request.Body.ProjectId
-  milestoneId := request.Body.MilestoneId
-  milestoneExecutor.VerifyMilestoneRecordExistingTx(projectId, milestoneId)
-  inserted := objectiveExecutor.UpsertObjectiveRecordTx(request.ToObjectiveRecord())
-  if inserted {
-    milestoneExecutor.IncreaseNumObjectivesTx(projectId, milestoneId)
+  for _ , singleRequest := range requestList {
+    milestoneExecutor.VerifyMilestoneRecordExistingTx(singleRequest.ProjectId, singleRequest.MilestoneId)
   }
+
+  for _ , singleRequest := range requestList {
+    projectId := singleRequest.ProjectId
+    milestoneId := singleRequest.MilestoneId
+    inserted := objectiveExecutor.UpsertObjectiveRecordTx(&objective_config.ObjectiveRecord{
+      ProjectId:      projectId,
+      MilestoneId:    milestoneId,
+      ObjectiveId:    singleRequest.ObjectiveId,
+      Content:        singleRequest.Content,
+      BlockTimestamp: singleRequest.BlockTimestamp,
+    })
+    if inserted {
+      milestoneExecutor.IncreaseNumObjectivesTx(projectId, milestoneId)
+    }
+  }
+
   postgresBigBangClient.Commit()
   response.Ok = true
 }
