@@ -12,6 +12,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/TCR/activate_milestone:go_default_test AdminAuth
 ./run_unit_test.sh  //test/lambda/TCR/finalize_milestone:go_default_test AdminAuth
 ./run_unit_test.sh  //test/lambda/TCR/objective:go_default_test AdminAuth
+./run_unit_test.sh  //test/lambda/TCR/batch_objectives:go_default_test AdminAuth
 
 ./run_unit_test.sh  //test/lambda/TCR/get_project:go_default_test NoAuth
 ./run_unit_test.sh  //test/lambda/TCR/get_project_list:go_default_test  NoAuth
@@ -38,6 +39,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/TCR/get_batch_finalized_validators:go_default_test NoAuth
 
 ./run_unit_test.sh  //test/lambda/TCR/delete_objective:go_default_test AdminAuth
+./run_unit_test.sh  //test/lambda/TCR/delete_batch_objectives:go_default_test AdminAuth
 ./run_unit_test.sh  //test/lambda/TCR/delete_milestone:go_default_test AdminAuth
 ./run_unit_test.sh  //test/lambda/TCR/delete_project:go_default_test AdminAuth
 

@@ -19,7 +19,7 @@ func TestHandler(t *testing.T) {
       request: lambda_delete_objective_config.Request{
         PrincipalId: test_constants.Actor1,
         Body: lambda_delete_objective_config.RequestContent{
-          ProjectId:   test_constants.ProjectId1,
+          ProjectId:   test_constants.ProjectId2,
           MilestoneId: test_constants.MilestoneId1,
           ObjectiveId: test_constants.ObjectiveId1,
         },

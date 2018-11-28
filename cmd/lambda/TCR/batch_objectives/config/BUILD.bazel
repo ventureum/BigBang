@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["batch_objectives.go"],
+    importpath = "BigBang/cmd/lambda/TCR/batch_objectives/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd/lambda/common/auth:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/milestone_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/objective_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+    ],
+)

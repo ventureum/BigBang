@@ -94,5 +94,11 @@
 #echo "generating update_batch_received_delegate_votes zip"
 #.//generate_lambda_zip.sh TCR update_batch_received_delegate_votes $1 $2
 
-echo "generating get_project_id_by_admin zip"
-.//generate_lambda_zip.sh TCR get_project_id_by_admin $1 $2
+#echo "generating get_project_id_by_admin zip"
+###.//generate_lambda_zip.sh TCR get_project_id_by_admin $1 $2
+
+echo "generating batch_objectives zip"
+.//generate_lambda_zip.sh TCR batch_objectives $1 $2 AdminAuth
+
+echo "generating delete_batch_objectives zip"
+.//generate_lambda_zip.sh TCR delete_batch_objectives $1 $2 AdminAuth

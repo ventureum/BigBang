@@ -42,8 +42,8 @@
 #echo "updating milestone zip"
 #.//update_lambda_zip.sh TCR milestone $1 $2 AdminAuth
 #
-#echo "updating objective zip"
-#.//update_lambda_zip.sh TCR objective $1 $2 AdminAuth
+echo "updating objective zip"
+.//update_lambda_zip.sh TCR objective $1 $2 AdminAuth
 #
 #echo "updating project zip"
 #.//update_lambda_zip.sh TCR project $1 $2 AdminAuth
@@ -66,11 +66,11 @@
 #echo "updating activate_milestone zip"
 #.//update_lambda_zip.sh TCR activate_milestone $1 $2 AdminAuth
 
-echo "updating finalize_milestone zip"
-.//update_lambda_zip.sh TCR finalize_milestone $1 $2 AdminAuth
-
-echo "updating finalize_validators zip"
-.//update_lambda_zip.sh TCR finalize_validators $1 $2 AdminAuth
+#echo "updating finalize_milestone zip"
+#.//update_lambda_zip.sh TCR finalize_milestone $1 $2 AdminAuth
+#
+#echo "updating finalize_validators zip"
+#.//update_lambda_zip.sh TCR finalize_validators $1 $2 AdminAuth
 
 #echo "updating get_finalized_validators zip"
 #.//update_lambda_zip.sh TCR get_finalized_validators $1 $2  NoAuth
@@ -89,3 +89,9 @@ echo "updating finalize_validators zip"
 #
 #echo "updating update_batch_received_delegate_votes zip"
 #.//update_lambda_zip.sh TCR update_batch_received_delegate_votes $1 $2 AdminAuth
+
+echo "updating batch_objectives zip"
+.//update_lambda_zip.sh TCR batch_objectives $1 $2 AdminAuth
+
+echo "updating delete_batch_objectives zip"
+.//update_lambda_zip.sh TCR delete_batch_objectives $1 $2 AdminAuth
