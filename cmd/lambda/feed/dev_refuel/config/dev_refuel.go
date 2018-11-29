@@ -43,10 +43,8 @@ func ProcessRequest(request Request, response *Response) {
   milestonePoints := feed_attributes.MilestonePoint(request.Body.MilestonePoints)
   actor := request.Body.Actor
 
-  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
-
-
   postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
   refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{
     *postgresBigBangClient}

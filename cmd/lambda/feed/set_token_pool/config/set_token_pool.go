@@ -34,9 +34,9 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 

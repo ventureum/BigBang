@@ -36,11 +36,11 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
-
   projectId := request.Body.ProjectId
   milestoneId := request.Body.MilestoneId
+
   postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}

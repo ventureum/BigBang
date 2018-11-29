@@ -49,15 +49,15 @@ func AuthProcess(principalId string, actor string, postgresBigBangClient *client
   if  postgresBigBangClient == nil {
     postgresBigBangClient = client_config.ConnectPostgresClient(nil)
   }
+
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  actorType := actorProfileRecordExecutor.GetActorType(principalId)
 
   if principalId != "" && AuthLevel(auth) == AdminAuth {
-    match := actorProfileRecordExecutor.CheckActorType(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
-    if match {
+    if actorType == feed_attributes.ADMIN_ACTOR_TYPE {
       return
     }
   } else if principalId != "" && AuthLevel(auth) == UserAuth {
-    actorType := actorProfileRecordExecutor.GetActorType(principalId)
     if actorType != feed_attributes.ActorType("") &&
       (actor == "" || (actor != "" &&
           ((actorType == feed_attributes.ADMIN_ACTOR_TYPE) ||

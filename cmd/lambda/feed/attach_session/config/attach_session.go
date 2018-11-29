@@ -55,6 +55,7 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, request.Body.Actor, postgresBigBangClient)
 
   var err error
@@ -71,8 +72,6 @@ func ProcessRequest(request Request, response *Response) {
 
   getStreamClient := &getstream_config.GetStreamClient{C: getStreamIOClient}
   sessionRecord := request.ToSessionRecord()
-
-  postgresBigBangClient.Begin()
 
   postExecutor := post_config.PostExecutor{*postgresBigBangClient}
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}

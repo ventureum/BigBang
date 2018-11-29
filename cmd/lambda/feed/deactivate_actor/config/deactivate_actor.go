@@ -34,9 +34,9 @@ func ProcessRequest(request Request, response *Response) {
 
 
   actor := request.Body.Actor
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
-  postgresBigBangClient.Begin()
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
 

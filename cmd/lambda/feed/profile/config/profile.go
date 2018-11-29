@@ -56,9 +56,10 @@ func ProcessRequest(request Request, response *Response) {
   }()
 
   actor := request.Body.Actor
-  auth.RegisterAuth(request.PrincipalId, actor, postgresBigBangClient)
 
   postgresBigBangClient.Begin()
+  auth.RegisterAuth(request.PrincipalId, actor, postgresBigBangClient)
+
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   inserted := actorProfileRecordExecutor.UpsertActorProfileRecordTx(request.ToActorProfileRecord())

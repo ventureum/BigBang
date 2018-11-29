@@ -32,10 +32,10 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
-  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   projectId := request.Body.ProjectId
   postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   projectExecutor.VerifyProjectRecordExistingTx(projectId)
