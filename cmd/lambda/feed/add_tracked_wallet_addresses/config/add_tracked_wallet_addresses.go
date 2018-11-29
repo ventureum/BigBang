@@ -33,8 +33,8 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
-  postgresBigBangClient.Begin()
 
+  postgresBigBangClient.Begin()
 
   actor := request.Body.Actor
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)

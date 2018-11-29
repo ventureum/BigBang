@@ -4,6 +4,7 @@ import (
   "github.com/stretchr/testify/assert"
   "testing"
   "BigBang/cmd/lambda/feed/feed_token_generator/config"
+  "BigBang/test/constants"
 )
 
 func TestHandler(t *testing.T) {
@@ -14,8 +15,11 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_feed_token_generator_config.Request {
-        FeedSlug: "User",
-        UserId: "david3620",
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_feed_token_generator_config.RequestContent{
+          FeedSlug: "User",
+          UserId: "david3620",
+        },
       },
       response: lambda_feed_token_generator_config.Response {
         FeedToken: "8XDj7VcxGoOYMYigN_bIT7h9hAo",

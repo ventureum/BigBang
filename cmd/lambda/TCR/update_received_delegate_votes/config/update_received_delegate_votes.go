@@ -36,11 +36,10 @@ func ProcessRequest(request Request, response *Response) {
   }()
 
   actor := request.Body.Actor
-  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
-
   projectId := request.Body.ProjectId
 
   postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}

@@ -39,10 +39,9 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
+
   postgresBigBangClient.Begin()
-
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
-
 
   requestList := request.Body.RequestList
 

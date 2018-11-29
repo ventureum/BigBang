@@ -166,10 +166,14 @@ func processEvent(
   switch reflect.TypeOf(*event) {
     case reflect.TypeOf(post_config.PostRecord{}):
       postRecord := (*event).(post_config.PostRecord)
+      postgresBigBangClient.Begin()
       ProcessPostRecord(&postRecord, getStreamClient, postgresBigBangClient, feed_attributes.ON_CHAIN)
+      postgresBigBangClient.Commit()
     case reflect.TypeOf(post_votes_record_config.PostVotesRecord{}):
       postVotesRecord := (*event).(post_votes_record_config.PostVotesRecord)
+      postgresBigBangClient.Begin()
       ProcessPostVotesRecord(&postVotesRecord, postgresBigBangClient)
+      postgresBigBangClient.Commit()
     case reflect.TypeOf(purchase_mps_record_config.PurchaseMPsRecord{}):
       purchaseReputationsRecord := (*event).(purchase_mps_record_config.PurchaseMPsRecord)
       ProcessPurchaseReputationsRecord(&purchaseReputationsRecord, postgresBigBangClient)
@@ -181,7 +185,6 @@ func ProcessPostRecord(
     getStreamClient *getstream_config.GetStreamClient,
     postgresBigBangClient *client_config.PostgresBigBangClient,
     source feed_attributes.Source) {
-  postgresBigBangClient.Begin()
   postExecutor := post_config.PostExecutor{*postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
     *postgresBigBangClient}
@@ -230,15 +233,11 @@ func ProcessPostRecord(
     }
     postRepliesRecordExecutor.UpsertPostRepliesRecordTx(&postRepliesRecord)
   }
-
-  postgresBigBangClient.Commit()
 }
 
 func ProcessPostVotesRecord(
     postVotesRecord *post_votes_record_config.PostVotesRecord,
     postgresBigBangClient *client_config.PostgresBigBangClient) *feed_attributes.VoteInfo {
-
-  postgresBigBangClient.Begin()
 
   actor := postVotesRecord.Actor
   postHash := postVotesRecord.PostHash
@@ -367,8 +366,6 @@ func ProcessPostVotesRecord(
       postVotesRecordExecutor.AddPostVoteDeltaRewardsInfoTx(actorAddress, postHash, voteType, 0, int64(rewards), int64(rewards))
     }
   }
-
-  postgresBigBangClient.Commit()
 
   return &voteInfo
 }

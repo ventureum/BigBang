@@ -42,9 +42,8 @@ func ProcessRequest(request Request, response *Response) {
   projectId := request.Body.ProjectId
   proxyVotingList := request.Body.ProxyVotingList
 
-  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
-
   postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
   actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}

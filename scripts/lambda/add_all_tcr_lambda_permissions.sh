@@ -63,8 +63,8 @@
 #echo "adding lambda permission for add_milestone"
 #.//add_tcr_lambda_permission.sh add_milestone $1 $2 add-milestone
 #
-#echo "adding lambda permission for activate_milestone"
-#.//add_tcr_lambda_permission.sh activate_milestone $1 $2 activate-milestone
+echo "adding lambda permission for activate_milestone"
+.//add_tcr_lambda_permission.sh activate_milestone $1 $2 activate-milestone
 #
 #echo "adding lambda permission for finalize_milestone"
 #.//add_tcr_lambda_permission.sh finalize_milestone $1 $2 finalize-milestone
@@ -93,8 +93,8 @@
 #echo "adding lambda permission for get_project_id_by_admin"
 #.//add_tcr_lambda_permission.sh get_project_id_by_admin $1 $2 get-project-id-by-admin
 
-echo "adding lambda permission for delete_batch_objectives"
-.//add_tcr_lambda_permission.sh delete_batch_objectives $1 $2 delete-batch-objectives
-
-echo "adding lambda permission for batch_objectives"
-.//add_tcr_lambda_permission.sh batch_objectives $1 $2 batch-objectives
+#echo "adding lambda permission for delete_batch_objectives"
+#.//add_tcr_lambda_permission.sh delete_batch_objectives $1 $2 delete-batch-objectives
+#
+#echo "adding lambda permission for batch_objectives"
+#.//add_tcr_lambda_permission.sh batch_objectives $1 $2 batch-objectives

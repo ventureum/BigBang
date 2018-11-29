@@ -33,9 +33,9 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
-  postgresBigBangClient.Begin()
   proxy := request.Body.Proxy
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}

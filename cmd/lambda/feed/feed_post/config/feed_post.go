@@ -55,6 +55,8 @@ func ProcessRequest(request Request, response *Response) {
   }()
 
   actor := request.Body.Actor
+
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
   var err error
@@ -77,6 +79,8 @@ func ProcessRequest(request Request, response *Response) {
     getStreamClient,
     postgresBigBangClient,
     feed_attributes.OFF_CHAIN)
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

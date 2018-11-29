@@ -32,7 +32,7 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.VoteInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
-      if feed_attributes.CreateVoteTypeFromValue(request.Body.Value) != feed_attributes.LOOKUP_VOTE_TYPE {
+      if feed_attributes.CreateVoteTypeFromValue(request.Body.Value) != feed_attributes.LOOKUP_VOTE_TYPE && postgresBigBangClient.Tx != nil{
         postgresBigBangClient.RollBack()
       }
     }
@@ -51,7 +51,9 @@ func ProcessRequest(request Request, response *Response) {
   if postVotesRecord.VoteType == feed_attributes.LOOKUP_VOTE_TYPE {
     response.VoteInfo =  eth_config.QueryPostVotesInfo(&postVotesRecord, postgresBigBangClient)
   } else {
+    postgresBigBangClient.Begin()
     response.VoteInfo = eth_config.ProcessPostVotesRecord(&postVotesRecord, postgresBigBangClient)
+    postgresBigBangClient.Commit()
   }
 
   response.Ok = true

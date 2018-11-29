@@ -42,13 +42,14 @@ func ProcessRequest(request Request, response *Response) {
   }()
 
   actor := request.Body.Actor
-  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
   debugMode, _ := strconv.ParseInt(os.Getenv("DEBUG_MODE"), 10, 64)
   refuelInterval, _ := strconv.ParseInt(os.Getenv("REFUEL_INTERVAL"), 10, 64)
   refuelReplenishmentHourly, _ := strconv.ParseInt(os.Getenv("FUEL_REPLENISHMENT_HOURLY"), 10, 64)
 
   postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
+
 
   refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{
     *postgresBigBangClient}
