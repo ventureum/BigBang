@@ -64,7 +64,7 @@ UPDATE projects
 SET 
    total_rating = total_rating + $2,
    total_weight = total_weight + $3,
-   avg_rating = (total_rating + $2) / GREATEST(total_weight + $3, 1)
+   avg_rating = (total_rating + $2) * 10 / GREATEST(total_weight + $3, 1)
 WHERE project_id = $1;
 `
 

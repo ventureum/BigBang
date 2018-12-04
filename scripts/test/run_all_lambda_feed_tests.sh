@@ -5,7 +5,7 @@ bazel run //:gazelle
 ./run_unit_test.sh  //test/lambda/feed/profile:go_default_test UserAuth
 ./run_unit_test.sh  //test/lambda/feed/get_profile:go_default_test  UserAuth
 ./run_unit_test.sh  //test/lambda/feed/get_batch_profiles:go_default_test AdminAuth
-#
+
 ./run_unit_test.sh  //test/lambda/feed/set_actor_private_key:go_default_test AdminAuth
 ./run_unit_test.sh  //test/lambda/feed/get_actor_private_key:go_default_test UserAuth
 ./run_unit_test.sh  //test/lambda/feed/get_actor_uuid_from_public_key:go_default_test UserAuth
@@ -33,12 +33,12 @@ bazel run //:gazelle
 
 ./run_unit_test.sh  //test/lambda/feed/set_next_redeem:go_default_test  UserAuth
 ./run_unit_test.sh  //test/lambda/feed/get_next_redeem:go_default_test  UserAuth
-#
+
 ./run_unit_test.sh  //test/lambda/feed/feed_update_post_rewards:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/feed_redeem_milestone_points:go_default_test
 ./run_unit_test.sh  //test/lambda/feed/get_redeem_history:go_default_test UserAuth
-#
+
 ./run_unit_test.sh  //test/lambda/feed/set_token_pool:go_default_test AdminAuth
 ./run_unit_test.sh  //test/lambda/feed/get_redeem_block_info:go_default_test NoAuth
-#
+
 ./run_unit_test.sh  //test/lambda/feed/deactivate_actor:go_default_test AdminAuth

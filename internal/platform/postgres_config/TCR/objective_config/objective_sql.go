@@ -57,6 +57,6 @@ UPDATE objectives
 SET 
    total_rating = total_rating + $4,
    total_weight = total_weight + $5,
-   avg_rating = (total_rating + $4) / GREATEST(total_weight + $5, 1)
+   avg_rating = (total_rating + $4) * 10 / GREATEST(total_weight + $5, 1)
 WHERE project_id = $1 and milestone_id = $2 and objective_id = $3;
 `
