@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["browser.go"],
-    importmap = "BigBang/vendor/github.com/ethereum/go-ethereum/cmd/internal/browser",
-    importpath = "github.com/ethereum/go-ethereum/cmd/internal/browser",
-    visibility = ["//vendor/github.com/ethereum/go-ethereum/cmd:__subpackages__"],
-)
