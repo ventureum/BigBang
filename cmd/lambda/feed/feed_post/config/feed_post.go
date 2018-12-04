@@ -7,9 +7,12 @@ import (
   "BigBang/internal/platform/postgres_config/feed/post_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/platform/getstream_config"
-  "BigBang/internal/platform/eth_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/cmd/lambda/common/auth"
+  "BigBang/internal/platform/postgres_config/feed/actor_rewards_info_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_replies_record_config"
+  "BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
+  "BigBang/internal/platform/postgres_config/feed/post_rewards_record_config"
 )
 
 type Request struct {
@@ -74,14 +77,65 @@ func ProcessRequest(request Request, response *Response) {
   getStreamClient := &getstream_config.GetStreamClient{C: getStreamIOClient}
 
   postRecord := request.ToPostRecord()
-  eth_config.ProcessPostRecord(
-    postRecord,
-    getStreamClient,
-    postgresBigBangClient,
-    feed_attributes.OFF_CHAIN)
+  ProcessPostRecord(postRecord, getStreamClient, postgresBigBangClient, feed_attributes.OFF_CHAIN)
 
   postgresBigBangClient.Commit()
   response.Ok = true
+}
+
+func ProcessPostRecord(
+    postRecord *post_config.PostRecord,
+    getStreamClient *getstream_config.GetStreamClient,
+    postgresBigBangClient *client_config.PostgresBigBangClient,
+    source feed_attributes.Source) {
+  postExecutor := post_config.PostExecutor{*postgresBigBangClient}
+  actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
+    *postgresBigBangClient}
+  postRepliesRecordExecutor := post_replies_record_config.PostRepliesRecordExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
+  actorRewardsInfoRecordExecutor.VerifyActorExistingTx(postRecord.Actor)
+
+  updateCount :=  postExecutor.GetPostUpdateCountTx(postRecord.PostHash)
+  fuelsPenalty := feed_attributes.FuelsPenaltyForPostType(
+    feed_attributes.PostType(postRecord.PostType), updateCount)
+
+  log.Printf("UpdateCount for PostHash %s: %d", postRecord.PostHash, updateCount)
+  log.Printf("Fuel Penalty for PostHash %s: %d", postRecord.PostHash, fuelsPenalty)
+
+  // Update Actor Fuel
+  actorRewardsInfoRecordExecutor.SubActorFuelTx(postRecord.Actor, fuelsPenalty)
+
+  // Insert Post Record
+  createdTimestamp := postExecutor.UpsertPostRecordTx(postRecord)
+  activity := postRecord.ToActivity(source, feed_attributes.BlockTimestamp(createdTimestamp.Unix()))
+
+  postRewardsRecordExecutor.UpsertPostRewardsRecordTx(&post_rewards_record_config.PostRewardsRecord{
+    PostHash: postRecord.PostHash,
+    Actor: postRecord.Actor,
+    PostType: postRecord.PostType,
+    Object: activity.Object.Value(),
+    PostTime: createdTimestamp,
+    DeltaFuel: int64(fuelsPenalty.Neg()),
+  })
+
+  // Insert Activity to GetStream
+  if updateCount == 0 {
+    getStreamClient.AddFeedActivityToGetStream(activity)
+  } else {
+    getStreamClient.UpdateFeedActivityToGetStream(activity)
+  }
+
+
+  // Update Post Replies Record
+  if activity.Verb == feed_attributes.ReplyVerb {
+    postRepliesRecord := post_replies_record_config.PostRepliesRecord {
+      PostHash: postRecord.ParentHash,
+      ReplyHash: postRecord.PostHash,
+    }
+    postRepliesRecordExecutor.UpsertPostRepliesRecordTx(&postRepliesRecord)
+  }
 }
 
 func Handler(request Request) (response Response, err error) {

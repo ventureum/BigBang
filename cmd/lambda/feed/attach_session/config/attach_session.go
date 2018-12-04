@@ -11,7 +11,6 @@ import (
   "BigBang/internal/platform/getstream_config"
   "BigBang/internal/pkg/error_config"
   "BigBang/internal/platform/postgres_config/feed/post_config"
-  "BigBang/internal/platform/eth_config"
   "BigBang/cmd/lambda/common/auth"
 )
 
@@ -81,8 +80,8 @@ func ProcessRequest(request Request, response *Response) {
   postRecord := postExecutor.GetPostRecordTx(sessionRecord.PostHash)
   sessionRecordExecutor.UpsertSessionRecordTx(sessionRecord)
 
-  activity := eth_config.ConvertPostRecordToActivity(
-    postRecord, feed_attributes.OFF_CHAIN, feed_attributes.BlockTimestamp(postRecord.CreatedAt.Unix()))
+  activity :=  postRecord.ToActivity(
+    feed_attributes.OFF_CHAIN, feed_attributes.BlockTimestamp(postRecord.CreatedAt.Unix()))
 
   // Insert Activity to GetStream
   sessionRecord.EmbedSessionRecordToActivity(activity)
