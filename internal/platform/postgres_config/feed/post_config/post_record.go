@@ -4,6 +4,7 @@ import (
   "github.com/jmoiron/sqlx/types"
   "time"
   "BigBang/internal/app/feed_attributes"
+  "BigBang/internal/pkg/utils"
 )
 
 
@@ -43,4 +44,53 @@ func (postRecord *PostRecord) ToPostRecordResult() *PostRecordResult{
     CreatedAt:   postRecord.CreatedAt,
     UpdatedAt:   postRecord.UpdatedAt,
   }
+}
+
+func (postRecord *PostRecord) ToActivity(
+    source feed_attributes.Source,
+    timestamp feed_attributes.BlockTimestamp) *feed_attributes.Activity {
+  var verb feed_attributes.Verb
+  var to []feed_attributes.FeedId
+  var obj feed_attributes.Object
+  extraParam := map[string]interface{}{
+    "source": source,
+  }
+
+  if postRecord.ParentHash == utils.NullHashString {
+    obj = feed_attributes.Object{
+      ObjType:feed_attributes.PostObjectType,
+      ObjId: postRecord.PostHash,
+    }
+    verb = feed_attributes.SubmitVerb
+    to = []feed_attributes.FeedId {
+      {
+        FeedSlug: feed_attributes.BoardFeedSlug,
+        UserId: feed_attributes.AllBoardId,
+      },
+      {
+        FeedSlug: feed_attributes.BoardFeedSlug,
+        UserId: feed_attributes.UserId(postRecord.BoardId),
+      },
+    }
+  } else {
+    obj = feed_attributes.Object{
+      ObjType:feed_attributes.ReplyObjectType,
+      ObjId: postRecord.PostHash,
+    }
+    verb = feed_attributes.ReplyVerb
+    extraParam["post"] = feed_attributes.Object{
+      ObjType: feed_attributes.PostObjectType,
+      ObjId: postRecord.ParentHash,
+    }
+    to = []feed_attributes.FeedId {
+      {
+        FeedSlug: feed_attributes.CommentFeedSlug,
+        UserId: feed_attributes.UserId(postRecord.ParentHash),
+      },
+    }
+  }
+
+  actor := feed_attributes.Actor(postRecord.Actor)
+  postType := feed_attributes.PostType(postRecord.PostType)
+  return feed_attributes.CreateNewActivity(actor, verb, obj, timestamp, postType, to, extraParam)
 }
