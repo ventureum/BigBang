@@ -81,7 +81,7 @@ UPDATE milestones
 SET
    total_rating = total_rating + $3,
    total_weight = total_weight + $4,
-   avg_rating = (total_rating + $3) / GREATEST(total_weight + $4, 1)
+   avg_rating = (total_rating + $3) * 10 / GREATEST(total_weight + $4, 1)
 WHERE project_id = $1 and milestone_id = $2;
 `
 
