@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["refuel_test.go"],
+    importpath = "BigBang/test/lambda/feed/refuel",
     deps = [
         "//cmd/lambda/feed/refuel/config:go_default_library",
         "//internal/pkg/error_config:go_default_library",

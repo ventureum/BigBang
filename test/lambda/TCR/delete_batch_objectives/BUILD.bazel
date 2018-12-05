@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["delete_batch_objectives_test.go"],
+    importpath = "BigBang/test/lambda/TCR/delete_batch_objectives",
     deps = [
         "//cmd/lambda/TCR/delete_batch_objectives/config:go_default_library",
         "//internal/platform/postgres_config/TCR/objective_config:go_default_library",

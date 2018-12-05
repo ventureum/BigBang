@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["get_proxy_voting_info_test.go"],
+    importpath = "BigBang/test/lambda/TCR/get_proxy_voting_info",
     deps = [
         "//cmd/lambda/TCR/get_proxy_voting_info/config:go_default_library",
         "//internal/app/tcr_attributes:go_default_library",

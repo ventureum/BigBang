@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["delete_proxy_test.go"],
+    importpath = "BigBang/test/lambda/TCR/delete_proxy",
     deps = [
         "//cmd/lambda/TCR/delete_proxy/config:go_default_library",
         "//test/constants:go_default_library",

@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["get_redeem_block_info_test.go"],
+    importpath = "BigBang/test/apis/feed/get_redeem_block_info",
+    deps = [
+        "//cmd/lambda/feed/get_redeem_block_info/config:go_default_library",
+        "//internal/app/feed_attributes:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)

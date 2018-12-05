@@ -11,5 +11,6 @@ go_library(
 go_binary(
     name = "pressure",
     embed = [":go_default_library"],
+    importpath = "BigBang/test/pressure",
     visibility = ["//visibility:public"],
 )

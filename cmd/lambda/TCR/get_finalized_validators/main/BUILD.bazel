@@ -14,5 +14,6 @@ go_library(
 go_binary(
     name = "main",
     embed = [":go_default_library"],
+    importpath = "BigBang/cmd/lambda/TCR/get_finalized_validators/main",
     visibility = ["//visibility:public"],
 )

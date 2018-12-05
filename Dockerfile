@@ -26,12 +26,12 @@ RUN \
 RUN mkdir  $GOPATH/src/BigBang
 COPY . $GOPATH/src/BigBang
 
+# Go dep
+RUN go get -u github.com/golang/dep/...
 RUN rm -rf $GOPATH/src/BigBang/vendor
 RUN rm -rf $GOPATH/pkg
 
-# Go dep
-RUN go get -u github.com/golang/dep/...
 RUN cd $GOPATH/src/BigBang && \
-    dep ensure -v &&\
+    dep ensure -v && \
     bazel run //:gazelle && \
     bazel run //:gazelle -- vendor
