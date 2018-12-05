@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["rating_vote_test.go"],
+    importpath = "BigBang/test/lambda/TCR/rating_vote",
     deps = [
         "//cmd/lambda/TCR/rating_vote/config:go_default_library",
         "//internal/platform/postgres_config/TCR/rating_vote_config:go_default_library",

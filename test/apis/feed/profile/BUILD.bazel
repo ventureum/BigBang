@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["profile_test.go"],
+    importpath = "BigBang/test/apis/feed/profile",
     deps = [
         "//cmd/lambda/feed/profile/config:go_default_library",
         "//internal/pkg/api:go_default_library",

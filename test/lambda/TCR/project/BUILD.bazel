@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["project_test.go"],
+    importpath = "BigBang/test/lambda/TCR/project",
     deps = [
         "//cmd/lambda/TCR/project/config:go_default_library",
         "//test/constants:go_default_library",

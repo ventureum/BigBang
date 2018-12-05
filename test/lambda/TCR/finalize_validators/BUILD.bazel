@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 go_test(
     name = "go_default_test",
     srcs = ["finalize_validators_test.go"],
+    importpath = "BigBang/test/lambda/TCR/finalize_validators",
     deps = [
         "//cmd/lambda/TCR/finalize_validators/config:go_default_library",
         "//internal/pkg/error_config:go_default_library",
