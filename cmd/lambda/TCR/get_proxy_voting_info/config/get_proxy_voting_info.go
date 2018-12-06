@@ -43,10 +43,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   actor := request.Body.Actor
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
@@ -57,12 +59,12 @@ func ProcessRequest(request Request, response *Response) {
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
 
-  actorProfileRecordExecutor.VerifyActorExisting(actor)
-  projectExecutor.VerifyProjectRecordExisting(projectId)
+  actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+  projectExecutor.VerifyProjectRecordExistingTx(projectId)
 
   principalProxyVotesExecutor := principal_proxy_votes_config.PrincipalProxyVotesExecutor{*postgresBigBangClient}
 
-  existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExisting(actor, projectId)
+  existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExistingTx(actor, projectId)
   if !existing  {
     response.ResponseData = &ResponseData{
       NextCursor: "",
@@ -82,8 +84,9 @@ func ProcessRequest(request Request, response *Response) {
       cursor = utils.Base64DecodeToString(cursorStr)
     }
 
-    actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
-    principalProxyVotesRecordList := principalProxyVotesExecutor.GetPrincipalProxyVotesRecordListByCursor(actor, projectId, cursor, limit + 1)
+    actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecordTx(actor, projectId)
+    principalProxyVotesRecordList := principalProxyVotesExecutor.GetPrincipalProxyVotesRecordListByCursorTx(
+      actor, projectId, cursor, limit + 1)
 
     response.ResponseData = &ResponseData{
       NextCursor: "",
@@ -119,6 +122,8 @@ func ProcessRequest(request Request, response *Response) {
         actor, projectId, cursorStr, limit)
     }
   }
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

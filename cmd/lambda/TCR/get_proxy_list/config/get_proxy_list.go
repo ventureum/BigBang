@@ -36,10 +36,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   limit := request.Body.Limit
@@ -52,7 +54,7 @@ func ProcessRequest(request Request, response *Response) {
 
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
 
-  proxyRecords := proxyExecutor.GetListOfProxyByCursor(cursor, limit + 1)
+  proxyRecords := proxyExecutor.GetListOfProxyByCursorTx(cursor, limit + 1)
 
   response.ResponseData = &ResponseData{
     NextCursor: "",
@@ -75,6 +77,8 @@ func ProcessRequest(request Request, response *Response) {
   } else {
     log.Printf("ProxyUUIDList  is loaded for query with cursor %s and limit %d\n", cursorStr, limit)
   }
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

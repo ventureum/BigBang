@@ -33,10 +33,11 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.ObjectiveVotesInfoList = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
-
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
@@ -48,7 +49,7 @@ func ProcessRequest(request Request, response *Response) {
     projectId := objectiveVotesInfoKey.ProjectId
     milestoneId := objectiveVotesInfoKey.MilestoneId
     objectiveId := objectiveVotesInfoKey.ObjectiveId
-    objectiveExecutor.VerifyObjectiveRecordExisting(projectId, milestoneId, objectiveId)
+    objectiveExecutor.VerifyObjectiveRecordExistingTx(projectId, milestoneId, objectiveId)
   }
 
   var objectiveVotesInfoList []tcr_attributes.ObjectiveVotesInfo
@@ -57,7 +58,7 @@ func ProcessRequest(request Request, response *Response) {
     projectId := objectiveVotesInfoKey.ProjectId
     milestoneId := objectiveVotesInfoKey.MilestoneId
     objectiveId := objectiveVotesInfoKey.ObjectiveId
-    ratingVotes:= ratingVoteExecutor.GetRatingVotesByIDs(
+    ratingVotes:= ratingVoteExecutor.GetRatingVotesByIDsTx(
       projectId, milestoneId, objectiveId)
     objectiveVotesInfo := &tcr_attributes.ObjectiveVotesInfo{
       ProjectId: projectId,
@@ -74,6 +75,7 @@ func ProcessRequest(request Request, response *Response) {
 
   response.ObjectiveVotesInfoList = &objectiveVotesInfoList
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

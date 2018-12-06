@@ -32,15 +32,17 @@ func ProcessRequest(request Request, response *Response) {
     }
     postgresBigBangClient.Close()
   }()
-
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   admin := request.Body.Admin
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
-  actorProfileRecordExecutor.VerifyActorExisting(admin)
+  actorProfileRecordExecutor.VerifyActorExistingTx(admin)
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
-  response.ProjectId = projectExecutor.GetProjectIdByAdmin(admin)
+  response.ProjectId = projectExecutor.GetProjectIdByAdminTx(admin)
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

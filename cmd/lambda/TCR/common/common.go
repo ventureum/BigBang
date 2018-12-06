@@ -8,7 +8,7 @@ import (
   "BigBang/internal/platform/postgres_config/TCR/project_config"
 )
 
-func ConstructMilestoneFromMilestoneRecord(
+func ConstructMilestoneFromMilestoneRecordTx(
   milestoneRecord *milestone_config.MilestoneRecord, postgresBigBangClient *client_config.PostgresBigBangClient) *tcr_attributes.Milestone {
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
 
@@ -24,7 +24,7 @@ func ConstructMilestoneFromMilestoneRecord(
     AvgRating:      milestoneRecord.AvgRating,
   }
 
-  objectiveRecords := objectiveExecutor.GetObjectiveRecordsByProjectIdAndMilestoneId(
+  objectiveRecords := objectiveExecutor.GetObjectiveRecordsByProjectIdAndMilestoneIdTx(
     milestoneRecord.ProjectId, milestoneRecord.MilestoneId)
 
   var objectives []tcr_attributes.Objective
@@ -43,7 +43,7 @@ func ConstructMilestoneFromMilestoneRecord(
   return milestone
 }
 
-func ConstructProjectFromProjectRecord(
+func ConstructProjectFromProjectRecordTx(
   projectRecord *project_config.ProjectRecord, postgresBigBangClient *client_config.PostgresBigBangClient) *tcr_attributes.Project {
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
 
@@ -61,11 +61,11 @@ func ConstructProjectFromProjectRecord(
     NumMilestonesCompleted: projectRecord.NumMilestonesCompleted,
   }
 
-  milestoneRecords := milestoneExecutor.GetMilestonesRecordsByProjectId(project.ProjectId)
+  milestoneRecords := milestoneExecutor.GetMilestonesRecordsByProjectIdTx(project.ProjectId)
 
   var milestones []tcr_attributes.Milestone
   for _, milestoneRecord := range *milestoneRecords {
-    milestone := ConstructMilestoneFromMilestoneRecord(&milestoneRecord, postgresBigBangClient)
+    milestone := ConstructMilestoneFromMilestoneRecordTx(&milestoneRecord, postgresBigBangClient)
     milestones = append(milestones, *milestone)
   }
   milestonesInfo.Milestones = &milestones

@@ -38,9 +38,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
+
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   limit := request.Body.Limit
@@ -53,7 +56,7 @@ func ProcessRequest(request Request, response *Response) {
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
 
-  projectRecords := projectExecutor.GetProjectRecordsByCursor(cursor, limit + 1)
+  projectRecords := projectExecutor.GetProjectRecordsByCursorTx(cursor, limit + 1)
 
   response.ResponseData = &ResponseData{
     NextCursor: "",
@@ -63,7 +66,7 @@ func ProcessRequest(request Request, response *Response) {
   var projects []tcr_attributes.Project
   for index, projectRecord := range *projectRecords {
     if index < int(limit) {
-      project := common.ConstructProjectFromProjectRecord(&projectRecord, postgresBigBangClient)
+      project := common.ConstructProjectFromProjectRecordTx(&projectRecord, postgresBigBangClient)
       projects = append(projects, *project)
     } else {
       response.ResponseData.NextCursor = utils.Base64EncodeStr(projectRecord.ID)
@@ -76,6 +79,8 @@ func ProcessRequest(request Request, response *Response) {
   } else {
     log.Printf("ProjectRecords is loaded for query with cursor %s and limit %d\n", cursorStr, limit)
   }
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

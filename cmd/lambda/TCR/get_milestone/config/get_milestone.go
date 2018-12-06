@@ -32,9 +32,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Milestone = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
+
+  postgresBigBangClient.Begin()
 
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
@@ -43,13 +46,14 @@ func ProcessRequest(request Request, response *Response) {
 
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
 
-  milestoneExecutor.VerifyMilestoneRecordExisting(projectId, milestoneId)
-  milestoneRecord := milestoneExecutor.GetMilestoneRecordByIDs(projectId, milestoneId)
-  response.Milestone = common.ConstructMilestoneFromMilestoneRecord(milestoneRecord, postgresBigBangClient)
+  milestoneExecutor.VerifyMilestoneRecordExistingTx(projectId, milestoneId)
+  milestoneRecord := milestoneExecutor.GetMilestoneRecordByIDsTx(projectId, milestoneId)
+  response.Milestone = common.ConstructMilestoneFromMilestoneRecordTx(milestoneRecord, postgresBigBangClient)
 
   log.Printf("Milestone Content is loaded for projectId %s and milestoneId %d\n",
     projectId, milestoneId)
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

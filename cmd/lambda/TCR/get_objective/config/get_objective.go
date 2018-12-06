@@ -33,10 +33,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Objective = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   projectId := request.Body.ProjectId
@@ -45,9 +47,9 @@ func ProcessRequest(request Request, response *Response) {
 
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
 
-  objectiveExecutor.VerifyObjectiveRecordExisting(projectId, milestoneId, objectiveId)
+  objectiveExecutor.VerifyObjectiveRecordExistingTx(projectId, milestoneId, objectiveId)
 
-  objectiveRecord := objectiveExecutor.GetObjectiveRecordByIDs(projectId, milestoneId, objectiveId)
+  objectiveRecord := objectiveExecutor.GetObjectiveRecordByIDsTx(projectId, milestoneId, objectiveId)
   objective := &tcr_attributes.Objective{
     ProjectId: objectiveRecord.ProjectId,
     MilestoneId: objectiveRecord.MilestoneId,
@@ -62,6 +64,7 @@ func ProcessRequest(request Request, response *Response) {
   log.Printf("Objective Content is loaded for projectId %s, milestoneId %d and objectiveId %d\n",
     projectId,  milestoneId, objectiveId)
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 
