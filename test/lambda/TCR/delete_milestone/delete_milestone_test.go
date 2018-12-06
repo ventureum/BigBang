@@ -31,6 +31,7 @@ func TestHandler(t *testing.T) {
   }
 
   postgresBigBangClient := client_config.ConnectPostgresClient(nil)
+  postgresBigBangClient.Begin()
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
 
   for _, test := range tests {
@@ -39,7 +40,8 @@ func TestHandler(t *testing.T) {
     assert.Equal(t, test.response.Ok, result.Ok)
     assert.False(
       t,
-      milestoneExecutor.CheckMilestoneRecordExisting(
+      milestoneExecutor.CheckMilestoneRecordExistingTx(
         test.request.Body.ProjectId, test.request.Body.MilestoneId))
   }
+  postgresBigBangClient.Commit()
 }

@@ -30,14 +30,15 @@ func TestHandler(t *testing.T) {
   }
 
   postgresBigBangClient := client_config.ConnectPostgresClient(nil)
+  postgresBigBangClient.Begin()
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
-
   for _, test := range tests {
     result, err := lambda_delete_project_config.Handler(test.request)
     assert.IsType(t, test.err, err)
     assert.Equal(t, test.response.Ok, result.Ok)
     assert.False(
       t,
-      projectExecutor.CheckProjectRecordExisting(test.request.Body.ProjectId))
+      projectExecutor.CheckProjectRecordExistingTx(test.request.Body.ProjectId))
   }
+  postgresBigBangClient.Commit()
 }
