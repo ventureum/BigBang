@@ -33,22 +33,26 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Validators = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   projectId := request.Body.ProjectId
   milestoneId := request.Body.MilestoneId
   milestoneValidatorRecordExecutor := milestone_validator_record_config.MilestoneValidatorRecordExecutor{*postgresBigBangClient}
   milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
-  milestoneExecutor.VerifyMilestoneRecordExisting(projectId, milestoneId)
+  milestoneExecutor.VerifyMilestoneRecordExistingTx(projectId, milestoneId)
 
-  response.Validators= milestoneValidatorRecordExecutor.GetMilestoneValidatorListByProjectIdAndMilestoneId(projectId, milestoneId)
+  response.Validators= milestoneValidatorRecordExecutor.GetMilestoneValidatorListByProjectIdAndMilestoneIdTx(
+    projectId, milestoneId)
 
   log.Printf("Validators are sucessfully loaded for projectId %s and milestoneId %d\n", projectId, milestoneId)
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

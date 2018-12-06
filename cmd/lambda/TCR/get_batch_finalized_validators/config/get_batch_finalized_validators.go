@@ -31,10 +31,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.MilestoneValidatorsInfoList = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   milestoneValidatorRecordExecutor := milestone_validator_record_config.MilestoneValidatorRecordExecutor{*postgresBigBangClient}
@@ -45,14 +47,14 @@ func ProcessRequest(request Request, response *Response) {
   for _ , milestoneValidatorsInfoKey := range milestoneValidatorsInfoKeyList {
     projectId := milestoneValidatorsInfoKey.ProjectId
     milestoneId := milestoneValidatorsInfoKey.MilestoneId
-    milestoneExecutor.VerifyMilestoneRecordExisting(projectId, milestoneId)
+    milestoneExecutor.VerifyMilestoneRecordExistingTx(projectId, milestoneId)
   }
 
   var milestoneValidatorInfoList []tcr_attributes.MilestoneValidatorsInfo
   for _ , milestoneValidatorsInfoKey := range milestoneValidatorsInfoKeyList {
     projectId := milestoneValidatorsInfoKey.ProjectId
     milestoneId := milestoneValidatorsInfoKey.MilestoneId
-    validators := milestoneValidatorRecordExecutor.GetMilestoneValidatorListByProjectIdAndMilestoneId(projectId, milestoneId)
+    validators := milestoneValidatorRecordExecutor.GetMilestoneValidatorListByProjectIdAndMilestoneIdTx(projectId, milestoneId)
     milestoneValidatorInfo := tcr_attributes.MilestoneValidatorsInfo{
       MilestoneValidatorsInfoKey: tcr_attributes.MilestoneValidatorsInfoKey{
         ProjectId: projectId,
@@ -66,6 +68,7 @@ func ProcessRequest(request Request, response *Response) {
 
   response.MilestoneValidatorsInfoList = &milestoneValidatorInfoList
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

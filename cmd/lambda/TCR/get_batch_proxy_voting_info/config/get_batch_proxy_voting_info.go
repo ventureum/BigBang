@@ -36,10 +36,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.ProxyVotingInfoList  = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
@@ -52,15 +54,15 @@ func ProcessRequest(request Request, response *Response) {
   for _ , proxyVotingInfoKey := range proxyVotingInfoKeyList {
     actor := proxyVotingInfoKey.Actor
     projectId := proxyVotingInfoKey.ProjectId
-    actorProfileRecordExecutor.VerifyActorExisting(actor)
-    projectExecutor.VerifyProjectRecordExisting(projectId)
+    actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+    projectExecutor.VerifyProjectRecordExistingTx(projectId)
   }
   var proxyVotingInfoList []tcr_attributes.ProxyVotingInfo
 
   for _ , proxyVotingInfoKey := range proxyVotingInfoKeyList {
     actor := proxyVotingInfoKey.Actor
     projectId := proxyVotingInfoKey.ProjectId
-    existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExisting(actor, projectId)
+    existing := actorDelegateVotesAccountExecutor.VerifyDelegateVotesAccountExistingTx(actor, projectId)
     var proxyVotingInfo tcr_attributes.ProxyVotingInfo
     if !existing  {
       proxyVotingInfo = tcr_attributes.ProxyVotingInfo{
@@ -72,8 +74,8 @@ func ProcessRequest(request Request, response *Response) {
       }
 
     } else {
-      actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecord(actor, projectId)
-      proxyVotingList := principalProxyVotesExecutor.GetProxyVotingListByActorAndProjectId(actor, projectId)
+      actorDelegateVotesAccount := actorDelegateVotesAccountExecutor.GetActorDelegateVotesAccountRecordTx(actor, projectId)
+      proxyVotingList := principalProxyVotesExecutor.GetProxyVotingListByActorAndProjectIdTx(actor, projectId)
       proxyVotingInfo = tcr_attributes.ProxyVotingInfo{
         Actor:                  actor,
         ProjectId:              projectId,
@@ -87,6 +89,8 @@ func ProcessRequest(request Request, response *Response) {
   }
 
   response.ProxyVotingInfoList = &proxyVotingInfoList
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 
