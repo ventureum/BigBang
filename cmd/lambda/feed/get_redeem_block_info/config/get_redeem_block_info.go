@@ -3,10 +3,10 @@ package lambda_get_redeem_block_info_config
 import (
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/pkg/error_config"
-  "log"
   "BigBang/internal/app/feed_attributes"
   "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
   "BigBang/cmd/lambda/common/auth"
+  "log"
 )
 
 type Request struct {
@@ -30,18 +30,22 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.RedeemBlockInfo = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
+
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
   redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 
   redeemBlockTimestamp := request.Body.RedeemBlockTimestamp
   redeemBlock := feed_attributes.CreateRedeemBlockFromUnix(redeemBlockTimestamp)
-  redeemBlockInfoRecordExecutor.VerifyRedeemBlockInfoExisting(redeemBlock)
+  redeemBlockInfoRecordExecutor.VerifyRedeemBlockInfoExistingTx(redeemBlock)
 
-  response.RedeemBlockInfo = redeemBlockInfoRecordExecutor.GetRedeemBlockInfo(redeemBlock)
+  response.RedeemBlockInfo = redeemBlockInfoRecordExecutor.GetRedeemBlockInfoTx(redeemBlock)
 
+  postgresBigBangClient.Commit()
   log.Printf("Sucessfully loaded content of RedeemBlockInfo for redeemBlock %d\n", redeemBlock)
 
   response.Ok = true

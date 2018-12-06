@@ -44,10 +44,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.RecentPosts = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   actor := request.Body.Actor
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
@@ -63,13 +65,15 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   postRewardsRecordExecutor := post_rewards_record_config.PostRewardsRecordExecutor{*postgresBigBangClient}
 
-  actorProfileRecordExecutor.VerifyActorExisting(actor)
-  actorRewardsInfoRecordExecutor.VerifyActorExisting(actor)
+  actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+  actorRewardsInfoRecordExecutor.VerifyActorExistingTx(actor)
 
-  response.RecentPosts =  postRewardsRecordExecutor.GetRecentPostRewardsRecordsByActor(actor, postType, limit)
+  response.RecentPosts =  postRewardsRecordExecutor.GetRecentPostRewardsRecordsByActorTx(actor, postType, limit)
+
+
+  postgresBigBangClient.Commit()
 
   log.Printf("RecentPostRewardsRecords is loaded for actor %s\n", actor)
-
   response.Ok = true
 }
 

@@ -29,20 +29,23 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Session = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
   postHash := request.Body.PostHash
 
   postExecutor := post_config.PostExecutor{*postgresBigBangClient}
   sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}
 
-  postExecutor.VerifyPostRecordExisting(postHash)
+  postExecutor.VerifyPostRecordExistingTx(postHash)
 
-  response.Session = sessionRecordExecutor.GetSessionRecord(postHash).ToSessionRecordResult()
+  response.Session = sessionRecordExecutor.GetSessionRecordTx(postHash).ToSessionRecordResult()
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

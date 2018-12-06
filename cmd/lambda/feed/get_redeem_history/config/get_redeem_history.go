@@ -39,9 +39,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.ResponseData = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
+
+  postgresBigBangClient.Begin()
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
@@ -50,16 +53,19 @@ func ProcessRequest(request Request, response *Response) {
   limit := request.Body.Limit
   cursorStr := request.Body.Cursor
 
-  actorProfileRecordExecutor.VerifyActorExisting(actor)
+  actorProfileRecordExecutor.VerifyActorExistingTx(actor)
 
   var cursor string
   if cursorStr != "" {
     cursor = utils.Base64DecodeToString(cursorStr)
   }
 
-  actorMilestonePointsRedeemHistoryRecordExecutor := actor_milestone_points_redeem_history_record_config.ActorMilestonePointsRedeemHistoryRecordExecutor{*postgresBigBangClient}
+  actorMilestonePointsRedeemHistoryRecordExecutor :=
+    actor_milestone_points_redeem_history_record_config.ActorMilestonePointsRedeemHistoryRecordExecutor{
+      *postgresBigBangClient}
 
-  actorMilestonePointsRedeemHistory := actorMilestonePointsRedeemHistoryRecordExecutor.GetActorMilestonePointsRedeemHistoryByCursor(
+  actorMilestonePointsRedeemHistory :=
+    actorMilestonePointsRedeemHistoryRecordExecutor.GetActorMilestonePointsRedeemHistoryByCursorTx(
     actor, cursor, limit + 1)
 
   response.ResponseData = &ResponseData{
@@ -85,6 +91,8 @@ func ProcessRequest(request Request, response *Response) {
     log.Printf("ActorMilestonePointsRedeemHistory is loaded for query with actor %s, cursor %s and limit %d\n",
       actor, cursorStr, limit)
   }
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

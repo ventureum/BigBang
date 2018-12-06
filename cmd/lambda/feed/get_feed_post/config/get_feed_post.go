@@ -66,10 +66,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Post = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   postHash := request.Body.PostHash
   requestor := request.Body.Requestor
   auth.AuthProcess(request.PrincipalId, requestor, postgresBigBangClient)
@@ -85,17 +87,17 @@ func ProcessRequest(request Request, response *Response) {
 
   postExecutor.VerifyPostRecordExisting(postHash)
   if requestor != "" {
-    actorProfileRecordExecutor.VerifyActorExisting(requestor)
-    actorRewardsInfoRecordExecutor.VerifyActorExisting(requestor)
+    actorProfileRecordExecutor.VerifyActorExistingTx(requestor)
+    actorRewardsInfoRecordExecutor.VerifyActorExistingTx(requestor)
   }
 
-  postRecordResult := postExecutor.GetPostRecord(postHash).ToPostRecordResult()
+  postRecordResult := postExecutor.GetPostRecordTx(postHash).ToPostRecordResult()
   response.Post = PostRecordResultToResponseContent(postRecordResult)
-  actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(postRecordResult.Actor)
+  actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecordTx(postRecordResult.Actor)
   response.Post.Username = actorProfileRecord.Username
   response.Post.PhotoUrl = actorProfileRecord.PhotoUrl
-  response.Post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCount(postHash)
-  postRewardsRecord := postRewardsRecordExecutor.GetPostRewardsRecordByPostHash(postHash)
+  response.Post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCountTx(postHash)
+  postRewardsRecord := postRewardsRecordExecutor.GetPostRewardsRecordByPostHashTx(postHash)
   response.Post.DeltaFuel = postRewardsRecord.DeltaFuel
   response.Post.DeltaReputation = postRewardsRecord.DeltaReputation
   response.Post.DeltaMilestonePoints = postRewardsRecord.DeltaMilestonePoints
@@ -104,7 +106,7 @@ func ProcessRequest(request Request, response *Response) {
 
   log.Printf("Post Content is loaded for postHash %s\n", postHash)
 
-  postVotesCounterRecord := postVotesCounterRecordExecutor.GetPostVotesCountersRecordByPostHash(postHash)
+  postVotesCounterRecord := postVotesCounterRecordExecutor.GetPostVotesCountersRecordByPostHashTx(postHash)
   response.Post.PostVoteCountInfo = &feed_attributes.VoteCountInfo{
     DownVoteCount:  postVotesCounterRecord.DownVoteCount,
     UpVoteCount:    postVotesCounterRecord.UpVoteCount,
@@ -114,7 +116,7 @@ func ProcessRequest(request Request, response *Response) {
   log.Printf("PostVoteInfo is loaded for postHash %s\n", postHash)
 
   if requestor != "" {
-    actorVotesCountersRecord := actorVotesCountersRecordExecutor.GetActorVotesCountersRecordByPostHashAndActor(postHash, requestor)
+    actorVotesCountersRecord := actorVotesCountersRecordExecutor.GetActorVotesCountersRecordByPostHashAndActorTx(postHash, requestor)
     response.Post.RequestorVoteCountInfo = &feed_attributes.VoteCountInfo{
       DownVoteCount:  actorVotesCountersRecord.DownVoteCount,
       UpVoteCount:    actorVotesCountersRecord.UpVoteCount,
@@ -123,6 +125,7 @@ func ProcessRequest(request Request, response *Response) {
     log.Printf("RequestorVoteInfo is loaded for postHash %s\n", postHash)
   }
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 
