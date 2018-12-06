@@ -43,27 +43,33 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.NextRedeem = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   actor := request.Body.Actor
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{
+    *postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExisting(actor)
-  milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
+  milestonePointsRedeemRequestRecordExecutor :=
+    milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{
+    *postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{
     *postgresBigBangClient}
-  redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
+  redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{
+    *postgresBigBangClient}
 
   nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
-  milestonePointsRedeemRequestRecordExecutor.VerifyMilestonePointsRedeemRequestExisting(actor)
+  milestonePointsRedeemRequestRecordExecutor.VerifyMilestonePointsRedeemRequestExistingTx(actor)
 
-  milestonePointsRedeemRequest := milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(actor)
+  milestonePointsRedeemRequest := milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(actor)
 
-  redeemBlockInfo := redeemBlockInfoRecordExecutor.GetRedeemBlockInfo(nextRedeemBlock)
-  actorRewardsInfoRecord := actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
+  redeemBlockInfo := redeemBlockInfoRecordExecutor.GetRedeemBlockInfoTx(nextRedeemBlock)
+  actorRewardsInfoRecord := actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
 
   milestonePointsToRedeem := actorRewardsInfoRecord.MilestonePoints
   targetedMilestonePoints := milestonePointsRedeemRequest.TargetedMilestonePoints
@@ -89,6 +95,7 @@ func ProcessRequest(request Request, response *Response) {
 
   log.Printf("Sucessfully loaded content for get_next_redeem for actor %s\n", actor)
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

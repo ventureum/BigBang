@@ -30,18 +30,21 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.WalletAddressList = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   actor := request.Body.Actor
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
   walletAddressRecordExecutor := wallet_address_record_config.WalletAddressRecordExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
-  actorProfileRecordExecutor.VerifyActorExisting(actor)
-  response.WalletAddressList = walletAddressRecordExecutor.GetWalletAddressListByActor(actor)
+  actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+  response.WalletAddressList = walletAddressRecordExecutor.GetWalletAddressListByActorTx(actor)
 
+  postgresBigBangClient.Commit()
 
   log.Printf("WalletAddressList are sucessfully loaded for actor %s\n", actor)
 

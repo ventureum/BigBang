@@ -60,10 +60,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Posts = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   postHashes := request.Body.PostHashes
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
@@ -73,18 +75,18 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
   for _, postHash := range postHashes {
-    postExecutor.VerifyPostRecordExisting(postHash)
+    postExecutor.VerifyPostRecordExistingTx(postHash)
   }
   posts := make([]ResponseContent, len(postHashes))
   for index, postHash := range postHashes {
     var post *ResponseContent
-    postRecordResult := postExecutor.GetPostRecord(postHash).ToPostRecordResult()
+    postRecordResult := postExecutor.GetPostRecordTx(postHash).ToPostRecordResult()
     post = PostRecordResultToResponseContent(postRecordResult)
-    actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(postRecordResult.Actor)
+    actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecordTx(postRecordResult.Actor)
     post.Username = actorProfileRecord.Username
     post.PhotoUrl = actorProfileRecord.PhotoUrl
-    post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCount(postHash)
-    postRewardsRecord := postRewardsRecordExecutor.GetPostRewardsRecordByPostHash(postHash)
+    post.RepliesLength = postRepliesRecordExecutor.GetPostRepliesRecordCountTx(postHash)
+    postRewardsRecord := postRewardsRecordExecutor.GetPostRewardsRecordByPostHashTx(postHash)
     post.DeltaFuel = postRewardsRecord.DeltaFuel
     post.DeltaReputation = postRewardsRecord.DeltaReputation
     post.DeltaMilestonePoints = postRewardsRecord.DeltaMilestonePoints
@@ -95,6 +97,7 @@ func ProcessRequest(request Request, response *Response) {
   response.Posts = &posts
   log.Printf("Post Content for all postHashes are loaded\n")
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

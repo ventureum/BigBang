@@ -56,10 +56,12 @@ func ProcessRequest(request Request, response *Response) {
     if errPanic := recover(); errPanic != nil { //catch
       response.Profiles = nil
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
@@ -67,16 +69,16 @@ func ProcessRequest(request Request, response *Response) {
   actors := request.Body.Actors
 
   for _ , actor := range actors {
-    actorProfileRecordExecutor.VerifyActorExisting(actor)
-    actorRewardsInfoRecordExecutor.VerifyActorExisting(actor)
+    actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+    actorRewardsInfoRecordExecutor.VerifyActorExistingTx(actor)
   }
 
   var profiles []ResponseContent
   for _ , actor := range actors {
-    actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecord(actor)
+    actorProfileRecord := actorProfileRecordExecutor.GetActorProfileRecordTx(actor)
     profile := ProfileRecordResultToResponseContent(actorProfileRecord)
     log.Printf("Loaded Profile content for actor %s\n", actor)
-    rewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
+    rewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
     log.Printf("Loaded Rewards info for actor %s\n", actor)
     profile.RewardsInfo = rewardsInfo
     profile.Level = int64(math.Floor(math.Log10(1 + math.Max(float64(rewardsInfo.Reputation), 0))))
@@ -84,6 +86,8 @@ func ProcessRequest(request Request, response *Response) {
   }
 
   response.Profiles = &profiles
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 

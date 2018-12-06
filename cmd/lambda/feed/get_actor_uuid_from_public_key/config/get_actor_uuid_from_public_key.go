@@ -29,9 +29,12 @@ func ProcessRequest(request Request, response *Response) {
   defer func() {
     if errPanic := recover(); errPanic != nil { //catch
       response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+      postgresBigBangClient.RollBack()
     }
     postgresBigBangClient.Close()
   }()
+
+  postgresBigBangClient.Begin()
 
   publicKey := request.Body.PublicKey
   auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
@@ -45,8 +48,11 @@ func ProcessRequest(request Request, response *Response) {
     log.Printf("Invalid Empty Public Key\n")
     log.Panicln(errorInfo.Marshal())
   }
-  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
-  response.Actor = actorProfileRecordExecutor.GetActorUuidFromPublicKey(strings.ToLower(publicKey))
+  actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{
+    *postgresBigBangClient}
+  response.Actor = actorProfileRecordExecutor.GetActorUuidFromPublicKeyTx(strings.ToLower(publicKey))
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 
