@@ -41,8 +41,8 @@ func TestHandler(t *testing.T) {
   }
 
   postgresBigBangClient := client_config.ConnectPostgresClient(nil)
+  postgresBigBangClient.Begin()
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
-
   for _, test := range tests {
     result, err := lambda_delete_batch_objectives_config.Handler(test.request)
     assert.IsType(t, test.err, err)
@@ -50,8 +50,9 @@ func TestHandler(t *testing.T) {
     for _, singleRequest := range test.request.Body.RequestList {
       assert.False(
         t,
-        objectiveExecutor.CheckObjectiveRecordExisting(
+        objectiveExecutor.CheckObjectiveRecordExistingTx(
           singleRequest.ProjectId, singleRequest.MilestoneId, singleRequest.ObjectiveId))
     }
   }
+  postgresBigBangClient.Commit()
 }
