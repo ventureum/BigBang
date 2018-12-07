@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "parser.go",
+        "signer.go",
+        "utils.go",
+        "verify.go",
+    ],
+    importmap = "BigBang/vendor/gopkg.in/LeisureLink/httpsig.v1",
+    importpath = "gopkg.in/LeisureLink/httpsig.v1",
+    visibility = ["//visibility:public"],
+)

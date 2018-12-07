@@ -18,6 +18,3 @@
 
 # Node Js node_modules folder
 */**/node_modules
-
-# vendor
-/vendor
