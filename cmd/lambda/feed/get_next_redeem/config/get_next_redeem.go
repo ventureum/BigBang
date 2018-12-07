@@ -54,7 +54,8 @@ func ProcessRequest(request Request, response *Response) {
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{
     *postgresBigBangClient}
-  actorProfileRecordExecutor.VerifyActorExisting(actor)
+  actorProfileRecordExecutor.VerifyActorExistingTx(actor)
+
   milestonePointsRedeemRequestRecordExecutor :=
     milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{
     *postgresBigBangClient}

@@ -47,6 +47,7 @@ func ProcessRequest(request Request, response *Response) {
     postgresBigBangClient.Close()
   }()
 
+  postgresBigBangClient.Begin()
   actor := request.Body.Actor
   auth.AuthProcess(request.PrincipalId, actor, postgresBigBangClient)
 
@@ -59,11 +60,10 @@ func ProcessRequest(request Request, response *Response) {
   if postVotesRecord.VoteType == feed_attributes.LOOKUP_VOTE_TYPE {
     response.VoteInfo = QueryPostVotesInfo(&postVotesRecord, postgresBigBangClient)
   } else {
-    postgresBigBangClient.Begin()
     response.VoteInfo = ProcessPostVotesRecord(&postVotesRecord, postgresBigBangClient)
-    postgresBigBangClient.Commit()
   }
 
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 
@@ -85,25 +85,25 @@ func QueryPostVotesInfo(
   postVotesCountersRecordExecutor := post_votes_counters_record_config.PostVotesCountersRecordExecutor{
     *postgresBigBangClient}
 
-  actorProfileRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
-  actorRewardsInfoRecordExecutor.VerifyActorExisting(postVotesRecord.Actor)
-  postExecutor.VerifyPostRecordExisting(postVotesRecord.PostHash)
+  actorProfileRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
+  actorRewardsInfoRecordExecutor.VerifyActorExistingTx(postVotesRecord.Actor)
+  postExecutor.VerifyPostRecordExistingTx(postVotesRecord.PostHash)
 
 
   // Current Actor ActualMilestonePoints
-  actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfo(actor)
+  actorRewardsInfo := actorRewardsInfoRecordExecutor.GetActorRewardsInfoTx(actor)
   log.Printf("Current Actor RewardsInfo: %+v\n", actorRewardsInfo)
   voteInfo.RewardsInfo = actorRewardsInfo
 
   // Total Actor Reputation
-  totalActorReputations := actorRewardsInfoRecordExecutor.GetTotalActorReputation()
+  totalActorReputations := actorRewardsInfoRecordExecutor.GetTotalActorReputationTx()
 
   log.Printf("Total Actor Reputation: %+v\n", totalActorReputations)
 
-  postVotesCountersRecord := postVotesCountersRecordExecutor.GetPostVotesCountersRecordByPostHash(postHash)
+  postVotesCountersRecord := postVotesCountersRecordExecutor.GetPostVotesCountersRecordByPostHashTx(postHash)
 
   // Total Actor Reputation for PostHash
-  totalReputationsForPostHash := actorVotesCountersRecordExecutor.GetTotalActorReputationByPostHash(postHash)
+  totalReputationsForPostHash := actorVotesCountersRecordExecutor.GetTotalActorReputationByPostHashTx(postHash)
 
   log.Printf("Total Actor Reputation for PostHash %s: %+v\n", postHash, totalReputationsForPostHash)
 
@@ -118,7 +118,7 @@ func QueryPostVotesInfo(
   voteInfo.FuelCost = feed_attributes.Fuel(fuelCost)
   log.Printf("FuelCost for PostHash %s: %+v\n", postHash, voteInfo.FuelCost)
 
-  actorVotesCountersRecord := actorVotesCountersRecordExecutor.GetActorVotesCountersRecordByPostHashAndActor(
+  actorVotesCountersRecord := actorVotesCountersRecordExecutor.GetActorVotesCountersRecordByPostHashAndActorTx(
     postHash, actor)
 
   voteInfo.PostHash = postVotesRecord.PostHash

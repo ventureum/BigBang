@@ -13,15 +13,16 @@ import (
   "log"
 )
 
-var postgresBigBangClient = client_config.ConnectPostgresClient(nil)
-var milestonePointsRedeemRequestRecordExecutor = milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
-var actorMilestonePointsRedeemHistoryRecordExecutor = actor_milestone_points_redeem_history_record_config.ActorMilestonePointsRedeemHistoryRecordExecutor{*postgresBigBangClient}
 
-var nextRedeemBlock = feed_attributes.MoveToNextNRedeemBlock(1)
-var executedAt = nextRedeemBlock.ConvertToTime()
-
-var redeemBlock = feed_attributes.MoveToNextNRedeemBlock(1)
 func TestHandler(t *testing.T) {
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
+  postgresBigBangClient.Begin()
+  milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
+  actorMilestonePointsRedeemHistoryRecordExecutor := actor_milestone_points_redeem_history_record_config.ActorMilestonePointsRedeemHistoryRecordExecutor{*postgresBigBangClient}
+
+  nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
+  executedAt := nextRedeemBlock.ConvertToTime()
+
   tests := []struct{
     request lambda_get_redeem_history_config.Request
     response lambda_get_redeem_history_config.Response
@@ -64,7 +65,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints: 100,
               ConsumedMilestonePoints: 100,
               RedeemedTokens: 2500,
-              SubmittedAt: milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt: milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt: executedAt,
             },
             {
@@ -76,7 +77,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints: 100,
               ConsumedMilestonePoints: 100,
               RedeemedTokens: 2500,
-              SubmittedAt: milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt: milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt: executedAt,
             },
           },
@@ -107,7 +108,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints:        100,
               ConsumedMilestonePoints:      100,
               RedeemedTokens:               2500,
-              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt:                   executedAt,
             },
             {
@@ -119,7 +120,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints:        100,
               ConsumedMilestonePoints:      100,
               RedeemedTokens:               2500,
-              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt:                   executedAt,
             },
           },
@@ -150,7 +151,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints:        100,
               ConsumedMilestonePoints:      100,
               RedeemedTokens:               2500,
-              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt:                   executedAt,
             },
             {
@@ -162,7 +163,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints:        100,
               ConsumedMilestonePoints:      100,
               RedeemedTokens:               2500,
-              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt:                   executedAt,
             },
             {
@@ -174,7 +175,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints:        100,
               ConsumedMilestonePoints:      100,
               RedeemedTokens:               2500,
-              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt:                   executedAt,
             },
             {
@@ -186,7 +187,7 @@ func TestHandler(t *testing.T) {
               ActualMilestonePoints:        100,
               ConsumedMilestonePoints:      100,
               RedeemedTokens:               2500,
-              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+              SubmittedAt:                  milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
               ExecutedAt:                   executedAt,
             },
           },
@@ -207,30 +208,33 @@ func TestHandler(t *testing.T) {
     ActualMilestonePoints: 100,
     ConsumedMilestonePoints: 100,
     RedeemedTokens: 2500,
-    SubmittedAt: milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
+    SubmittedAt: milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test_constants.Actor1).SubmittedAt,
     ExecutedAt: executedAt,
   }
 
   actorMilestonePointsRedeemHistoryRecord.GenerateID()
 
   log.Printf("%+v\n", actorMilestonePointsRedeemHistoryRecord)
-  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecord(actorMilestonePointsRedeemHistoryRecord)
+  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecordTx(actorMilestonePointsRedeemHistoryRecord)
 
   actorMilestonePointsRedeemHistoryRecord.RedeemBlock = feed_attributes.MoveToNextNRedeemBlock(3)
   actorMilestonePointsRedeemHistoryRecord.GenerateID()
-  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecord(actorMilestonePointsRedeemHistoryRecord)
+  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecordTx(actorMilestonePointsRedeemHistoryRecord)
 
   actorMilestonePointsRedeemHistoryRecord.RedeemBlock = feed_attributes.MoveToNextNRedeemBlock(4)
   actorMilestonePointsRedeemHistoryRecord.GenerateID()
-  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecord(actorMilestonePointsRedeemHistoryRecord)
+  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecordTx(actorMilestonePointsRedeemHistoryRecord)
 
   actorMilestonePointsRedeemHistoryRecord.RedeemBlock = feed_attributes.MoveToNextNRedeemBlock(5)
   actorMilestonePointsRedeemHistoryRecord.GenerateID()
-  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecord(actorMilestonePointsRedeemHistoryRecord)
+  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecordTx(actorMilestonePointsRedeemHistoryRecord)
 
   actorMilestonePointsRedeemHistoryRecord.RedeemBlock = feed_attributes.MoveToNextNRedeemBlock(6)
   actorMilestonePointsRedeemHistoryRecord.GenerateID()
-  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecord(actorMilestonePointsRedeemHistoryRecord)
+  actorMilestonePointsRedeemHistoryRecordExecutor.UpsertActorMilestonePointsRedeemHistoryRecordTx(actorMilestonePointsRedeemHistoryRecord)
+
+  postgresBigBangClient.Commit()
+  postgresBigBangClient.Begin()
 
   for _, test := range tests {
     result, err := lambda_get_redeem_history_config.Handler(test.request)
@@ -251,4 +255,5 @@ func TestHandler(t *testing.T) {
        assert.Equal(t, expectedRedeems[index].ExecutedAt, redeem.ExecutedAt)
     }
   }
+  postgresBigBangClient.Commit()
 }

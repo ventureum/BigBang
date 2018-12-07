@@ -18,10 +18,6 @@ func CreateRedeemBlockFromUnix(unix int64) RedeemBlock {
   return RedeemBlock(unix / RedeemBlockLength)
 }
 
-func CurrentRedeemBlock() RedeemBlock {
-  return RedeemBlock(time.Now().UTC().Unix() / RedeemBlockLength)
-}
-
 func MoveToNextNRedeemBlock(n int64) RedeemBlock {
   return RedeemBlock(time.Now().UTC().Unix() / RedeemBlockLength + n)
 }

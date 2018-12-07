@@ -22,48 +22,6 @@ func (sessionRecordExecutor *SessionRecordExecutor) DeleteSessionRecordTable() {
    sessionRecordExecutor.DeleteTable(TABLE_NAME_FOR_SESSION_RECORDS)
 }
 
-func (sessionRecordExecutor *SessionRecordExecutor) UpsertSessionRecord(sessionRecord *SessionRecord) time.Time {
-  res, err := sessionRecordExecutor.C.NamedQuery(UPSERT_SESSION_RECORD_COMMAND, sessionRecord)
-  if err != nil {
-    errInfo := error_config.MatchError(err, "postHash", sessionRecord.PostHash, error_config.SessionRecordLocation)
-    errInfo.ErrorData["actor"] = sessionRecord.Actor
-    log.Printf("Failed to upsert session record: %+v with error: %+v", sessionRecord, err)
-    log.Panicln(errInfo.Marshal())
-  }
-
-  log.Printf("Sucessfully upserted session record for postHash %s\n", sessionRecord.PostHash)
-
-  var updatedTime time.Time
-  for res.Next() {
-    res.Scan(&updatedTime)
-  }
-  return updatedTime
-}
-
-func (sessionRecordExecutor *SessionRecordExecutor) DeleteSessionRecord(postHash string) {
-  _, err := sessionRecordExecutor.C.Exec(DELETE_SESSION_RECORD_COMMAND, postHash)
-  if err != nil  {
-    errInfo := error_config.MatchError(err, "postHash", postHash, error_config.SessionRecordLocation)
-    log.Printf("Failed to delete session record for postHash %s with error: %+v", postHash, err)
-    log.Panicln(errInfo.Marshal())
-  }
-  log.Printf("Sucessfully deleted session record for postHash %s\n", postHash)
-}
-
-func (sessionRecordExecutor *SessionRecordExecutor) GetSessionRecord(postHash string) *SessionRecord {
-  var sessionRecord SessionRecord
-  err := sessionRecordExecutor.C.Get(&sessionRecord, QUERY_SESSION_RECORD_COMMAND, postHash)
-  if err != nil  {
-    errInfo := error_config.MatchError(err, "postHash", postHash, error_config.SessionRecordLocation)
-    log.Printf("Failed to get seesion record for postHash %s with error: %+v", postHash, err)
-    log.Panicln(errInfo.Marshal())
-  }
-  return &sessionRecord
-}
-
-/*
- * Tx versions
- */
 func (sessionRecordExecutor *SessionRecordExecutor) UpsertSessionRecordTx(sessionRecord *SessionRecord) time.Time {
   res, err := sessionRecordExecutor.Tx.NamedQuery(UPSERT_SESSION_RECORD_COMMAND, sessionRecord)
   if err != nil {

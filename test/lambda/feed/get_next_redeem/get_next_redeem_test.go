@@ -8,18 +8,22 @@ import (
   "BigBang/internal/platform/postgres_config/feed/milestone_points_redeem_request_record_config"
   "BigBang/internal/platform/postgres_config/client_config"
   "BigBang/internal/app/feed_attributes"
-  "time"
   "BigBang/internal/platform/postgres_config/feed/redeem_block_info_record_config"
 )
 
-var postgresBigBangClient = client_config.ConnectPostgresClient(nil)
-var redeemBlockInfoRecordExecutor = redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
-
-var milestonePointsRedeemRequestRecordExecutor = milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
-var nextRedeemBlock = feed_attributes.MoveToNextNRedeemBlock(1)
-var executedAt = nextRedeemBlock.ConvertToTime()
-
 func TestHandler(t *testing.T) {
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
+  nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
+  executedAt := nextRedeemBlock.ConvertToTime()
+  postgresBigBangClient.Begin()
+  redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{
+    *postgresBigBangClient}
+  redeemBlockInfoRecordExecutor.UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecordTx(nextRedeemBlock)
+  postgresBigBangClient.Commit()
+  postgresBigBangClient.Begin()
+  milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{
+    *postgresBigBangClient}
+
   tests := []struct{
     request lambda_get_next_redeem_config.Request
     response lambda_get_next_redeem_config.Response
@@ -38,7 +42,6 @@ func TestHandler(t *testing.T) {
             TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular1,
             ActualMilestonePoints:   100,
             EstimatedTokens:         2500,
-            SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor1).SubmittedAt,
             RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
               RedeemBlock:                  nextRedeemBlock,
               TotalEnrolledMilestonePoints: 400,
@@ -63,7 +66,6 @@ func TestHandler(t *testing.T) {
           TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular2,
           ActualMilestonePoints:   100,
           EstimatedTokens:         2500,
-          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor2).SubmittedAt,
           RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
             RedeemBlock:                  nextRedeemBlock,
             TotalEnrolledMilestonePoints: 400,
@@ -88,7 +90,6 @@ func TestHandler(t *testing.T) {
           TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular3,
           ActualMilestonePoints:   100,
           EstimatedTokens:         1250,
-          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor3).SubmittedAt,
           RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
             RedeemBlock:                  nextRedeemBlock,
             TotalEnrolledMilestonePoints: 400,
@@ -113,7 +114,6 @@ func TestHandler(t *testing.T) {
           TargetedMilestonePoints: test_constants.RedeemMiletonePointsRegular4,
           ActualMilestonePoints:   100,
           EstimatedTokens:         1250,
-          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor4).SubmittedAt,
           RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
             RedeemBlock:                  nextRedeemBlock,
             TotalEnrolledMilestonePoints: 400,
@@ -138,7 +138,6 @@ func TestHandler(t *testing.T) {
           TargetedMilestonePoints: test_constants.RedeemMiletonePointsMax,
           ActualMilestonePoints:   100,
           EstimatedTokens:         2500,
-          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor5).SubmittedAt,
           RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
             RedeemBlock:                  nextRedeemBlock,
             TotalEnrolledMilestonePoints: 400,
@@ -163,7 +162,6 @@ func TestHandler(t *testing.T) {
           TargetedMilestonePoints: test_constants.RedeemMiletonePointsZero,
           ActualMilestonePoints:   100,
           EstimatedTokens:         0,
-          SubmittedAt:             milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequest(test_constants.Actor6).SubmittedAt,
           RedeemBlockInfo: &feed_attributes.RedeemBlockInfo {
             RedeemBlock:                  nextRedeemBlock,
             TotalEnrolledMilestonePoints: 400,
@@ -176,20 +174,22 @@ func TestHandler(t *testing.T) {
       err: nil,
     },
   }
-  redeemBlockInfoRecordExecutor.UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecord(nextRedeemBlock)
-  executedAt = executedAt.In(time.UTC)
+
   for _, test := range tests {
     result, err := lambda_get_next_redeem_config.Handler(test.request)
+    submittedAt := milestonePointsRedeemRequestRecordExecutor.GetMilestonePointsRedeemRequestTx(test.request.Body.Actor).SubmittedAt
     assert.IsType(t, test.err, err)
     assert.Equal(t, test.response.Ok, result.Ok)
     assert.Equal(t, test.response.NextRedeem.Actor, result.NextRedeem.Actor)
     assert.Equal(t, test.response.NextRedeem.TargetedMilestonePoints, result.NextRedeem.TargetedMilestonePoints)
     assert.Equal(t, test.response.NextRedeem.ActualMilestonePoints, result.NextRedeem.ActualMilestonePoints)
     assert.Equal(t, test.response.NextRedeem.EstimatedTokens, result.NextRedeem.EstimatedTokens)
-    assert.Equal(t, test.response.NextRedeem.SubmittedAt.Unix(), result.NextRedeem.SubmittedAt.Unix())
+    assert.Equal(t, submittedAt.Unix(), result.NextRedeem.SubmittedAt.Unix())
     assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.TokenPool, result.NextRedeem.RedeemBlockInfo.TokenPool)
     assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.RedeemBlock, result.NextRedeem.RedeemBlockInfo.RedeemBlock)
     assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.TotalEnrolledMilestonePoints, result.NextRedeem.RedeemBlockInfo.TotalEnrolledMilestonePoints)
     assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.ExecutedAt.Unix(), result.NextRedeem.RedeemBlockInfo.ExecutedAt.Unix())
   }
+
+  postgresBigBangClient.Commit()
 }

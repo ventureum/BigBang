@@ -12,18 +12,16 @@ import (
 
 func RegisterAuth(principalId string, actor string, postgresBigBangClient *client_config.PostgresBigBangClient) {
   auth := os.Getenv("AUTH_LEVEL")
-  if  postgresBigBangClient == nil {
-    postgresBigBangClient = client_config.ConnectPostgresClient(nil)
-  }
+
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
   if principalId != "" && AuthLevel(auth) == AdminAuth {
-    match := actorProfileRecordExecutor.CheckActorType(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
+    match := actorProfileRecordExecutor.CheckActorTypeTx(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
     if match {
       return
     }
   } else if principalId != "" && AuthLevel(auth) == UserAuth {
-    match := actorProfileRecordExecutor.CheckActorType(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
+    match := actorProfileRecordExecutor.CheckActorTypeTx(principalId, feed_attributes.ADMIN_ACTOR_TYPE)
     if match || (actor != "" && principalId == actor) {
       return
     }
@@ -51,7 +49,7 @@ func AuthProcess(principalId string, actor string, postgresBigBangClient *client
   }
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
-  actorType := actorProfileRecordExecutor.GetActorType(principalId)
+  actorType := actorProfileRecordExecutor.GetActorTypeTx(principalId)
 
   if principalId != "" && AuthLevel(auth) == AdminAuth {
     if actorType == feed_attributes.ADMIN_ACTOR_TYPE {

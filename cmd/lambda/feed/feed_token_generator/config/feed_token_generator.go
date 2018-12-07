@@ -7,6 +7,7 @@ import (
   "BigBang/internal/pkg/error_config"
   "log"
   "BigBang/cmd/lambda/common/auth"
+  "BigBang/internal/platform/postgres_config/client_config"
 )
 
 type Request struct {
@@ -28,14 +29,18 @@ type Response struct {
 }
 
 func ProcessRequest(request Request, response *Response) {
+  postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   defer func() {
    if errPanic := recover(); errPanic != nil { //catch
      response.FeedToken  = ""
      response.Message = error_config.CreatedErrorInfoFromString(errPanic)
+     postgresBigBangClient.RollBack()
    }
+    postgresBigBangClient.Close()
   }()
 
-  auth.AuthProcess(request.PrincipalId, "", nil)
+  postgresBigBangClient.Begin()
+  auth.AuthProcess(request.PrincipalId, "", postgresBigBangClient)
 
   var client *stream.Client
   var err error
@@ -58,6 +63,9 @@ func ProcessRequest(request Request, response *Response) {
   client.FlatFeed(request.Body.FeedSlug, request.Body.UserId)
   feedID := feed_attributes.CreateFeedId(request.Body.FeedSlug, request.Body.UserId)
   response.FeedToken = feedID.FeedToken(request.Body.GetStreamApiSecret)
+
+
+  postgresBigBangClient.Commit()
   response.Ok = true
 }
 
