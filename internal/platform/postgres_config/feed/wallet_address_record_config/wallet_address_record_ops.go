@@ -4,6 +4,7 @@ import (
   "log"
   "database/sql"
   "BigBang/internal/platform/postgres_config/client_config"
+  "BigBang/internal/pkg/error_config"
 )
 
 
@@ -54,4 +55,31 @@ func (walletAddressRecordExecutor *WalletAddressRecordExecutor) GetWalletAddress
       "Failed to get wallet address list for actor %s with error: %+v\n", actor, err)
   }
   return &walletAddressList
+}
+
+
+func (walletAddressRecordExecutor *WalletAddressRecordExecutor) CheckWalletAddressExistingTx(actor string, walletAddress string) bool {
+  var existing bool
+  err := walletAddressRecordExecutor.Tx.Get(&existing, VERIFY_WALLET_ADDRESS_EXISTING_COMMAND, actor, walletAddress)
+  if err != nil {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.WalletAddressRecordLocation)
+    log.Printf("Failed to check  wallet addreess %s existing for actor %s with error: %+v\n", walletAddress, actor, err)
+    log.Panicln(errInfo.Marshal())
+  }
+  return existing
+}
+
+func (walletAddressRecordExecutor *WalletAddressRecordExecutor) VerifyActorExistingTx(actor string, walletAddress string) {
+  existing := walletAddressRecordExecutor.CheckWalletAddressExistingTx(actor, walletAddress)
+  if !existing {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoActorExisting,
+      ErrorData: map[string]interface{} {
+        "actor": actor,
+      },
+      ErrorLocation: error_config.ProfileAccountLocation,
+    }
+    log.Printf("No Actor Profile Acount for actor %s", actor)
+    log.Panicln(errorInfo.Marshal())
+  }
 }

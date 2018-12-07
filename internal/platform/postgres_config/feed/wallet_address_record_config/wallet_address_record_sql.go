@@ -27,3 +27,7 @@ const QUERY_WALLET_ADDRESS_LIST_BY_ACTOR_COMMAND = `
 SELECT wallet_address FROM wallet_address_records
 WHERE actor = $1;
 `
+
+const VERIFY_WALLET_ADDRESS_EXISTING_COMMAND = `
+select exists(select 1 from wallet_address_records where actor = $1 and wallet_address = $2);
+`

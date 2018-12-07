@@ -45,6 +45,22 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
 
   for _, walletAddress := range walletAddressList {
+    existing := walletAddressRecordExecutor.CheckWalletAddressExistingTx(actor, walletAddress)
+    if !existing {
+      errorInfo := error_config.ErrorInfo{
+        ErrorCode: error_config.NoWalletAddressExisting,
+        ErrorData: map[string]interface{} {
+          "actor": actor,
+          "walletAddress": walletAddress,
+        },
+        ErrorLocation: error_config.WalletAddressRecordLocation,
+      }
+      log.Printf("No Wallet Address  %s exists for actor %s", walletAddress, actor)
+      log.Panicln(errorInfo.Marshal())
+    }
+  }
+
+  for _, walletAddress := range walletAddressList {
     walletAddressRecordExecutor.DeleteWalletAddressRecordByActorAndAddressTx(actor, walletAddress)
   }
 

@@ -6,6 +6,7 @@ go_test(
     importpath = "BigBang/test/lambda/feed/add_tracked_wallet_addresses",
     deps = [
         "//cmd/lambda/feed/add_tracked_wallet_addresses/config:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
         "//test/constants:go_default_library",
         "//vendor/github.com/stretchr/testify/assert:go_default_library",
     ],

@@ -46,6 +46,22 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor.VerifyActorExistingTx(actor)
 
   for _, walletAddress := range walletAddressList {
+    existing := walletAddressRecordExecutor.CheckWalletAddressExistingTx(actor, walletAddress)
+    if existing {
+      errorInfo := error_config.ErrorInfo{
+        ErrorCode: error_config.WalletAddressAlreadyExisting,
+        ErrorData: map[string]interface{} {
+          "actor": actor,
+          "walletAddress": walletAddress,
+        },
+        ErrorLocation: error_config.WalletAddressRecordLocation,
+      }
+      log.Printf("Wallet Address  %s already exists for actor %s", walletAddress, actor)
+      log.Panicln(errorInfo.Marshal())
+    }
+  }
+
+  for _, walletAddress := range walletAddressList {
     walletAddressRecordExecutor.UpsertWalletAddressRecordTx(&wallet_address_record_config.WalletAddressRecord{
       Actor: actor,
       WalletAddress: walletAddress,
