@@ -85,7 +85,7 @@ func ProcessRequest(request Request, response *Response) {
     *postgresBigBangClient}
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 
-  postExecutor.VerifyPostRecordExisting(postHash)
+  postExecutor.VerifyPostRecordExistingTx(postHash)
   if requestor != "" {
     actorProfileRecordExecutor.VerifyActorExistingTx(requestor)
     actorRewardsInfoRecordExecutor.VerifyActorExistingTx(requestor)

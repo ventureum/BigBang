@@ -41,7 +41,7 @@ func ProcessRequest(request Request, response *Response) {
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
   actorProfileRecordExecutor.VerifyActorExistingTx(proxy)
-  existing := proxyExecutor.VerifyProxyRecordExisting(proxy)
+  existing := proxyExecutor.VerifyProxyRecordExistingTx(proxy)
   if !existing {
     errorInfo := error_config.ErrorInfo{
       ErrorCode: error_config.NoProxyUUIDExisting,
@@ -53,7 +53,7 @@ func ProcessRequest(request Request, response *Response) {
     log.Printf("No proxy record for uuid %s", proxy)
     log.Panicln(errorInfo.Marshal())
   }
-  proxyExecutor.DeleteProxyRecord(proxy)
+  proxyExecutor.DeleteProxyRecordTx(proxy)
 
   postgresBigBangClient.Commit()
   response.Ok = true

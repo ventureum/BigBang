@@ -42,8 +42,8 @@ func ProcessRequest(request Request, response *Response) {
   projectExecutor.DeleteProjectRecordTx(projectId)
 
   postgresBigBangClient.Commit()
-
   log.Printf("Project is deleted for projectId %s\n", projectId)
+
 
   response.Ok = true
 }
