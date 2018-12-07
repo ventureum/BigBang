@@ -5,6 +5,7 @@ import (
   "testing"
   "BigBang/test/constants"
   "BigBang/cmd/lambda/feed/delete_tracked_wallet_addresses/config"
+  "BigBang/internal/pkg/error_config"
 )
 
 func TestHandler(t *testing.T) {
@@ -26,6 +27,30 @@ func TestHandler(t *testing.T) {
       },
       response: lambda_delete_tracked_wallet_addresses_config.Response {
         Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_delete_tracked_wallet_addresses_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_delete_tracked_wallet_addresses_config.RequestContent{
+          Actor: test_constants.Actor1,
+          WalletAddressList: []string{
+            test_constants.WalletAddress1,
+            test_constants.WalletAddress2,
+          },
+        },
+      },
+      response: lambda_delete_tracked_wallet_addresses_config.Response {
+        Ok: false,
+        Message: &error_config.ErrorInfo{
+          ErrorCode: error_config.NoWalletAddressExisting,
+          ErrorData: error_config.ErrorData {
+            "actor": test_constants.Actor1,
+            "walletAddress": test_constants.WalletAddress1,
+          },
+          ErrorLocation: error_config.WalletAddressRecordLocation,
+        },
       },
       err: nil,
     },

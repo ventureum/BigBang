@@ -19,6 +19,7 @@ const PostTypeLocation ErrorLocation = "PostTypeLocation"
 const MilestonePointsRedeemRequestRecordLocation ErrorLocation = "MilestonePointsRedeemRequestRecordLocation"
 const ActorMilestonePointsRedeemHistoryRecordLocation ErrorLocation = "ActorMilestonePointsRedeemHistoryRecordLocation"
 const RedeemBlockInfoRecordLocation ErrorLocation = "RedeemBlockInfoRecordLocation"
+const WalletAddressRecordLocation ErrorLocation = "WalletAddressRecordLocation"
 
 // For TCR
 const ProjectRecordLocation ErrorLocation = "ProjectRecordLocation"

@@ -28,6 +28,8 @@ const EmptyPublicKey ErrorCode = "EmptyPublicKey"
 const InvalidActorType ErrorCode = "InvalidActorType"
 const InvalidPostType ErrorCode = "InvalidPostType"
 const InvalidMilestonePoints ErrorCode = "InvalidMilestonePoints"
+const WalletAddressAlreadyExisting ErrorCode = "WalletAddressAlreadyExisting"
+const NoWalletAddressExisting ErrorCode = "NoWalletAddressExisting"
 
 
 // For TCR
