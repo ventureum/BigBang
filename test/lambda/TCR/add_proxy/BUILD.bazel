@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["add_proxy_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["add_proxy.go"],
     importpath = "BigBang/test/lambda/TCR/add_proxy",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/TCR/add_proxy/config:go_default_library",
         "//test/constants:go_default_library",

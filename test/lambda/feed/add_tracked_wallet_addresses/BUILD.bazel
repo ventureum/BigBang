@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["add_tracked_wallet_addresses_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["add_tracked_wallet_addresses.go"],
     importpath = "BigBang/test/lambda/feed/add_tracked_wallet_addresses",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/feed/add_tracked_wallet_addresses/config:go_default_library",
         "//internal/pkg/error_config:go_default_library",

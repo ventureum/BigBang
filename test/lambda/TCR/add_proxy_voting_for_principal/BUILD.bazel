@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["add_proxy_voting_for_principal_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["add_proxy_voting_for_principal.go"],
     importpath = "BigBang/test/lambda/TCR/add_proxy_voting_for_principal",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/TCR/add_proxy_voting_for_principal/config:go_default_library",
         "//internal/app/tcr_attributes:go_default_library",

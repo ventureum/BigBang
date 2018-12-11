@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["get_rating_vote_list_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["get_rating_vote_list.go"],
     importpath = "BigBang/test/lambda/TCR/get_rating_vote_list",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/TCR/get_rating_vote_list/config:go_default_library",
         "//internal/app/tcr_attributes:go_default_library",
