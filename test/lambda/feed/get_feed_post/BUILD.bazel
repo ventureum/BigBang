@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["get_feed_post_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["get_feed_post.go"],
     importpath = "BigBang/test/lambda/feed/get_feed_post",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/feed/get_feed_post/config:go_default_library",
         "//internal/app/feed_attributes:go_default_library",

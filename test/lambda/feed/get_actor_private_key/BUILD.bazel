@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["get_actor_private_key_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["get_actor_private_key.go"],
     importpath = "BigBang/test/lambda/feed/get_actor_private_key",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/feed/get_actor_private_key/config:go_default_library",
         "//internal/pkg/error_config:go_default_library",

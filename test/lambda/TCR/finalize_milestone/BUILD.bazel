@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["finalize_milestone_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["finalize_milestone.go"],
     importpath = "BigBang/test/lambda/TCR/finalize_milestone",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/TCR/finalize_milestone/config:go_default_library",
         "//test/constants:go_default_library",

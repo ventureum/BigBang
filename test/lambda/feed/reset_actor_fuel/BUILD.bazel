@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["reset_actor_fuel_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["reset_actor_fuel.go"],
     importpath = "BigBang/test/lambda/feed/reset_actor_fuel",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/feed/reset_actor_fuel/config:go_default_library",
         "//vendor/github.com/stretchr/testify/assert:go_default_library",

@@ -1,9 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["refuel_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["refuel.go"],
     importpath = "BigBang/test/lambda/feed/refuel",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/feed/refuel/config:go_default_library",
         "//internal/pkg/error_config:go_default_library",
