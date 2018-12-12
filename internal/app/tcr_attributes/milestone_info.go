@@ -20,14 +20,3 @@ func (milestonesInfo *MilestonesInfo) ToJsonText() types.JSONText {
   }
   return types.JSONText(string(marshaled))
 }
-
-
-func CreatedMilestoneInfoFromJsonText(jsonText types.JSONText) *MilestonesInfo {
-  var milestonesInfo MilestonesInfo
-  err := jsonText.Unmarshal(&milestonesInfo)
-  if err != nil {
-    log.Panicf("Failed to unmarshal jsonText %+v with error: %+v\n", jsonText, err)
-  }
-  return &milestonesInfo
-}
-
