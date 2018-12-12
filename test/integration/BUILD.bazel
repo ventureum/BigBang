@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "go_default_test",
+    srcs = ["integration_test.go"],
+    deps = [
+        "//test/integration/TCR:go_default_library",
+        "//test/integration/feed:go_default_library",
+    ],
+)

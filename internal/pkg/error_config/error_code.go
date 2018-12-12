@@ -1,10 +1,5 @@
 package error_config
 
-import (
-  "fmt"
-  "strings"
-)
-
 type ErrorCode string
 
 const InvalidAuthAccess ErrorCode = "InvalidAuthAccess"
@@ -39,14 +34,8 @@ const NoMilestoneIdExisting ErrorCode = "NoMilestoneIdExisting"
 const NoRatingVoteVoterExisting ErrorCode = "NoRatingVoteVoterExisting"
 const NoProxyUUIDExisting ErrorCode = "NoProxyUUIDExisting"
 const ProxyUUIDAlreadyExisting ErrorCode = "ProxyUUIDAlreadyExisting"
-const EmptyProxyVotingList ErrorCode = "EmptyProxyVotingList"
 const TotalProxyVotingPercentageExceeding100 ErrorCode = "TotalProxyVotingPercentageExceeding100"
 const RatingVoteExceedingLimitedVotingTimes ErrorCode = "RatingVoteExceedingLimitedVotingTimes"
-const MilestoneIdAlreadyExisting ErrorCode = "MilestoneIdAlreadyExisting"
 const MilestoneInvalidForUpdating ErrorCode = "MilestoneInvalidForUpdating"
 const MilestoneValidatorAlreadyExisting ErrorCode = "MilestoneValidatorAlreadyExisting"
 const ProjectAdminReassign ErrorCode = "ProjectAdminReassign"
-func CreateNoExistingErrorCode(tag string) ErrorCode {
-  errCodeStr := fmt.Sprintf("No%sExisting", strings.Title(tag))
-  return ErrorCode(errCodeStr)
-}

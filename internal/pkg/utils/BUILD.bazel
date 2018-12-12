@@ -3,15 +3,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
-        "aws.go",
         "constants.go",
         "crypto.go",
-        "mapstruct.go",
     ],
     importpath = "BigBang/internal/pkg/utils",
     visibility = ["//:__subpackages__"],
     deps = [
-        "//vendor/github.com/aws/aws-sdk-go/aws/session:go_default_library",
         "//vendor/github.com/ethereum/go-ethereum/common:go_default_library",
         "//vendor/github.com/ethereum/go-ethereum/crypto/sha3:go_default_library",
     ],

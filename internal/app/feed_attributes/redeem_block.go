@@ -9,7 +9,6 @@ import (
 type RedeemBlock int64
 
 
-
 const DefaultRedeemBlockLength int64 = 60 * 60 * 24 * 7
 
 var RedeemBlockLength = LoadRedeemBlockLengthEnv()

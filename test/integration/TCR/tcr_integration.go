@@ -1,4 +1,4 @@
-package tcr_integation_test
+package tcr_integration_test
 
 import (
   "testing"

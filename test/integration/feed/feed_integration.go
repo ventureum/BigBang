@@ -35,7 +35,7 @@ import (
   "BigBang/test/lambda/feed/deactivate_actor"
 )
 
-func ATestHandler(t *testing.T) {
+func TestHandler(t *testing.T) {
   os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
   t.Run("feed_events_table_creator", feed_events_table_creator_test.TestHandler)
 

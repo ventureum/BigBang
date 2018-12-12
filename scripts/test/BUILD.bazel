@@ -1,0 +1,9 @@
+package(default_visibility = ["//visibility:public"])
+
+sh_binary(
+    name = "run_integration_tests",
+    srcs = ["run_integration_tests.sh"],
+    deps = [
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+)

@@ -1,8 +1,10 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_test(
-    name = "go_default_test",
-    srcs = ["tcr_integration_test.go"],
+go_library(
+    name = "go_default_library",
+    srcs = ["tcr_integration.go"],
+    importpath = "BigBang/test/integration/TCR",
+    visibility = ["//visibility:public"],
     deps = [
         "//cmd/lambda/common/auth:go_default_library",
         "//test/lambda/TCR/activate_milestone:go_default_library",
