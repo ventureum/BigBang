@@ -31,6 +31,7 @@ func TestHandler(t *testing.T) {
           TelegramId: test_constants.TelegramId1,
           PhoneNumber: "5197290001",
           PublicKey: strings.ToLower(test_constants.PublicKey1),
+          ProfileContent: test_constants.ProfileContent1,
           Level: 2,
           RewardsInfo: &feed_attributes.RewardsInfo{
             Fuel: 100,

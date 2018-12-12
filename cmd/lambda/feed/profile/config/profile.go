@@ -26,6 +26,7 @@ type RequestContent struct {
   TelegramId string `json:"telegramId,omitempty"`
   PhoneNumber string `json:"phoneNumber,omitempty"`
   PublicKey string `json:"publicKey,omitempty"`
+  ProfileContent string `json:"profileContent,omitempty"`
 }
 
 type Response struct {
@@ -42,6 +43,7 @@ func (request *Request) ToActorProfileRecord() (*actor_profile_record_config.Act
     TelegramId: request.Body.TelegramId,
     PhoneNumber: request.Body.PhoneNumber,
     PublicKey: strings.ToLower(request.Body.PublicKey),
+    ProfileContent: request.Body.ProfileContent,
   }
 }
 

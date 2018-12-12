@@ -15,6 +15,7 @@ type ActorProfileRecord struct {
   PrivateKey string `db:"private_key"`
   PublicKey string `db:"public_key"`
   ActorProfileStatus feed_attributes.ActorProfileStatus  `db:"actor_profile_status"`
+  ProfileContent string `db:"profile_content"`
   CreatedAt time.Time `db:"created_at"`
   UpdatedAt time.Time `db:"updated_at"`
 }
