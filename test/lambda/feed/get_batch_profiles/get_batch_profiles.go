@@ -33,6 +33,7 @@ func TestHandler(t *testing.T) {
             PhoneNumber: "5197290001",
             PublicKey:   strings.ToLower(test_constants.PublicKey1),
             Level:       2,
+            ProfileContent: test_constants.ProfileContent1,
             RewardsInfo: &feed_attributes.RewardsInfo{
               Fuel:            100,
               Reputation:      100,

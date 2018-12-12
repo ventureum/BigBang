@@ -28,6 +28,7 @@ func TestHandler(t *testing.T) {
           TelegramId: test_constants.TelegramId1,
           PhoneNumber: "5197290001",
           PublicKey: test_constants.PublicKey1,
+          ProfileContent: test_constants.ProfileContent1,
         },
       },
       response: lambda_profile_config.Response {
@@ -46,6 +47,7 @@ func TestHandler(t *testing.T) {
           TelegramId:  test_constants.TelegramId2,
           PhoneNumber: "5197290002",
           PublicKey:   test_constants.PublicKey2,
+          ProfileContent: test_constants.ProfileContent2,
         },
       },
       response: lambda_profile_config.Response {
@@ -64,6 +66,7 @@ func TestHandler(t *testing.T) {
           TelegramId:  test_constants.TelegramId3,
           PhoneNumber: "5197290002",
           PublicKey:   test_constants.PublicKey3,
+          ProfileContent: test_constants.ProfileContent3,
         },
       },
       response: lambda_profile_config.Response {
@@ -82,6 +85,7 @@ func TestHandler(t *testing.T) {
           TelegramId:  test_constants.TelegramId4,
           PhoneNumber: "5197290002",
           PublicKey:   test_constants.PublicKey4,
+          ProfileContent: test_constants.ProfileContent4,
         },
       },
       response: lambda_profile_config.Response {
@@ -100,6 +104,7 @@ func TestHandler(t *testing.T) {
           TelegramId:  test_constants.TelegramId5,
           PhoneNumber: "5197290002",
           PublicKey:   test_constants.PublicKey5,
+          ProfileContent: test_constants.ProfileContent5,
         },
       },
       response: lambda_profile_config.Response {
@@ -118,6 +123,7 @@ func TestHandler(t *testing.T) {
           TelegramId:  test_constants.TelegramId6,
           PhoneNumber: "5197290002",
           PublicKey:   test_constants.PublicKey6,
+          ProfileContent: test_constants.ProfileContent6,
         },
       },
       response: lambda_profile_config.Response {
@@ -136,6 +142,7 @@ func TestHandler(t *testing.T) {
           TelegramId:  test_constants.TelegramId7,
           PhoneNumber: "5197290002",
           PublicKey:   test_constants.PublicKey7,
+          ProfileContent: test_constants.ProfileContent7,
         },
       },
       response: lambda_profile_config.Response {
@@ -154,6 +161,7 @@ func TestHandler(t *testing.T) {
           TelegramId:  test_constants.TelegramId8,
           PhoneNumber: "5197290002",
           PublicKey:   test_constants.PublicKey8,
+          ProfileContent: test_constants.ProfileContent8,
         },
       },
       response: lambda_profile_config.Response {

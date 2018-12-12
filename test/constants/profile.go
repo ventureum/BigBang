@@ -44,3 +44,13 @@ const PublicKey5 =  "0xPublicKey005"
 const PublicKey6 =  "0xPublicKey006"
 const PublicKey7 =  "0xPublicKey007"
 const PublicKey8 =  "0xPublicKey008"
+
+
+const ProfileContent1 =  "ProfileContent001"
+const ProfileContent2 =  "ProfileContent002"
+const ProfileContent3 =  "ProfileContent003"
+const ProfileContent4 =  "ProfileContent004"
+const ProfileContent5 =  "ProfileContent005"
+const ProfileContent6 =  "ProfileContent006"
+const ProfileContent7 =  "ProfileContent007"
+const ProfileContent8 =  "ProfileContent008"
