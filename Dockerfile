@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM golang:1.11.2
 
 ENV GOBIN /go/bin
 ENV GOPATH /go
@@ -22,16 +22,9 @@ RUN \
     # Unpack bazel for future use.
     bazel version
 
+# Fix possible patch error
+RUN apt-get install patch
+
 # build directories
 RUN mkdir  $GOPATH/src/BigBang
 COPY . $GOPATH/src/BigBang
-
-# Go dep
-RUN go get -u github.com/golang/dep/...
-RUN rm -rf $GOPATH/src/BigBang/vendor
-RUN rm -rf $GOPATH/pkg
-
-RUN cd $GOPATH/src/BigBang && \
-    dep ensure -v && \
-    bazel run //:gazelle && \
-    bazel run //:gazelle -- vendor

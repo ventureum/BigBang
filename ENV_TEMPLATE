@@ -1,0 +1,26 @@
+AWS_ACCESS_KEY_ID=<Add Value>
+AWS_SECRET_ACCESS_KEY=<Add Value>
+AWS_SECRET_KEY=<Add Value>
+AWS_REGION=<Add Value>
+
+STREAM_API_KEY=<Add Value>
+STREAM_API_SECRET=<Add Value>
+
+DB_USER=<Add Value>
+DB_PASSWORD=<Add Value>
+DB_NAME=<Add Value>
+DB_HOST=<Add Value>
+
+DB_NAME_PREFIX=<Add Value>
+DB_HOST_POSTFIX=<Add Value>
+
+MuMaxFuel=<Add Value>
+MuMinFuel=<Add Value>
+PostFuelCost=<Add Value>
+ReplyFuelCost=<Add Value>
+AuditFuelCost=<Add Value>
+BetaMax=<Add Value>
+REFUEL_INTERVAL=<Add Value>
+FUEL_REPLENISHMENT_HOURLY=<Add Value>
+TIME_INTERVAL_FOR_FUEL_UPDATE=<Add Value>
+MAX_FUEL_FOR_FUEL_UPDATE_INTERVAL=<Add Value>
