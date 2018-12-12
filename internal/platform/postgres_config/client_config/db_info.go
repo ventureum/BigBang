@@ -30,16 +30,3 @@ func CreateDefaultDBInfo() *DBInfo {
     DBHost: dbHost,
   }
 }
-
-func CreateTestDBInfo() *DBInfo {
-  dbUser := os.Getenv("DB_USER_TEST")
-  dbPassword := os.Getenv("DB_PASSWORD_TEST")
-  dbName := os.Getenv("DB_NAME_TEST")
-  dbHost := os.Getenv("DB_HOST_TEST")
-  return &DBInfo {
-    DBUser: dbUser,
-    DBPassword: dbPassword,
-    DBName: dbName,
-    DBHost: dbHost,
-  }
-}
