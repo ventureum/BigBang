@@ -44,7 +44,6 @@ func ProcessRequest(request Request, response *Response) {
   postgresBigBangClient.LoadVoteTypeEnum()
   postgresBigBangClient.LoadActorTypeEnum()
   postgresBigBangClient.LoadActorProfileStatusEnum()
-  postgresBigBangClient.SetIdleInTransactionSessionTimeout(60000)
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresBigBangClient}

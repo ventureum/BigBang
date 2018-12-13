@@ -33,7 +33,6 @@ func ProcessRequest(request Request, response *Response) {
   }()
 
   postgresBigBangClient.Begin()
-  postgresBigBangClient.SetIdleInTransactionSessionTimeout(60000)
 
   projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
   objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}

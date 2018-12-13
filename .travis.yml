@@ -1,0 +1,47 @@
+# trusty beta image has jdk8, gcc4.8.4
+dist: trusty
+notifications:
+  slack: ventureum-team:DSE8wxmLTenq0Yz17BrYBWg9
+fail_fast: true
+
+language: go
+go:
+  - 1.x
+sudo: false
+
+os:
+  - linux
+
+env:
+  secure: "1eIpznnuZ3E0XpSnunPbRqHr4oFMy2X0VNSLYF3QcLsO7oSpLrXC38RNmBRKWkz0WSKuA8pkEigPcVWsP0TxdtdrNNrPo2bQJoMveGOgKqGZHQ8yxEQmqHfg7zKo95KrTtQDJjWvRi5ingdmlAHKUXsXFd/5RziVBWYXrAcKH7AGgS/2TDEyO0CaozII+/v1LOQy/eTqsnxN+lkVJa6/gBOsGeX2SiyiNet733cfnlLhtLkwKHlv56uAzEcuZ0//a1exQ1qYNMruDRj5TiUntTcrPINVa8FzbZUa+P08WwgZlFmNl0w6z0ZxXLQFW+4nzy/fs5wTAXZSoIY7iD6lfG3eaWMy9cv3BV/+pJGglvQC6vwXfu9rFJHdulXgRgqCukJbG2m5hEE32v/fkDTVGGoZZrYbbPhqmtG6KPU7NowhP0+9HIr5M5vkVCcckWnK6wGkjZjqS/weVYbtvOUU5Xf/Wav6i+MwOBEI+GW/AA119QXaG3KEe1zivZARLSoMhKFEWRje2x81WHqX7OB01EqvwvXtEPDopS9VbWlqhQu2q3oU1JFK9FHMIDapAZLWzWHoH864vC1UdXSgezFRu83+/7fVq09P1Dg/7cBt43r3Y2sXEgchRrWkkRrpSYK/acyoY7kazZu47OayroETFlpFsLKBGmlyng9nR0ZFeCI="
+
+addons:
+  postgresql: "9.5"
+
+install:
+- go get -u github.com/golang/lint/golint
+
+
+before_script:
+- psql -c 'create database feedsys;' -U postgres
+- psql -c "CREATE USER bigbang WITH PASSWORD 'bigbang';" -U postgres
+- psql -c "ALTER USER bigbang WITH SUPERUSER;" -U postgres
+
+before_install:
+- V=0.20.0
+- OS=linux
+- URL="https://github.com/bazelbuild/bazel/releases/download/${V}/bazel-${V}-installer-${OS}-x86_64.sh"
+- wget -O install.sh "${URL}"
+- chmod +x install.sh
+- ./install.sh --user
+- rm -f install.sh
+
+script:
+# enable golint after further cleaning
+# - 'golint ./... | grep -v "be unexported"'
+- bazel clean
+- bazel run //:gazelle
+- bazel test --config=ci  //test/integration/...
+
+notifications:
+  email: false
