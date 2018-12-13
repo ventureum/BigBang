@@ -1,11 +1,15 @@
 # This file contains options passed to Bazel when running tests
 # on continuous integration services.
 
+build --spawn_strategy=standalone --genrule_strategy=standalone
+test --test_strategy=standalone
+
 common --color=yes
 
 test:ci \
+    --verbose_failures \
+    --noshow_progress \
     --test_output=errors  \
-    --sandbox_debug  \
     --action_env="AUTH_LEVEL" \
     --action_env="DB_USER" \
     --action_env="DB_PASSWORD" \
