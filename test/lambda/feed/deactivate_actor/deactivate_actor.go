@@ -15,7 +15,7 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_deactivate_actor_config.Request{
-        PrincipalId: test_constants.Actor2,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_deactivate_actor_config.RequestContent{
           Actor: test_constants.Actor2,
         },

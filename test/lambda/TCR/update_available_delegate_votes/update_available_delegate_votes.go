@@ -15,7 +15,7 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_update_available_delegate_votes_config.Request{
-        PrincipalId: test_constants.Actor3,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_update_available_delegate_votes_config.RequestContent{
           Actor:                  test_constants.Actor3,
           ProjectId:              test_constants.ProjectId1,
@@ -29,7 +29,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_update_available_delegate_votes_config.Request{
-        PrincipalId: test_constants.Actor4,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_update_available_delegate_votes_config.RequestContent{
           Actor:                  test_constants.Actor4,
           ProjectId:              test_constants.ProjectId1,
@@ -43,7 +43,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_update_available_delegate_votes_config.Request{
-        PrincipalId: test_constants.Actor5,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_update_available_delegate_votes_config.RequestContent{
           Actor:                  test_constants.Actor5,
           ProjectId:              test_constants.ProjectId1,
@@ -57,7 +57,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_update_available_delegate_votes_config.Request{
-        PrincipalId: test_constants.Actor6,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_update_available_delegate_votes_config.RequestContent{
           Actor:                  test_constants.Actor6,
           ProjectId:              test_constants.ProjectId1,
@@ -71,7 +71,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_update_available_delegate_votes_config.Request{
-        PrincipalId: test_constants.Actor7,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_update_available_delegate_votes_config.RequestContent{
           Actor:                  test_constants.Actor7,
           ProjectId:              test_constants.ProjectId1,

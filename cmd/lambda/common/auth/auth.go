@@ -43,14 +43,13 @@ func RegisterAuth(principalId string, actor string, postgresBigBangClient *clien
 
 func AuthProcess(principalId string, actor string, postgresBigBangClient *client_config.PostgresBigBangClient) {
   auth := os.Getenv("AUTH_LEVEL")
-
+  log.Printf("********************%+v", auth)
   if  postgresBigBangClient == nil {
     postgresBigBangClient = client_config.ConnectPostgresClient(nil)
   }
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorType := actorProfileRecordExecutor.GetActorTypeTx(principalId)
-
   if principalId != "" && AuthLevel(auth) == AdminAuth {
     if actorType == feed_attributes.ADMIN_ACTOR_TYPE {
       return
@@ -64,17 +63,18 @@ func AuthProcess(principalId string, actor string, postgresBigBangClient *client
     }
   } else if principalId != "" && AuthLevel(auth) == NoAuth {
     return
-  } else {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.InvalidAuthAccess,
-      ErrorData: error_config.ErrorData {
-        "principalId": principalId,
-      },
-      ErrorLocation: error_config.Auth,
-    }
-    log.Printf("Invalid Auth Access for principalId %s", actor)
-    log.Panicln(errorInfo.Marshal())
   }
+
+  errorInfo := error_config.ErrorInfo{
+    ErrorCode: error_config.InvalidAuthAccess,
+    ErrorData: error_config.ErrorData {
+      "principalId": principalId,
+    },
+    ErrorLocation: error_config.Auth,
+  }
+  log.Printf("Invalid Auth Access for principalId %s", actor)
+  log.Panicln(errorInfo.Marshal())
+
 }
 
 func ValidateAndCreateActorTypeWithAuthLevel (actorTypeStr string) feed_attributes.ActorType {
