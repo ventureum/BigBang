@@ -10,6 +10,7 @@ go_library(
         "//test/lambda/feed/add_tracked_wallet_addresses:go_default_library",
         "//test/lambda/feed/attach_session:go_default_library",
         "//test/lambda/feed/deactivate_actor:go_default_library",
+        "//test/lambda/feed/delete_batch_actors:go_default_library",
         "//test/lambda/feed/delete_tracked_wallet_addresses:go_default_library",
         "//test/lambda/feed/dev_refuel:go_default_library",
         "//test/lambda/feed/feed_events_table_creator:go_default_library",
