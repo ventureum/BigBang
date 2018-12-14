@@ -28,7 +28,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_actor_private_key_config.Request{
-        PrincipalId: test_constants.Actor2,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_set_actor_private_key_config.RequestContent{
           Actor:      test_constants.Actor2,
           PrivateKey: test_constants.PrivateKey2,
@@ -41,7 +41,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_actor_private_key_config.Request{
-        PrincipalId: test_constants.Actor3,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_set_actor_private_key_config.RequestContent{
           Actor:      test_constants.Actor3,
           PrivateKey: test_constants.PrivateKey3,
@@ -54,7 +54,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_actor_private_key_config.Request{
-        PrincipalId: test_constants.Actor4,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_set_actor_private_key_config.RequestContent{
           Actor:      test_constants.Actor4,
           PrivateKey: test_constants.PrivateKey4,
@@ -67,7 +67,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_actor_private_key_config.Request{
-        PrincipalId: test_constants.Actor5,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_set_actor_private_key_config.RequestContent{
           Actor:      test_constants.Actor5,
           PrivateKey: test_constants.PrivateKey5,
@@ -80,7 +80,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_actor_private_key_config.Request{
-        PrincipalId: test_constants.Actor6,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_set_actor_private_key_config.RequestContent{
           Actor:      test_constants.Actor6,
           PrivateKey: test_constants.PrivateKey6,
@@ -93,7 +93,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_set_actor_private_key_config.Request{
-        PrincipalId: test_constants.Actor6,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_set_actor_private_key_config.RequestContent{
           Actor:      test_constants.Actor6,
           PrivateKey: "",

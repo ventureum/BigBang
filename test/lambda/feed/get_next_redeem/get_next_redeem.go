@@ -55,7 +55,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_get_next_redeem_config.Request{
-        PrincipalId: test_constants.Actor2,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_get_next_redeem_config.RequestContent{
           Actor: test_constants.Actor2,
         },
@@ -79,7 +79,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_get_next_redeem_config.Request{
-        PrincipalId: test_constants.Actor3,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_get_next_redeem_config.RequestContent{
           Actor: test_constants.Actor3,
         },
@@ -103,7 +103,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_get_next_redeem_config.Request{
-        PrincipalId: test_constants.Actor2,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_get_next_redeem_config.RequestContent{
           Actor: test_constants.Actor4,
         },
@@ -127,7 +127,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_get_next_redeem_config.Request{
-        PrincipalId: test_constants.Actor2,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_get_next_redeem_config.RequestContent{
           Actor: test_constants.Actor5,
         },
@@ -151,7 +151,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_get_next_redeem_config.Request{
-        PrincipalId: test_constants.Actor2,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_get_next_redeem_config.RequestContent{
           Actor: test_constants.Actor6,
         },

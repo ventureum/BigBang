@@ -30,7 +30,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_dev_refuel_config.Request{
-        PrincipalId: test_constants.Actor2,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_dev_refuel_config.RequestContent{
           Actor:           test_constants.Actor2,
           Fuel:            100,
@@ -45,7 +45,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_dev_refuel_config.Request{
-        PrincipalId: test_constants.Actor3,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_dev_refuel_config.RequestContent{
           Actor:           test_constants.Actor3,
           Fuel:            100,
@@ -60,7 +60,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_dev_refuel_config.Request{
-        PrincipalId: test_constants.Actor4,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_dev_refuel_config.RequestContent{
           Actor:           test_constants.Actor4,
           Fuel:            100,
@@ -75,7 +75,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_dev_refuel_config.Request{
-        PrincipalId: test_constants.Actor5,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_dev_refuel_config.RequestContent{
           Actor:           test_constants.Actor5,
           Fuel:            100,
@@ -90,7 +90,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_dev_refuel_config.Request{
-        PrincipalId: test_constants.Actor6,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_dev_refuel_config.RequestContent{
           Actor:           test_constants.Actor6,
           Fuel:            100,
@@ -105,7 +105,7 @@ func TestHandler(t *testing.T) {
     },
     {
       request: lambda_dev_refuel_config.Request{
-        PrincipalId: test_constants.Actor7,
+        PrincipalId: test_constants.Actor1,
         Body: lambda_dev_refuel_config.RequestContent{
           Actor:           test_constants.Actor7,
           Fuel:            100,
