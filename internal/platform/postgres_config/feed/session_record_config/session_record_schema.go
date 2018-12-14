@@ -3,7 +3,7 @@ package session_record_config
 
 const TABLE_SCHEMA_FOR_SESSION_RECORDS = `
 CREATE TABLE session_records (
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     post_hash TEXT NOT NULL REFERENCES posts(post_hash),
     start_time BIGINT NOT NULL,
     end_time BIGINT NOT NULL,

@@ -3,7 +3,7 @@ package actor_delegate_votes_account_config
 
 const TABLE_SCHEMA_FOR_ACTOR_DELEGATE_VOTES_ACCOUNT = `
 CREATE TABLE actor_delegate_votes_accounts (
-    actor TEXT NOT NULL,
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     project_id TEXT NOT NULL,
     available_delegate_votes BIGINT NOT NULL DEFAULT 0,
     received_delegate_votes BIGINT NOT NULL DEFAULT 0,

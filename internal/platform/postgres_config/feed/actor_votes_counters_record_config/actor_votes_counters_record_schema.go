@@ -4,7 +4,7 @@ package actor_votes_counters_record_config
 const TABLE_SCHEMA_FOR_ACTOR_VOTES_COUNTERS_RECORD = `
 CREATE TABLE actor_votes_counters_records (
     post_hash TEXT NOT NULL REFERENCES posts(post_hash),
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     latest_reputation BIGINT NOT NULL DEFAULT 0,
     latest_vote_type vote_type_enum NOT NULL,
     latest_reputation_for_upvote BIGINT NOT NULL DEFAULT 0,

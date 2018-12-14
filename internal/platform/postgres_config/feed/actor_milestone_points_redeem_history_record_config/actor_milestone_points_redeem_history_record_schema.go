@@ -3,7 +3,7 @@ package actor_milestone_points_redeem_history_record_config
 const TABLE_SCHEMA_FOR_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD = `
 CREATE TABLE actor_milestone_points_redeem_history_records (
     id TEXT NOT NULL,
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     redeem_block BIGINT NOT NULL DEFAULT 0,
     token_pool BIGINT NOT NULL DEFAULT 0,
     total_enrolled_milestone_points BIGINT NOT NULL DEFAULT 0,

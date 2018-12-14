@@ -3,7 +3,7 @@ package refuel_record_config
 const TABLE_SCHEMA_FOR_REFUEL_RECORD = `
 CREATE TABLE refuel_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     fuel BIGINT NOT NULL DEFAULT 0,
     reputation BIGINT NOT NULL DEFAULT 0,
     milestone_points BIGINT NOT NULL DEFAULT 0,

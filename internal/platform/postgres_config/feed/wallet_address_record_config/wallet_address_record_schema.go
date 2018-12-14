@@ -4,7 +4,7 @@ package wallet_address_record_config
 const TABLE_SCHEMA_FOR_WALLET_ADDRESS_RECORD = `
 CREATE TABLE wallet_address_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     wallet_address TEXT NOT NULL UNIQUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

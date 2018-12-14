@@ -2,7 +2,7 @@ package milestone_points_redeem_request_record_config
 
 const TABLE_SCHEMA_FOR_MILESTONE_POINTS_REDEEM_REQUEST_RECORD = `
 CREATE TABLE milestone_points_redeem_request_records (
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     next_redeem_block BIGINT NOT NULL DEFAULT 0,
     targeted_milestone_points BIGINT NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

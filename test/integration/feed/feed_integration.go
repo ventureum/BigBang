@@ -33,6 +33,7 @@ import (
   "BigBang/test/lambda/feed/set_token_pool"
   "BigBang/test/lambda/feed/get_redeem_block_info"
   "BigBang/test/lambda/feed/deactivate_actor"
+  "BigBang/test/lambda/feed/delete_batch_actors"
 )
 
 func TestHandler(t *testing.T) {
@@ -135,7 +136,9 @@ func TestHandler(t *testing.T) {
   os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
   t.Run("get_redeem_block_info", get_redeem_block_info_test.TestHandler)
 
-
   os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
   t.Run("deactivate_actor", deactivate_actor_test.TestHandler)
+
+  os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
+  t.Run("delete_batch_actors", delete_batch_actors.TestHandler)
 }

@@ -4,7 +4,7 @@ package post_rewards_record_config
 const TABLE_SCHEMA_FOR_POST_REWARDS_RECORD = `
 CREATE TABLE post_rewards_records(
     post_hash TEXT NOT NULL REFERENCES posts(post_hash),
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     post_type TEXT NOT NULL,
     object TEXT NOT NULL,
     post_time TIMESTAMPTZ NOT NULL,

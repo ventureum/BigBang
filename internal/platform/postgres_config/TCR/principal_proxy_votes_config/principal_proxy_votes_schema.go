@@ -4,7 +4,7 @@ package principal_proxy_votes_config
 const TABLE_SCHEMA_FOR_PRINCIPAL_PROXY_VOTES = `
 CREATE TABLE principal_proxy_votes (
     id TEXT NOT NULL,
-    actor TEXT NOT NULL,
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     project_id TEXT NOT NULL,
     proxy TEXT NOT NULL,
     block_timestamp BIGINT NOT NULL,

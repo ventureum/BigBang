@@ -2,7 +2,7 @@ package actor_rewards_info_record_config
 
 const TABLE_SCHEMA_FOR_ACTOR_REWARDS_INFO_RECORD = `
 CREATE TABLE actor_rewards_info_records (
-    actor TEXT NOT NULL REFERENCES actor_profile_records(actor),
+    actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,
     fuel BIGINT NOT NULL DEFAULT 0,
     reputation BIGINT NOT NULL DEFAULT 0,
     milestone_points_from_votes BIGINT NOT NULL DEFAULT 0,
