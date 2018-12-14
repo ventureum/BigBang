@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.com/ventureum/BigBang.svg?branch=master)](https://travis-ci.com/ventureum/BigBang)
+
 # BigBang
 
 BigBang is a server-less backend system that is responsible to provide OFF-CHAIN data backups and APIs for Milestone
