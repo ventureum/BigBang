@@ -182,3 +182,30 @@ func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteRecordsByCursorTx(
   }
   return &ratingVoteRecords
 }
+
+func (ratingVoteExecutor *RatingVoteExecutor) GetRatingVoteActivitiesForActorByCursorTx(
+    actor string, cursor string, limit int64) *[]tcr_attributes.RatingVoteActivity {
+  var ratingVoteActivities []tcr_attributes.RatingVoteActivity
+  var err error
+  if cursor != "" {
+    err = ratingVoteExecutor.Tx.Select(
+      &ratingVoteActivities,
+      PAGINATION_QUERY_RATING_VOTE_ACTIVITIES_BY_ACTOR_COMMAND,
+      actor, cursor, limit)
+  } else {
+    err = ratingVoteExecutor.Tx.Select(
+      &ratingVoteActivities,
+      QUERY_RATING_VOTE_ACTIVITIES_BY_ACTOR_COMMAND,
+      actor, limit)
+  }
+
+  if err != nil && err != sql.ErrNoRows {
+    errInfo := error_config.MatchError(err, "actor", actor, error_config.RatingVoteRecordLocation)
+    log.Printf("Failed to get rating vote activities for actor %s by cursor %s and limit %d with error: %+v\n",
+      actor, cursor, limit, err)
+    errInfo.ErrorData["cursor"] = cursor
+    errInfo.ErrorData["limit"] = limit
+    log.Panicln(errInfo.Marshal())
+  }
+  return &ratingVoteActivities
+}

@@ -159,6 +159,42 @@ func TestHandler(t *testing.T) {
       },
       err: nil,
     },
+    {
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId2,
+          MilestoneId:    1,
+          ObjectiveId:    1,
+          Voter:          test_constants.Actor2,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp3,
+          Rating:         30,
+          Weight:         40,
+        },
+      },
+      response: lambda_rating_vote_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
+    {
+      request: lambda_rating_vote_config.Request{
+        PrincipalId: test_constants.Actor1,
+        Body: lambda_rating_vote_config.RequestContent{
+          ProjectId:      test_constants.ProjectId2,
+          MilestoneId:    1,
+          ObjectiveId:    2,
+          Voter:          test_constants.Actor2,
+          BlockTimestamp: test_constants.RatingVoteBlockTimestamp4,
+          Rating:         30,
+          Weight:         40,
+        },
+      },
+      response: lambda_rating_vote_config.Response {
+        Ok: true,
+      },
+      err: nil,
+    },
   }
   postgresBigBangClient := client_config.ConnectPostgresClient(nil)
   ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}

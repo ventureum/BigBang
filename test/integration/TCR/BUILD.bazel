@@ -31,6 +31,7 @@ go_library(
         "//test/lambda/TCR/get_proxy_list:go_default_library",
         "//test/lambda/TCR/get_proxy_voting_info:go_default_library",
         "//test/lambda/TCR/get_rating_vote_list:go_default_library",
+        "//test/lambda/TCR/get_validator_recent_rating_vote_activities:go_default_library",
         "//test/lambda/TCR/objective:go_default_library",
         "//test/lambda/TCR/project:go_default_library",
         "//test/lambda/TCR/rating_vote:go_default_library",

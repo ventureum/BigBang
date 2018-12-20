@@ -1,46 +1,32 @@
-# trusty beta image has jdk8, gcc4.8.4
 dist: trusty
 notifications:
-  slack: ventureum-team:DSE8wxmLTenq0Yz17BrYBWg9
+  email: false
 fail_fast: true
-
 language: go
 go:
-  - 1.x
+- 1.x
 sudo: false
-
 os:
-  - linux
-
+- linux
 env:
-  secure: "eh8ENEz7aT3qdwOj5n5fz//UpWWC74WR7z1YjNTPG6qgVvZloSX29esfZPTR26SLu0kcPT3VwsTHuEY1GvFBZucZb4KT17EQS0pEtqJogGZnxeEz87oivHqGPadVmfYSNJ1Z5zz2P0mb/pexkdGiTejpcUEJW3v5Ybq5ZwhsfeVhBXIaCs9ba3mHgpeWa6M4aKSFjhG5GHnPVvWVbtBBRMsb/tcA74n0LabSavFbE0kTiEFPhiSFaV31mwyS662AnbJFJg/1IDr+iyacx65Km+5Od8d8HCdmpIM0uAJ2OLkXpU+bekuDYCzCHfGlOnC5aBppaYj6esmtDzgS+YmlctjBi5j5B8WaE+K+ePTbPttNsBW8FWCbW0b2HOUEiC1hu26gMx0mQFQqYQyIgbAWMA8DywfreHXwCee+AJPXFf35n5MpHarFDvfwwjWuA/UZCB5kft9EPbL3BE+GNjbTiLgwmS2m3BuSdewRtRUoaeCtV1K0ubjsEmENhEMuhGllK+MmpnYcIMpPbBdK4FrYigRb3oO2KG+VjpGP1K1I6dmzsjUYDP0sOSn6YSRUMJ9zuvLWprz2fz1hf6AYmbj0c0z9IhaL5bCzVi6+fykW5XsQJ2h5W0zvHb+s/GUic5Nr8dmCoiDuZuNxQq5uFwL3czrcEohqPSST7B/ZiG/jLW8="
+  secure: DIdDml8gNouBc7Lw6hyOQj0PNKbhfGC0RK3wnF/Vtxz3V0nZJbe4+qFqIariYLhurlHB20QKPlsel28pHbSvR4+SCHPZRD6Id/JfGGmKdHRzlVYpcOAMNoOwqJLcKWoIV00644JerkCkvShA0tqWd1kk9NkWAkIMLV1l1KdGZsQySgPFNNbhcRuidDN74zE49Wl6iR1rEZR3veN0aoaRvMUCKZQFDDquS9J8E98lkTKIOFObDLwopCO0sTQ23UbknBhxaCRkDBKyty+GgsV4OhoFMpmh985l+KqLNdKsjGu0M34lXi2wx+eK7H1VfJbYnU3dImbOvyuJMCYQBf62kLW1h84WwpWNfnSd+ZTVN8LwZeyWxHUFHBmPC5D8qsfIW254GxxuNwH+g5t3Si6BIGgVZ8qaFHNpcvBba8mTSwt+6+w3PJWFqbqPdyjJ6+uSsBINkHpsphF066dn6eSNRQu5f5n0lcOqQt1zcyvI4yi9s40l/kisGpGcU/jXzLRaOhJz1lTvU7fmtv16UmAwVN88ZoOZ4Dj6WImJIt4PBq7qAIKGKlbFV7OnIGWeYgpKFr4AcZUU7fMC8QMypHf0V3xf0skwtlvtEIse7F0pXAMFjPYfJmp9JG2QNCnLHP/y4eoUtD6Eu7/Cq33Z8uFDxYnlb1lRsXEU2sl5+NvbhOM=
 addons:
-  postgresql: "9.5"
-
+  postgresql: '9.5'
 install:
 - go get -u github.com/golang/lint/golint
-
-
 before_script:
 - psql -c 'create database feedsys;' -U postgres
 - psql -c "CREATE USER bigbang WITH PASSWORD 'bigbang';" -U postgres
 - psql -c "ALTER USER bigbang WITH SUPERUSER;" -U postgres
-
 before_install:
 - V=0.20.0
 - OS=linux
 - URL="https://github.com/bazelbuild/bazel/releases/download/${V}/bazel-${V}-installer-${OS}-x86_64.sh"
 - wget -O install.sh "${URL}"
 - chmod +x install.sh
-- ./install.sh --user
+- "./install.sh --user"
 - rm -f install.sh
-
 script:
-# enable golint after further cleaning
-# - 'golint ./... | grep -v "be unexported"'
 - bazel clean
 - bazel run //:gazelle
 - bazel test --config=ci  //test/integration/...
-
-notifications:
-  email: false

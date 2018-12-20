@@ -41,13 +41,13 @@ func TestHandler(t *testing.T) {
   t.Run("feed_events_table_creator", feed_events_table_creator_test.TestHandler)
 
 
-  os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
+  os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
   t.Run("profile", profile_test.TestHandler)
 
   os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
   t.Run("get_profile", get_profile_test.TestHandler)
 
-  os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
+  os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
   t.Run("get_batch_profiles", get_batch_profiles_test.TestHandler)
 
 

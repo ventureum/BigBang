@@ -13,6 +13,7 @@ go_library(
         "proxy_voting.go",
         "proxy_voting_info.go",
         "rating_vote.go",
+        "rating_vote_activity.go",
     ],
     importpath = "BigBang/internal/app/tcr_attributes",
     visibility = ["//:__subpackages__"],
