@@ -25,8 +25,6 @@ type ResponseContent struct {
   ActorType string `json:"actorType,required"`
   Username string `json:"username,required"`
   PhotoUrl string `json:"photoUrl,required"`
-  TelegramId string `json:"telegramId,required"`
-  PhoneNumber string `json:"phoneNumber,required"`
   PublicKey string `json:"publicKey,required"`
   ProfileContent string `json:"profileContent,required"`
   Level int64 `json:"level,required"`
@@ -45,8 +43,6 @@ func ProfileRecordResultToResponseContent(actorProfileRecord *actor_profile_reco
     ActorType: string(actorProfileRecord.ActorType),
     Username: actorProfileRecord.Username,
     PhotoUrl: actorProfileRecord.PhotoUrl,
-    TelegramId: actorProfileRecord.TelegramId,
-    PhoneNumber: actorProfileRecord.PhoneNumber,
     PublicKey: actorProfileRecord.PublicKey,
     ProfileContent: actorProfileRecord.ProfileContent,
   }

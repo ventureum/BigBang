@@ -17,23 +17,21 @@ func TestHandler(t *testing.T) {
   }{
     {
       request: lambda_get_batch_profiles_config.Request{
-        PrincipalId: test_constants.Actor1,
+        PrincipalId: test_constants.Actor2,
         Body: lambda_get_batch_profiles_config.RequestContent{
-          Actors: []string{test_constants.Actor1},
+          Actors: []string{test_constants.Actor3},
         },
       },
       response: lambda_get_batch_profiles_config.Response{
         Profiles: &[]lambda_get_batch_profiles_config.ResponseContent{
           {
-            Actor:       test_constants.Actor1,
-            ActorType:   "ADMIN",
-            Username:    test_constants.UserName1,
-            PhotoUrl:    "http://123.com",
-            TelegramId:  test_constants.TelegramId1,
-            PhoneNumber: "5197290001",
-            PublicKey:   strings.ToLower(test_constants.PublicKey1),
+            Actor:       test_constants.Actor3,
+            ActorType:   "KOL",
+            Username:    test_constants.UserName3,
+            PhotoUrl:    "http://567.com",
+            PublicKey:   strings.ToLower(test_constants.PublicKey3),
             Level:       2,
-            ProfileContent: test_constants.ProfileContent1,
+            ProfileContent: test_constants.ProfileContent3,
             RewardsInfo: &feed_attributes.RewardsInfo{
               Fuel:            100,
               Reputation:      100,

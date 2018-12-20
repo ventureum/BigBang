@@ -27,42 +27,68 @@ func RegisterAuth(principalId string, actor string, postgresBigBangClient *clien
     }
   } else if principalId != "" && AuthLevel(auth) == NoAuth {
     return
-  } else {
-    errorInfo := error_config.ErrorInfo{
-      ErrorCode: error_config.InvalidAuthRegister,
-      ErrorData: error_config.ErrorData {
-        "principalId": principalId,
-        "actor": actor,
-      },
-      ErrorLocation: error_config.Auth,
-    }
-    log.Printf("Invalid Auth Register for principalId %s and actor %s", principalId, actor)
-    log.Panicln(errorInfo.Marshal())
   }
+  errorInfo := error_config.ErrorInfo{
+    ErrorCode: error_config.InvalidAuthRegister,
+    ErrorData: error_config.ErrorData {
+      "principalId": principalId,
+      "actor": actor,
+    },
+    ErrorLocation: error_config.Auth,
+  }
+  log.Printf("Invalid Auth Register for principalId %s and actor %s", principalId, actor)
+  log.Panicln(errorInfo.Marshal())
 }
 
 func AuthProcess(principalId string, actor string, postgresBigBangClient *client_config.PostgresBigBangClient) {
   auth := os.Getenv("AUTH_LEVEL")
-  log.Printf("********************%+v", auth)
+
+  if principalId == "" {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.InvalidPrincipalId,
+      ErrorData: error_config.ErrorData {
+        "principalId": principalId,
+      },
+      ErrorLocation: error_config.Auth,
+    }
+    log.Printf("Invalid PrincipalId: %s", principalId)
+    log.Panicln(errorInfo.Marshal())
+  }
+
+  if AuthLevel(auth) == NoAuth {
+    return
+  }
+
   if  postgresBigBangClient == nil {
     postgresBigBangClient = client_config.ConnectPostgresClient(nil)
   }
 
   actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
   actorType := actorProfileRecordExecutor.GetActorTypeTx(principalId)
-  if principalId != "" && AuthLevel(auth) == AdminAuth {
+
+  if actorType == "" {
+    errorInfo := error_config.ErrorInfo{
+      ErrorCode: error_config.NoPrincipalIdExisting,
+      ErrorData: error_config.ErrorData {
+        "principalId": principalId,
+      },
+      ErrorLocation: error_config.Auth,
+    }
+    log.Printf("No PrincipalId  %s exists", principalId)
+    log.Panicln(errorInfo.Marshal())
+  }
+
+  if  AuthLevel(auth) == AdminAuth {
     if actorType == feed_attributes.ADMIN_ACTOR_TYPE {
       return
     }
-  } else if principalId != "" && AuthLevel(auth) == UserAuth {
+  } else if AuthLevel(auth) == UserAuth {
     if actorType != feed_attributes.ActorType("") &&
       (actor == "" || (actor != "" &&
           ((actorType == feed_attributes.ADMIN_ACTOR_TYPE) ||
               (actorType != feed_attributes.ADMIN_ACTOR_TYPE && principalId == actor)))) {
       return
     }
-  } else if principalId != "" && AuthLevel(auth) == NoAuth {
-    return
   }
 
   errorInfo := error_config.ErrorInfo{
@@ -99,3 +125,4 @@ func ValidateAndCreateActorTypeWithAuthLevel (actorTypeStr string) feed_attribut
   }
   return actorType
 }
+

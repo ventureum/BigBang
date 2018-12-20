@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["get_validator_rencent_rating_vote_activities.go"],
+    importpath = "BigBang/cmd/lambda/TCR/get_validator_recent_rating_vote_activities/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd/lambda/common/auth:go_default_library",
+        "//internal/app/tcr_attributes:go_default_library",
+        "//internal/pkg/error_config:go_default_library",
+        "//internal/pkg/utils:go_default_library",
+        "//internal/platform/postgres_config/TCR/rating_vote_config:go_default_library",
+        "//internal/platform/postgres_config/client_config:go_default_library",
+        "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",
+    ],
+)

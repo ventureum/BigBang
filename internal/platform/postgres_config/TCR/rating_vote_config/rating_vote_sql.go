@@ -75,3 +75,19 @@ WHERE project_id = $1 and milestone_id = $2 and objective_id = $3
 ORDER BY id DESC
 LIMIT $4;
 `
+
+const PAGINATION_QUERY_RATING_VOTE_ACTIVITIES_BY_ACTOR_COMMAND = `
+SELECT project_id, milestone_id, objective_id, block_timestamp, rating, weight
+FROM rating_votes
+WHERE id <= $2 and voter = $1
+ORDER BY id DESC
+LIMIT $3;
+`
+
+const QUERY_RATING_VOTE_ACTIVITIES_BY_ACTOR_COMMAND = `
+SELECT project_id, milestone_id, objective_id, block_timestamp, rating, weight
+FROM rating_votes
+WHERE voter = $1
+ORDER BY id DESC
+LIMIT $2;
+`

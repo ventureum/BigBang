@@ -26,6 +26,7 @@ import (
   "BigBang/test/lambda/TCR/add_proxy_voting_for_principal"
   "BigBang/test/lambda/TCR/get_rating_vote_list"
   "BigBang/test/lambda/TCR/get_batch_rating_vote_list"
+  "BigBang/test/lambda/TCR/get_validator_recent_rating_vote_activities"
   "BigBang/test/lambda/TCR/get_proxy_voting_info"
   "BigBang/test/lambda/TCR/get_batch_proxy_voting_info"
   "BigBang/test/lambda/TCR/finalize_validators"
@@ -36,8 +37,8 @@ import (
   "BigBang/test/lambda/TCR/delete_milestone"
   "BigBang/test/lambda/TCR/delete_project"
   "BigBang/test/lambda/TCR/get_proxy_list"
-  "BigBang/test/lambda/TCR/delete_proxy"
   "BigBang/test/lambda/TCR/get_project_id_by_admin"
+  "BigBang/test/lambda/TCR/delete_proxy"
 )
 
 func TestHandler(t *testing.T) {
@@ -48,7 +49,7 @@ func TestHandler(t *testing.T) {
   t.Run("tcr_table_creator", tcr_table_creator_test.TestHandler)
 
 
-  os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
+  os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
   t.Run("profile", profile_test.TestHandler)
 
 
@@ -107,16 +108,20 @@ func TestHandler(t *testing.T) {
   t.Run("add_proxy_voting_for_principal", add_proxy_voting_for_principal_test.TestHandler)
 
 
-  os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
+  os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
   t.Run("get_rating_vote_list", get_rating_vote_list_test.TestHandler)
 
-  os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
+  os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
   t.Run("get_batch_rating_vote_list", get_batch_rating_vote_list_test.TestHandler)
 
-  os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
+  os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
+  t.Run("get_validator_recent_rating_vote_activities",
+    get_validator_recent_rating_vote_activities_test.TestHandler)
+
+  os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
   t.Run("get_proxy_voting_info", get_proxy_voting_info_test.TestHandler)
 
-  os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
+  os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
   t.Run("get_batch_proxy_voting_info", get_batch_proxy_voting_info_test.TestHandler)
 
 

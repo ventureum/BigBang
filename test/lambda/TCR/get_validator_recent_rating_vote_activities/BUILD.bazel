@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["get_validator_recent_rating_vote_activities.go"],
+    importpath = "BigBang/test/lambda/TCR/get_validator_recent_rating_vote_activities",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd/lambda/TCR/get_validator_recent_rating_vote_activities/config:go_default_library",
+        "//internal/app/tcr_attributes:go_default_library",
+        "//internal/platform/postgres_config/TCR/rating_vote_config:go_default_library",
+        "//test/constants:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+    ],
+)
