@@ -132,9 +132,9 @@ docker build -t bigbang .
 Run the following command in the root of BigBang with ENV file <env_file> loaded 
 
 ```js
- sudo docker run --name bigbangimage -ti  --net=host -e DISPLAY —env-file <env_file> -v ~/ventureum_projects/go_projects/src/BigBang:/go/src/BigBang bigbang:latest
+ sudo docker run --name bigbangimage -ti  --net=host -e DISPLAY --env-file <env_file> -v ~/ventureum_projects/go_projects/src/BigBang:/go/src/BigBang bigbang:latest
 ```
-
+- `~/ventureum_projects/go_projects/src/BigBang` is an example of local path for BigBang
 
 ### Run BigBang Container 
 
