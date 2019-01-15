@@ -19,36 +19,35 @@ const EmptyParentHash = "0x00000000000000000000000000000000000000000000000000000
 const PostTypeHash = "0x2fca5a5e"
 
 var PostContent1 = feed_attributes.Content{
-  Title: "Title1",
-  Text: "Text1",
-  Image: "Image1",
-  Subtitle: "Subtitle1",
-  Meta: "[{offset: 0, length: 41, type: 'url'}]",
+	Title:    "Title1",
+	Text:     "Text1",
+	Image:    "Image1",
+	Subtitle: "Subtitle1",
+	Meta:     "[{offset: 0, length: 41, type: 'url'}]",
 }
 
 var PostContent2 = feed_attributes.Content{
-  Title: "Title2",
-  Text: "Text2",
-  Image: "Image2",
-  Subtitle: "Subtitle2",
-  Meta: "[{offset: 0, length: 41, type: 'url'}]",
+	Title:    "Title2",
+	Text:     "Text2",
+	Image:    "Image2",
+	Subtitle: "Subtitle2",
+	Meta:     "[{offset: 0, length: 41, type: 'url'}]",
 }
 
-
 var SessionContent1 = feed_attributes.Content{
-  Title: "SessionTitle1",
-  Text: "SessionText1",
-  Image: "SessionImage1",
-  Subtitle: "SessionSubtitle1",
-  Meta: "[{offset: 0, length: 41, type: 'url'}]",
+	Title:    "SessionTitle1",
+	Text:     "SessionText1",
+	Image:    "SessionImage1",
+	Subtitle: "SessionSubtitle1",
+	Meta:     "[{offset: 0, length: 41, type: 'url'}]",
 }
 
 var SessionContent2 = feed_attributes.Content{
-  Title: "Sessionitle2",
-  Text: "SessionText2",
-  Image: "SessionImage2",
-  Subtitle: "SessionSubtitle2",
-  Meta: "[{offset: 0, length: 41, type: 'url'}]",
+	Title:    "Sessionitle2",
+	Text:     "SessionText2",
+	Image:    "SessionImage2",
+	Subtitle: "SessionSubtitle2",
+	Meta:     "[{offset: 0, length: 41, type: 'url'}]",
 }
 
 const SessionStartTime1 = 1539108006

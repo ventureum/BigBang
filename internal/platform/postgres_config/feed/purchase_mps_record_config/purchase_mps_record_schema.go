@@ -1,6 +1,5 @@
 package purchase_mps_record_config
 
-
 const TABLE_SCHEMA_FOR_PURCHASE_MPS_RECORDS = `
 CREATE TABLE purchase_mps_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),

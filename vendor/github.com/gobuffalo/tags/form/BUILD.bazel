@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "checkbox_tag.go",
+        "file_tag.go",
+        "form.go",
+        "form_for.go",
+        "input_tag.go",
+        "radio_button_tag.go",
+        "select_options.go",
+        "select_tag.go",
+        "selectable.go",
+        "submit_tag.go",
+        "text_area_tag.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/tags/form",
+    importpath = "github.com/gobuffalo/tags/form",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/flect:go_default_library",
+        "//vendor/github.com/gobuffalo/tags:go_default_library",
+        "//vendor/github.com/gobuffalo/uuid:go_default_library",
+        "//vendor/github.com/gobuffalo/validate:go_default_library",
+    ],
+)

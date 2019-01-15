@@ -1,6 +1,5 @@
 package wallet_address_record_config
 
-
 const TABLE_SCHEMA_FOR_WALLET_ADDRESS_RECORD = `
 CREATE TABLE wallet_address_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),

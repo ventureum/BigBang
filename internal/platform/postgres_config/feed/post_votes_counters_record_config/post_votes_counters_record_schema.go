@@ -1,6 +1,5 @@
 package post_votes_counters_record_config
 
-
 const TABLE_SCHEMA_FOR_POST_VOTES_COUNTERS_RECORDS = `
 CREATE TABLE post_votes_counters_records (
     post_hash TEXT NOT NULL REFERENCES posts(post_hash),
@@ -18,6 +17,5 @@ CREATE TABLE post_votes_counters_records (
 );
 CREATE INDEX post_votes_counters_records_index ON post_votes_counters_records (post_hash, latest_vote_type, downvote_count, upvote_count, total_vote_count);
 `
-
 
 const TABLE_NAME_FOR_POST_VOTES_COUNTERS_RECORD = "post_votes_counters_records"

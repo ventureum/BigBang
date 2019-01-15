@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["lexer.go"],
+    importmap = "BigBang/vendor/github.com/gobuffalo/plush/lexer",
+    importpath = "github.com/gobuffalo/plush/lexer",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/gobuffalo/plush/token:go_default_library"],
+)

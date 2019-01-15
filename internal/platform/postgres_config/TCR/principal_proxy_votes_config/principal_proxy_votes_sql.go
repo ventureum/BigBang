@@ -1,6 +1,5 @@
 package principal_proxy_votes_config
 
-
 const INSERT_PRINCIPAL_PROXY_VOTES_COMMAND = `
 INSERT INTO principal_proxy_votes 
 ( 

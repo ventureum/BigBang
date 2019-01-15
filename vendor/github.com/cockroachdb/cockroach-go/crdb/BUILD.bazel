@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "error.go",
+        "tx.go",
+    ],
+    importmap = "BigBang/vendor/github.com/cockroachdb/cockroach-go/crdb",
+    importpath = "github.com/cockroachdb/cockroach-go/crdb",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jackc/pgx:go_default_library",
+        "//vendor/github.com/lib/pq:go_default_library",
+    ],
+)

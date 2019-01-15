@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dump.go",
+        "goon.go",
+        "print_types.go",
+    ],
+    importmap = "BigBang/vendor/github.com/shurcooL/go-goon",
+    importpath = "github.com/shurcooL/go-goon",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/shurcooL/go/reflectsource:go_default_library"],
+)

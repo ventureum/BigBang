@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["kebabcase.go"],
+    importmap = "BigBang/vendor/dmitri.shuralyov.com/text/kebabcase",
+    importpath = "dmitri.shuralyov.com/text/kebabcase",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/shurcooL/graphql/ident:go_default_library"],
+)

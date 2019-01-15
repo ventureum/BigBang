@@ -1,6 +1,5 @@
 package milestone_points_redeem_request_record_config
 
-
 const UPSERT_MILESTONE_POINTS_REDEEM_REQUEST_RECORD_COMMAND = `
 INSERT INTO milestone_points_redeem_request_records
 (

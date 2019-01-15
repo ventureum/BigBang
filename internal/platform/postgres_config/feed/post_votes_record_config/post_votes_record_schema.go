@@ -1,6 +1,5 @@
 package post_votes_record_config
 
-
 const TABLE_SCHEMA_FOR_POST_VOTES_RECORD = `
 CREATE TABLE post_votes_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),

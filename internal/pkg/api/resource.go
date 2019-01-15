@@ -22,8 +22,6 @@ const DevRefuel Resource = "dev-refuel"
 
 const FeedUpvote Resource = "feed-upvote"
 
-
-
 const GetRecentVotes Resource = "get-recent-votes"
 const GetSession Resource = "get-session"
 

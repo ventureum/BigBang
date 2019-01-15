@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "array_literal.go",
+        "assign_expression.go",
+        "ast.go",
+        "block_statement.go",
+        "boolean.go",
+        "call_expression.go",
+        "expression_statement.go",
+        "float_literal.go",
+        "for_expression.go",
+        "function_literal.go",
+        "hash_literal.go",
+        "html_literal.go",
+        "identifier.go",
+        "if_expression.go",
+        "index_expression.go",
+        "infix_expression.go",
+        "integer_literal.go",
+        "let_statement.go",
+        "prefix_expression.go",
+        "program.go",
+        "return_statement.go",
+        "string_literal.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/plush/ast",
+    importpath = "github.com/gobuffalo/plush/ast",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/gobuffalo/plush/token:go_default_library"],
+)

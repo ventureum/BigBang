@@ -1,10 +1,10 @@
 package main
 
 import (
-  "github.com/aws/aws-lambda-go/lambda"
-  "BigBang/cmd/lambda/TCR/get_project/config"
+	"BigBang/cmd/lambda/TCR/get_project/config"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
-  lambda.Start(lambda_get_project_config.Handler)
+	lambda.Start(lambda_get_project_config.Handler)
 }

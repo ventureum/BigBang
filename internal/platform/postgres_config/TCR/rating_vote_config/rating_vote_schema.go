@@ -1,6 +1,5 @@
 package rating_vote_config
 
-
 const TABLE_SCHEMA_FOR_RATING_VOTE = `
 CREATE TABLE rating_votes (
     id TEXT NOT NULL,

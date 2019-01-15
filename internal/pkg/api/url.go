@@ -28,7 +28,6 @@ var GetRecentVotesAlphaEndingPoint URL = BuildEndingPoint(FeedSystemBaseURL, Alp
 
 const TCRBaseURL URL = "https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com"
 
-
 var NewProjectAlphaEndingPoint URL = BuildEndingPoint(TCRBaseURL, AlphaStage, NewProject)
 var GetProjectAlphaEndingPoint URL = BuildEndingPoint(TCRBaseURL, AlphaStage, GetProject)
 

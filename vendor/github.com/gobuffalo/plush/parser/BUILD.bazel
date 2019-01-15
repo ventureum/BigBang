@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "errors.go",
+        "parser.go",
+        "precedences.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/plush/parser",
+    importpath = "github.com/gobuffalo/plush/parser",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/plush/ast:go_default_library",
+        "//vendor/github.com/gobuffalo/plush/lexer:go_default_library",
+        "//vendor/github.com/gobuffalo/plush/token:go_default_library",
+    ],
+)

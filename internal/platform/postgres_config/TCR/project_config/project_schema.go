@@ -1,6 +1,5 @@
 package project_config
 
-
 const TABLE_SCHEMA_FOR_PROJECT = `
 CREATE TABLE projects (
     id TEXT NOT NULL UNIQUE,

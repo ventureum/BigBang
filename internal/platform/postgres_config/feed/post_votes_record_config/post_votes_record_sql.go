@@ -77,4 +77,3 @@ const QUERY_TOTAL_REPUTATION_BY_POST_HASH_AND_VOTE_TYPE_COMMAND = `
 SELECT sum(abs(signed_reputation)) FROM post_votes_records
 WHERE post_hash = $1 and vote_type = $2;
 `
-

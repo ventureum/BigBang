@@ -1,6 +1,5 @@
 package session_record_config
 
-
 const TABLE_SCHEMA_FOR_SESSION_RECORDS = `
 CREATE TABLE session_records (
     actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,

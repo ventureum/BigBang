@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "compiler.go",
+        "content_helper.go",
+        "context.go",
+        "forms.go",
+        "helper_map.go",
+        "helpers.go",
+        "iterators.go",
+        "markdown_helper.go",
+        "partial_helper.go",
+        "plush.go",
+        "template.go",
+        "user_function.go",
+        "version.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/plush",
+    importpath = "github.com/gobuffalo/plush",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/envy:go_default_library",
+        "//vendor/github.com/gobuffalo/github_flavored_markdown:go_default_library",
+        "//vendor/github.com/gobuffalo/plush/ast:go_default_library",
+        "//vendor/github.com/gobuffalo/plush/parser:go_default_library",
+        "//vendor/github.com/gobuffalo/tags:go_default_library",
+        "//vendor/github.com/gobuffalo/tags/form:go_default_library",
+        "//vendor/github.com/gobuffalo/tags/form/bootstrap:go_default_library",
+        "//vendor/github.com/markbates/inflect:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)

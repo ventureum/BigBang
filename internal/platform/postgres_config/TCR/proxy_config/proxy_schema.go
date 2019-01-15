@@ -1,6 +1,5 @@
 package proxy_config
 
-
 const TABLE_SCHEMA_FOR_PROXY = `
 CREATE TABLE proxies (
     id BIGSERIAL,

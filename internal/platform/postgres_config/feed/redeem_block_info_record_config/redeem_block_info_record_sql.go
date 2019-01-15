@@ -1,6 +1,5 @@
 package redeem_block_info_record_config
 
-
 const UPSERT_REDEEM_BLOCK_INFO_RECORD_COMMAND = `
 INSERT INTO redeem_block_info_records
 (

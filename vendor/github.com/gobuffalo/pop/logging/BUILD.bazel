@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["const.go"],
+    importmap = "BigBang/vendor/github.com/gobuffalo/pop/logging",
+    importpath = "github.com/gobuffalo/pop/logging",
+    visibility = ["//visibility:public"],
+)

@@ -1,6 +1,5 @@
 package actor_profile_record_config
 
-
 const UPSERT_ACTOR_PROFILE_RECORD_COMMAND = `
 INSERT INTO actor_profile_records
 (

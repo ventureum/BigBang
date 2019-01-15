@@ -1,6 +1,5 @@
 package milestone_validator_record_config
 
-
 const TABLE_SCHEMA_FOR_MILESTONE_VALIDATOR_RECORD = `
 CREATE TABLE milestone_validator_records (
     uuid uuid NOT NULL DEFAULT gen_random_uuid(),

@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bytes_are_present.go",
+        "common.go",
+        "email_is_present.go",
+        "func_validator.go",
+        "int_array_is_present.go",
+        "int_is_greater_than.go",
+        "int_is_less_than.go",
+        "int_is_present.go",
+        "regex_match.go",
+        "string_inclusion.go",
+        "string_is_present.go",
+        "string_length_in_range.go",
+        "strings_match.go",
+        "time_after_time.go",
+        "time_is_before_time.go",
+        "time_is_present.go",
+        "url_is_present.go",
+        "uuid_is_present.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/validate/validators",
+    importpath = "github.com/gobuffalo/validate/validators",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/uuid:go_default_library",
+        "//vendor/github.com/gobuffalo/validate:go_default_library",
+        "//vendor/github.com/serenize/snaker:go_default_library",
+    ],
+)

@@ -1,10 +1,10 @@
 package main
 
 import (
-  "github.com/aws/aws-lambda-go/lambda"
-  "BigBang/cmd/lambda/feed/set_actor_private_key/config"
+	"BigBang/cmd/lambda/feed/set_actor_private_key/config"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
-  lambda.Start(lambda_set_actor_private_key_config.Handler)
+	lambda.Start(lambda_set_actor_private_key_config.Handler)
 }
