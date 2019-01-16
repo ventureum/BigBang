@@ -25,6 +25,10 @@ RUN \
 # Fix possible patch error
 RUN apt-get install patch
 
+# install pop and soda for migrations
+RUN go get github.com/gobuffalo/pop/...
+RUN go install github.com/gobuffalo/pop/soda
+
 # build directories
 RUN mkdir  $GOPATH/src/BigBang
 COPY . $GOPATH/src/BigBang
