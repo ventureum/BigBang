@@ -28,7 +28,6 @@ const InvalidMilestonePoints ErrorCode = "InvalidMilestonePoints"
 const WalletAddressAlreadyExisting ErrorCode = "WalletAddressAlreadyExisting"
 const NoWalletAddressExisting ErrorCode = "NoWalletAddressExisting"
 
-
 // For TCR
 const NoProjectIdExisting ErrorCode = "NoProjectIdExisting"
 const NoObjectiveIdExisting ErrorCode = "NoObjectiveIdExisting"

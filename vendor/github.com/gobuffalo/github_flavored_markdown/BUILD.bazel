@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "main.go",
+        "version.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/github_flavored_markdown",
+    importpath = "github.com/gobuffalo/github_flavored_markdown",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/github_flavored_markdown/internal/russross/blackfriday:go_default_library",
+        "//vendor/github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/highlight_diff:go_default_library",
+        "//vendor/github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/highlight_go:go_default_library",
+        "//vendor/github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/octicon:go_default_library",
+        "//vendor/github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/sanitized_anchor_name:go_default_library",
+        "//vendor/github.com/microcosm-cc/bluemonday:go_default_library",
+        "//vendor/github.com/sourcegraph/annotate:go_default_library",
+        "//vendor/github.com/sourcegraph/syntaxhighlight:go_default_library",
+        "//vendor/golang.org/x/net/html:go_default_library",
+        "//vendor/golang.org/x/net/html/atom:go_default_library",
+    ],
+)

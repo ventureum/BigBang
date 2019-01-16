@@ -1,6 +1,5 @@
 package post_replies_record_config
 
-
 const UPSERT_POST_REPLIES_RECORD_COMMAND = `
 INSERT INTO post_replies_records
 (

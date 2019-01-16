@@ -1,10 +1,10 @@
 package main
 
 import (
-  "github.com/aws/aws-lambda-go/lambda"
-  "BigBang/cmd/lambda/feed/get_profile/config"
+	"BigBang/cmd/lambda/feed/get_profile/config"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
-  lambda.Start(lambda_get_profile_config.Handler)
+	lambda.Start(lambda_get_profile_config.Handler)
 }

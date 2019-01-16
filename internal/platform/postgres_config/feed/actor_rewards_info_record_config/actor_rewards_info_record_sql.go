@@ -1,6 +1,5 @@
 package actor_rewards_info_record_config
 
-
 const UPSERT_ACTOR_REWARDS_INFO_RECORD_COMMAND = `
 INSERT INTO actor_rewards_info_records
 (

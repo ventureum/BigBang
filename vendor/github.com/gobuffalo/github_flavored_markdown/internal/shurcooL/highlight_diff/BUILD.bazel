@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importmap = "BigBang/vendor/github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/highlight_diff",
+    importpath = "github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/highlight_diff",
+    visibility = ["//vendor/github.com/gobuffalo/github_flavored_markdown:__subpackages__"],
+    deps = [
+        "//vendor/github.com/sergi/go-diff/diffmatchpatch:go_default_library",
+        "//vendor/github.com/sourcegraph/annotate:go_default_library",
+        "//vendor/github.com/sourcegraph/syntaxhighlight:go_default_library",
+    ],
+)

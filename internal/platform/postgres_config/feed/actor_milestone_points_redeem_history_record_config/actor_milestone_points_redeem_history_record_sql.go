@@ -1,6 +1,5 @@
 package actor_milestone_points_redeem_history_record_config
 
-
 const UPSERT_ACTOR_MILESTONE_POINTS_REDEEM_HISTORY_RECORD_COMMAND = `
 INSERT INTO actor_milestone_points_redeem_history_records
 (   

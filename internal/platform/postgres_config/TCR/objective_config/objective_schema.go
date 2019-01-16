@@ -1,6 +1,5 @@
 package objective_config
 
-
 const TABLE_SCHEMA_FOR_OBJECTIVE = `
 CREATE TABLE objectives (
     project_id TEXT NOT NULL,

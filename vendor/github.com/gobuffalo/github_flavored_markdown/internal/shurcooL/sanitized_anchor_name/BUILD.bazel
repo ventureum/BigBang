@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importmap = "BigBang/vendor/github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/sanitized_anchor_name",
+    importpath = "github.com/gobuffalo/github_flavored_markdown/internal/shurcooL/sanitized_anchor_name",
+    visibility = ["//vendor/github.com/gobuffalo/github_flavored_markdown:__subpackages__"],
+)

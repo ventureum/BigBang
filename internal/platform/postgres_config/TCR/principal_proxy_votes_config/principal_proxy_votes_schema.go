@@ -1,6 +1,5 @@
 package principal_proxy_votes_config
 
-
 const TABLE_SCHEMA_FOR_PRINCIPAL_PROXY_VOTES = `
 CREATE TABLE principal_proxy_votes (
     id TEXT NOT NULL,

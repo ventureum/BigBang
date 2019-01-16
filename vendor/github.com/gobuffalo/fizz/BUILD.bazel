@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bubbler.go",
+        "columns.go",
+        "fizz.go",
+        "foreign_keys.go",
+        "index.go",
+        "raw_sql.go",
+        "tables.go",
+        "translator.go",
+        "version.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/fizz",
+    importpath = "github.com/gobuffalo/fizz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/plush:go_default_library",
+        "//vendor/github.com/kballard/go-shellquote:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)

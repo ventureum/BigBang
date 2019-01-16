@@ -1,6 +1,5 @@
 package post_rewards_record_config
 
-
 const UPSERT_POST_REWARDS_RECORD_COMMAND = `
 INSERT INTO post_rewards_records
 (

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "codec.go",
+        "generator.go",
+        "sql.go",
+        "uuid.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/uuid",
+    importpath = "github.com/gobuffalo/uuid",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/gofrs/uuid:go_default_library"],
+)

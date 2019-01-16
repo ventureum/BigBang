@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "misc.go",
+        "options.go",
+        "pagination.go",
+        "tag.go",
+        "version.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/tags",
+    importpath = "github.com/gobuffalo/tags",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/fatih/structs:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)

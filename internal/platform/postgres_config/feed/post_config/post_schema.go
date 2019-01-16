@@ -1,6 +1,5 @@
 package post_config
 
-
 const TABLE_SCHEMA_FOR_POST = `
 CREATE TABLE posts (
     actor TEXT NOT NULL REFERENCES actor_profile_records(actor) ON DELETE CASCADE,

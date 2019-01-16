@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "char.go",
+        "file.go",
+        "folder.go",
+        "ident.go",
+        "join.go",
+        "key.go",
+        "name.go",
+        "os_path.go",
+        "package.go",
+        "param_id.go",
+        "resource.go",
+        "tablize.go",
+        "url.go",
+        "var_case.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/flect/name",
+    importpath = "github.com/gobuffalo/flect/name",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/gobuffalo/flect:go_default_library"],
+)

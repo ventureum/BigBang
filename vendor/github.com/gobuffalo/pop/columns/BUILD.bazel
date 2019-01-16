@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "column.go",
+        "columns.go",
+        "columns_for_struct.go",
+        "readable_columns.go",
+        "tags.go",
+        "writeable_columns.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/pop/columns",
+    importpath = "github.com/gobuffalo/pop/columns",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/markbates/oncer:go_default_library"],
+)

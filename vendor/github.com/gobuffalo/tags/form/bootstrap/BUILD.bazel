@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "common.go",
+        "form.go",
+        "form_for.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/tags/form/bootstrap",
+    importpath = "github.com/gobuffalo/tags/form/bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/flect:go_default_library",
+        "//vendor/github.com/gobuffalo/tags:go_default_library",
+        "//vendor/github.com/gobuffalo/tags/form:go_default_library",
+        "//vendor/github.com/gobuffalo/validate/validators:go_default_library",
+    ],
+)

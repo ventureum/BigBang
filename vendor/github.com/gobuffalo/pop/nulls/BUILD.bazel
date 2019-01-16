@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bool.go",
+        "byte_slice.go",
+        "float32.go",
+        "float64.go",
+        "int.go",
+        "int32.go",
+        "int64.go",
+        "nulls.go",
+        "schema.go",
+        "string.go",
+        "time.go",
+        "uint32.go",
+        "uuid.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/pop/nulls",
+    importpath = "github.com/gobuffalo/pop/nulls",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/uuid:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)

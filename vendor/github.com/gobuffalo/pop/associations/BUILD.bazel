@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "association.go",
+        "associations_for_struct.go",
+        "belongs_to_association.go",
+        "has_many_association.go",
+        "has_one_association.go",
+        "many_to_many_association.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/pop/associations",
+    importpath = "github.com/gobuffalo/pop/associations",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gobuffalo/flect:go_default_library",
+        "//vendor/github.com/gobuffalo/pop/columns:go_default_library",
+        "//vendor/github.com/gobuffalo/pop/nulls:go_default_library",
+        "//vendor/github.com/gobuffalo/uuid:go_default_library",
+        "//vendor/github.com/gobuffalo/x/defaults:go_default_library",
+        "//vendor/github.com/jmoiron/sqlx:go_default_library",
+        "//vendor/github.com/markbates/oncer:go_default_library",
+    ],
+)

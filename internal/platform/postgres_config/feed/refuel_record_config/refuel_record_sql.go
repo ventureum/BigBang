@@ -1,6 +1,5 @@
 package refuel_record_config
 
-
 const UPSERT_REFUEL_RECORD_COMMAND = `
 INSERT INTO refuel_records
 (

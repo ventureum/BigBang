@@ -1,6 +1,5 @@
 package actor_votes_counters_record_config
 
-
 const TABLE_SCHEMA_FOR_ACTOR_VOTES_COUNTERS_RECORD = `
 CREATE TABLE actor_votes_counters_records (
     post_hash TEXT NOT NULL REFERENCES posts(post_hash),

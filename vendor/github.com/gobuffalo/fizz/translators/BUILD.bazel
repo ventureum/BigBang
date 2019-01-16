@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cockroach.go",
+        "cockroach_meta.go",
+        "mariadb.go",
+        "mssqlserver.go",
+        "mysql.go",
+        "mysql_meta.go",
+        "postgres.go",
+        "schema.go",
+        "sqlite.go",
+        "sqlite_meta.go",
+    ],
+    importmap = "BigBang/vendor/github.com/gobuffalo/fizz/translators",
+    importpath = "github.com/gobuffalo/fizz/translators",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/blang/semver:go_default_library",
+        "//vendor/github.com/gobuffalo/fizz:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)
