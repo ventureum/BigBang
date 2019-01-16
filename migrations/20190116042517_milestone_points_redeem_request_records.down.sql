@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS milestone_points_redeem_request_records;

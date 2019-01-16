@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS actor_milestone_points_redeem_history_records;
