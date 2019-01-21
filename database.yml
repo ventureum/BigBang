@@ -1,13 +1,31 @@
 development:
   dialect: postgres
-  database: BigBang_development
-  user: postgres
-  password: postgres
-  host: 127.0.0.1
-  pool: 5
+  database: {{ env "DB_NAME_DEV" }}
+  host: {{ env "DB_HOST_DEV" }}
+  port: 5432
+  user: {{ env "DB_USER_DEV" }}
+  password: {{ env "DB_PASSWORD_DEV" }}
 
 test:
-  url: {{envOr "TEST_DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/BigBang_test?sslmode=disable"}}
+  dialect: postgres
+  database: {{ env "DB_NAME_TEST" }}
+  host: {{ env "DB_HOST_TEST" }}
+  port: 5432
+  user: {{ env "DB_USER_TEST" }}
+  password: {{ env "DB_PASSWORD_TEST" }}
 
-production:
-  url: {{envOr "DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/BigBang_production?sslmode=disable"}}
+staging:
+  dialect: postgres
+  database: {{ env "DB_NAME_STAGING" }}
+  host: {{ env "DB_HOST_STAGING" }}
+  port: 5432
+  user: {{ env "DB_USER_STAGING" }}
+  password: {{ env "DB_PASSWORD_STAGING" }}
+
+exp:
+  dialect: postgres
+  database: {{ env "DB_NAME_EXP" }}
+  host: {{ env "DB_HOST_EXP" }}
+  port: 5432
+  user: {{ env "DB_USER_EXP" }}
+  password: {{ env "DB_PASSWORD_EXP" }}

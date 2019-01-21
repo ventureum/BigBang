@@ -14,6 +14,21 @@ DB_HOST=<Add Value>
 DB_NAME_PREFIX=<Add Value>
 DB_HOST_POSTFIX=<Add Value>
 
+DB_HOST_TEST=<Add Value>
+DB_NAME_TEST=<Add Value>
+DB_USER_TEST=<Add Value>
+DB_PASSWORD_TEST=<Add Value>
+
+DB_HOST_STAGING=<Add Value>
+DB_NAME_STAGING=<Add Value>
+DB_USER_STAGING=<Add Value>
+DB_PASSWORD_STAGING=<Add Value>
+
+DB_HOST_EXP=<Add Value>
+DB_NAME_EXP=<Add Value>
+DB_USER_EXP=<Add Value>
+DB_PASSWORD_EXP=<Add Value>
+
 MuMaxFuel=<Add Value>
 MuMinFuel=<Add Value>
 PostFuelCost=<Add Value>
