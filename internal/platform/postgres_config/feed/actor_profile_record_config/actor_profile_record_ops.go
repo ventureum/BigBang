@@ -23,6 +23,10 @@ func (actorProfileRecordExecutor *ActorProfileRecordExecutor) DeleteActorProfile
 	actorProfileRecordExecutor.DeleteTable(TABLE_NAME_FOR_ACTOR_PROFILE_RECORD)
 }
 
+func (actorProfileRecordExecutor *ActorProfileRecordExecutor) ClearActorProfileRecordTable() {
+	actorProfileRecordExecutor.ClearTable(TABLE_NAME_FOR_ACTOR_PROFILE_RECORD)
+}
+
 func (actorProfileRecordExecutor *ActorProfileRecordExecutor) UpsertActorProfileRecordTx(
 	actorProfileRecord *ActorProfileRecord) bool {
 	var inserted sql.NullBool

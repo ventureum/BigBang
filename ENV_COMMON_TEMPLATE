@@ -6,13 +6,10 @@ AWS_REGION=<Add Value>
 STREAM_API_KEY=<Add Value>
 STREAM_API_SECRET=<Add Value>
 
-DB_USER=<Add Value>
-DB_PASSWORD=<Add Value>
-DB_NAME=<Add Value>
-DB_HOST=<Add Value>
-
-DB_NAME_PREFIX=<Add Value>
-DB_HOST_POSTFIX=<Add Value>
+DB_USER_DEV=<Add Value>
+DB_PASSWORD_DEV=<Add Value>
+DB_NAME_DEV=<Add Value>
+DB_HOST_DEV=<Add Value>
 
 DB_HOST_TEST=<Add Value>
 DB_NAME_TEST=<Add Value>

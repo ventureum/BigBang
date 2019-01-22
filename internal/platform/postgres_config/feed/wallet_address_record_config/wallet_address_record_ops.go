@@ -21,6 +21,10 @@ func (walletAddressRecordExecutor *WalletAddressRecordExecutor) DeleteWalletAddr
 	walletAddressRecordExecutor.DeleteTable(TABLE_NAME_FOR_WALLET_ADDRESS_RECORD)
 }
 
+func (walletAddressRecordExecutor *WalletAddressRecordExecutor) ClearWalletAddressRecordTable() {
+	walletAddressRecordExecutor.ClearTable(TABLE_NAME_FOR_WALLET_ADDRESS_RECORD)
+}
+
 func (walletAddressRecordExecutor *WalletAddressRecordExecutor) UpsertWalletAddressRecordTx(walletAddressRecord *WalletAddressRecord) {
 	_, err := walletAddressRecordExecutor.Tx.NamedExec(UPSERT_WALLET_ADDRESS_RECORD_COMMAND, walletAddressRecord)
 	if err != nil {

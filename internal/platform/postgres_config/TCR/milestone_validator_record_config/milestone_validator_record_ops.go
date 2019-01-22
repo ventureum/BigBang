@@ -21,6 +21,10 @@ func (milestoneValidatorRecordExecutor *MilestoneValidatorRecordExecutor) Delete
 	milestoneValidatorRecordExecutor.DeleteTable(TABLE_NAME_FOR_MILESTONE_VALIDATOR_RECORD)
 }
 
+func (milestoneValidatorRecordExecutor *MilestoneValidatorRecordExecutor) ClearMilestoneValidatorRecordTable() {
+	milestoneValidatorRecordExecutor.ClearTable(TABLE_NAME_FOR_MILESTONE_VALIDATOR_RECORD)
+}
+
 func (milestoneValidatorRecordExecutor *MilestoneValidatorRecordExecutor) UpsertMilestoneValidatorRecordTx(milestoneValidatorRecord *MilestoneValidatorRecord) {
 	_, err := milestoneValidatorRecordExecutor.Tx.NamedExec(UPSERT_MILESTONE_VALIDATOR_RECORD_COMMAND, milestoneValidatorRecord)
 	if err != nil {

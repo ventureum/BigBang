@@ -9,3 +9,8 @@ CREATE TABLE refuel_records (
     PRIMARY KEY (uuid)
 );
 CREATE INDEX refuel_records_index ON refuel_records (actor, fuel, reputation, milestone_points);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON refuel_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

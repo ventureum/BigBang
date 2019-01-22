@@ -21,3 +21,8 @@ CREATE TABLE principal_proxy_votes (
 );
 CREATE INDEX principal_proxy_votes_index ON principal_proxy_votes (actor, project_id, proxy);
 CREATE INDEX principal_proxy_votes_desc_index ON proxies (id DESC NULLS LAST);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON principal_proxy_votes
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

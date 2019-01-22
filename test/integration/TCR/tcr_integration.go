@@ -30,24 +30,16 @@ import (
 	"BigBang/test/lambda/TCR/objective"
 	"BigBang/test/lambda/TCR/project"
 	"BigBang/test/lambda/TCR/rating_vote"
-	"BigBang/test/lambda/TCR/tcr_table_creator"
 	"BigBang/test/lambda/TCR/update_available_delegate_votes"
 	"BigBang/test/lambda/TCR/update_batch_available_delegate_votes"
 	"BigBang/test/lambda/TCR/update_batch_received_delegate_votes"
 	"BigBang/test/lambda/TCR/update_received_delegate_votes"
-	"BigBang/test/lambda/feed/feed_events_table_creator"
 	"BigBang/test/lambda/feed/profile"
 	"os"
 	"testing"
 )
 
 func TestHandler(t *testing.T) {
-	os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
-	t.Run("feed_events_table_creator", feed_events_table_creator_test.TestHandler)
-
-	os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
-	t.Run("tcr_table_creator", tcr_table_creator_test.TestHandler)
-
 	os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
 	t.Run("profile", profile_test.TestHandler)
 

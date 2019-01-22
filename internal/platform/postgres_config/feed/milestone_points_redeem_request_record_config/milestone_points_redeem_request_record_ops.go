@@ -22,6 +22,10 @@ func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRe
 	milestonePointsRedeemRequestRecordExecutor.DeleteTable(TABLE_NAME_FOR_MILESTONE_POINTS_REDEEM_REQUEST_RECORD)
 }
 
+func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) ClearMilestonePointsRedeemRequestRecordTable() {
+	milestonePointsRedeemRequestRecordExecutor.ClearTable(TABLE_NAME_FOR_MILESTONE_POINTS_REDEEM_REQUEST_RECORD)
+}
+
 func (milestonePointsRedeemRequestRecordExecutor *MilestonePointsRedeemRequestRecordExecutor) UpsertMilestonePointsRedeemRequestRecordTx(
 	milestonePointsRedeemRequestRecord *MilestonePointsRedeemRequestRecord) {
 	_, err := milestonePointsRedeemRequestRecordExecutor.Tx.NamedExec(

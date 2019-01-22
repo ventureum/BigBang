@@ -12,6 +12,8 @@ addons:
   postgresql: '9.5'
 install:
 - go get -u github.com/golang/lint/golint
+- go get github.com/gobuffalo/pop/...
+- go install github.com/gobuffalo/pop/soda
 before_script:
 - psql -c 'create database feedsys;' -U postgres
 - psql -c "CREATE USER bigbang WITH PASSWORD 'bigbang';" -U postgres
@@ -27,4 +29,5 @@ before_install:
 script:
 - bazel clean
 - bazel run //:gazelle
+- soda reset -e development
 - bazel test --config=ci  //test/integration/...

@@ -25,6 +25,13 @@ func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) DeleteRedeem
 	redeemBlockInfoRecordExecutor.DeleteTable(TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
 }
 
+func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) ClearRedeemBlockInfoRecordTable() {
+	redeemBlockInfoRecordExecutor.ClearTable(TABLE_NAME_FOR_REDEEM_BLOCK_INFO_RECORD)
+	nextRedeemBlock := feed_attributes.MoveToNextNRedeemBlock(1)
+	redeemBlockInfoRecordExecutor.InitRedeemBlockInfoTx(nextRedeemBlock)
+	redeemBlockInfoRecordExecutor.UpdateTotalEnrolledMilestonePointsForRedeemBlockInfoRecordTx(nextRedeemBlock)
+}
+
 func (redeemBlockInfoRecordExecutor *RedeemBlockInfoRecordExecutor) InitRedeemBlockInfoTx(nextRedeemBlock feed_attributes.RedeemBlock) {
 	executedAt := nextRedeemBlock.ConvertToTime()
 	_, err := redeemBlockInfoRecordExecutor.Tx.Exec(

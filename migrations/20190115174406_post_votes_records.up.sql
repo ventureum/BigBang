@@ -13,3 +13,8 @@ CREATE TABLE post_votes_records (
     PRIMARY KEY (uuid)
 );
 CREATE INDEX post_votes_records_index ON post_votes_records (uuid, actor, post_hash, post_type, vote_type, delta_fuel, delta_reputation, delta_milestone_points, signed_reputation, created_at);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON post_votes_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

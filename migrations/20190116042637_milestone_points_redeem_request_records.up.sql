@@ -8,3 +8,8 @@ CREATE TABLE milestone_points_redeem_request_records (
 );
 CREATE INDEX milestone_points_redeem_request_records_index ON milestone_points_redeem_request_records (actor, next_redeem_block, targeted_milestone_points);
 CREATE INDEX total_enrolled_milestone_points_index ON milestone_points_redeem_request_records (next_redeem_block, targeted_milestone_points);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON milestone_points_redeem_request_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

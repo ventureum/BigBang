@@ -7,3 +7,7 @@ CREATE TABLE post_replies_records (
 );
 CREATE INDEX post_replies_records_index ON post_replies_records (post_hash, reply_hash);
 
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON post_replies_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

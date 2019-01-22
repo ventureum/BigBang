@@ -6,5 +6,6 @@ go_test(
     deps = [
         "//test/integration/TCR:go_default_library",
         "//test/integration/feed:go_default_library",
+        "//test/integration/migrations/clear_tables:go_default_library",
     ],
 )

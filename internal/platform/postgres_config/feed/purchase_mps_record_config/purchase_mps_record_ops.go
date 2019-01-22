@@ -19,6 +19,10 @@ func (purchaseMPsRecordExecutor *PurchaseMPsRecordExecutor) DeletePurchaseReputa
 	purchaseMPsRecordExecutor.DeleteTable(TABLE_NAME_FOR_PURCHASE_MPS_RECORDS)
 }
 
+func (purchaseMPsRecordExecutor *PurchaseMPsRecordExecutor) ClearPurchaseReputationsRecordTable() {
+	purchaseMPsRecordExecutor.ClearTable(TABLE_NAME_FOR_PURCHASE_MPS_RECORDS)
+}
+
 func (purchaseMPsRecordExecutor *PurchaseMPsRecordExecutor) UpsertPurchaseMPsRecordTx(
 	purchaseMPsRecord *PurchaseMPsRecord) {
 	_, err := purchaseMPsRecordExecutor.Tx.NamedExec(UPSERT_PURCHASE_MPS_RECORD_COMMAND, purchaseMPsRecord)

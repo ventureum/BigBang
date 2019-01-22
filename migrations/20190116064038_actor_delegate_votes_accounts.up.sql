@@ -18,3 +18,8 @@ CREATE TABLE actor_delegate_votes_accounts (
        REFERENCES projects (project_id) ON DELETE CASCADE
 );
 CREATE INDEX actor_delegate_votes_accounts_index ON actor_delegate_votes_accounts (actor, project_id);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON actor_delegate_votes_accounts
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

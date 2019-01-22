@@ -16,3 +16,8 @@ CREATE TABLE milestones (
 );
 CREATE INDEX milestones_index ON milestones (project_id, milestone_id);
 CREATE INDEX milestones_asc_index ON milestones (milestone_id ASC NULLS LAST);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON milestones
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

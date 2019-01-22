@@ -23,6 +23,10 @@ func (actorVotesCountersRecordExecutor *ActorVotesCountersRecordExecutor) Delete
 	actorVotesCountersRecordExecutor.DeleteTable(TABLE_NAME_FOR_ACTOR_VOTES_COUNTERS_RECORD)
 }
 
+func (actorVotesCountersRecordExecutor *ActorVotesCountersRecordExecutor) ClearActorVotesCountersRecordTable() {
+	actorVotesCountersRecordExecutor.ClearTable(TABLE_NAME_FOR_ACTOR_VOTES_COUNTERS_RECORD)
+}
+
 func (actorVotesCountersRecordExecutor *ActorVotesCountersRecordExecutor) UpsertActorVotesCountersRecordTx(
 	postReputationsRecord *ActorVotesCountersRecord) *ActorVotesCountersRecord {
 	res, err := actorVotesCountersRecordExecutor.Tx.NamedQuery(UPSERT_ACTOR_VOTES_COUNTERS_RECORD_COMMAND, postReputationsRecord)

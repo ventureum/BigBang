@@ -21,6 +21,10 @@ func (sessionRecordExecutor *SessionRecordExecutor) DeleteSessionRecordTable() {
 	sessionRecordExecutor.DeleteTable(TABLE_NAME_FOR_SESSION_RECORDS)
 }
 
+func (sessionRecordExecutor *SessionRecordExecutor) ClearSessionRecordTable() {
+	sessionRecordExecutor.ClearTable(TABLE_NAME_FOR_SESSION_RECORDS)
+}
+
 func (sessionRecordExecutor *SessionRecordExecutor) UpsertSessionRecordTx(sessionRecord *SessionRecord) time.Time {
 	res, err := sessionRecordExecutor.Tx.NamedQuery(UPSERT_SESSION_RECORD_COMMAND, sessionRecord)
 	if err != nil {

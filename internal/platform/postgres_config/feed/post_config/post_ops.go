@@ -23,6 +23,10 @@ func (postExecutor *PostExecutor) DeletePostTable() {
 	postExecutor.DeleteTable(TABLE_NAME_FOR_POST)
 }
 
+func (postExecutor *PostExecutor) ClearPostTable() {
+	postExecutor.ClearTable(TABLE_NAME_FOR_POST)
+}
+
 func (postExecutor *PostExecutor) UpsertPostRecordTx(postRecord *PostRecord) time.Time {
 	res, err := postExecutor.Tx.NamedQuery(UPSERT_POST_COMMAND, postRecord)
 	if err != nil {

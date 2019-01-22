@@ -7,3 +7,8 @@ CREATE TABLE wallet_address_records (
     PRIMARY KEY (uuid)
 );
 CREATE INDEX wallet_address_records_index ON wallet_address_records (actor, wallet_address);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON wallet_address_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

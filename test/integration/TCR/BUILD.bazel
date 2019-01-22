@@ -35,12 +35,10 @@ go_library(
         "//test/lambda/TCR/objective:go_default_library",
         "//test/lambda/TCR/project:go_default_library",
         "//test/lambda/TCR/rating_vote:go_default_library",
-        "//test/lambda/TCR/tcr_table_creator:go_default_library",
         "//test/lambda/TCR/update_available_delegate_votes:go_default_library",
         "//test/lambda/TCR/update_batch_available_delegate_votes:go_default_library",
         "//test/lambda/TCR/update_batch_received_delegate_votes:go_default_library",
         "//test/lambda/TCR/update_received_delegate_votes:go_default_library",
-        "//test/lambda/feed/feed_events_table_creator:go_default_library",
         "//test/lambda/feed/profile:go_default_library",
     ],
 )

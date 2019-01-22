@@ -8,7 +8,6 @@ import (
 	"BigBang/test/lambda/feed/delete_batch_actors"
 	"BigBang/test/lambda/feed/delete_tracked_wallet_addresses"
 	"BigBang/test/lambda/feed/dev_refuel"
-	"BigBang/test/lambda/feed/feed_events_table_creator"
 	"BigBang/test/lambda/feed/feed_post"
 	"BigBang/test/lambda/feed/feed_redeem_milestone_points"
 	"BigBang/test/lambda/feed/feed_token_generator"
@@ -38,9 +37,6 @@ import (
 
 func TestHandler(t *testing.T) {
 	os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
-	t.Run("feed_events_table_creator", feed_events_table_creator_test.TestHandler)
-
-	os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
 	t.Run("profile", profile_test.TestHandler)
 
 	os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
@@ -67,7 +63,7 @@ func TestHandler(t *testing.T) {
 	os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
 	t.Run("get_recent_posts", get_recent_posts_test.TestHandler)
 
-	os.Setenv("AUTH_LEVEL", string(auth.AdminAuth))
+	os.Setenv("AUTH_LEVEL", string(auth.NoAuth))
 	t.Run("get_batch_posts", get_batch_posts_test.TestHandler)
 
 	os.Setenv("AUTH_LEVEL", string(auth.UserAuth))
