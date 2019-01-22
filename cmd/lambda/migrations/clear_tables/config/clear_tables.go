@@ -1,7 +1,15 @@
-package lambda_feed_events_table_creator_config
+package clear_tables_config
 
 import (
 	"BigBang/internal/pkg/error_config"
+	"BigBang/internal/platform/postgres_config/TCR/actor_delegate_votes_account_config"
+	"BigBang/internal/platform/postgres_config/TCR/milestone_config"
+	"BigBang/internal/platform/postgres_config/TCR/milestone_validator_record_config"
+	"BigBang/internal/platform/postgres_config/TCR/objective_config"
+	"BigBang/internal/platform/postgres_config/TCR/principal_proxy_votes_config"
+	"BigBang/internal/platform/postgres_config/TCR/project_config"
+	"BigBang/internal/platform/postgres_config/TCR/proxy_config"
+	"BigBang/internal/platform/postgres_config/TCR/rating_vote_config"
 	"BigBang/internal/platform/postgres_config/client_config"
 	"BigBang/internal/platform/postgres_config/feed/actor_milestone_points_redeem_history_record_config"
 	"BigBang/internal/platform/postgres_config/feed/actor_profile_record_config"
@@ -40,10 +48,6 @@ func ProcessRequest(request Request, response *Response) {
 	}()
 
 	postgresBigBangClient.Begin()
-	postgresBigBangClient.LoadUuidExtension()
-	postgresBigBangClient.LoadVoteTypeEnum()
-	postgresBigBangClient.LoadActorTypeEnum()
-	postgresBigBangClient.LoadActorProfileStatusEnum()
 
 	actorProfileRecordExecutor := actor_profile_record_config.ActorProfileRecordExecutor{*postgresBigBangClient}
 	actorRewardsInfoRecordExecutor := actor_rewards_info_record_config.ActorRewardsInfoRecordExecutor{*postgresBigBangClient}
@@ -57,41 +61,44 @@ func ProcessRequest(request Request, response *Response) {
 	sessionRecordExecutor := session_record_config.SessionRecordExecutor{*postgresBigBangClient}
 	refuelRecordExecutor := refuel_record_config.RefuelRecordExecutor{*postgresBigBangClient}
 	walletAddressRecordExecutor := wallet_address_record_config.WalletAddressRecordExecutor{*postgresBigBangClient}
+
 	milestonePointsRedeemRequestRecordExecutor := milestone_points_redeem_request_record_config.MilestonePointsRedeemRequestRecordExecutor{*postgresBigBangClient}
 	redeemBlockInfoRecordExecutor := redeem_block_info_record_config.RedeemBlockInfoRecordExecutor{*postgresBigBangClient}
 	actorMilestonePointsRedeemHistoryRecordExecutor := actor_milestone_points_redeem_history_record_config.ActorMilestonePointsRedeemHistoryRecordExecutor{*postgresBigBangClient}
+	projectExecutor := project_config.ProjectExecutor{*postgresBigBangClient}
+	objectiveExecutor := objective_config.ObjectiveExecutor{*postgresBigBangClient}
+	milestoneExecutor := milestone_config.MilestoneExecutor{*postgresBigBangClient}
+	proxyExecutor := proxy_config.ProxyExecutor{*postgresBigBangClient}
+	ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
+	actorDelegateVotesAccountExecutor := actor_delegate_votes_account_config.ActorDelegateVotesAccountExecutor{*postgresBigBangClient}
+	principalProxyVotesExecutor := principal_proxy_votes_config.PrincipalProxyVotesExecutor{*postgresBigBangClient}
+	milestoneValidatorRecordExecutor := milestone_validator_record_config.MilestoneValidatorRecordExecutor{*postgresBigBangClient}
 
-	actorMilestonePointsRedeemHistoryRecordExecutor.DeleteActorMilestonePointsRedeemHistoryRecordTable()
-	redeemBlockInfoRecordExecutor.DeleteRedeemBlockInfoRecordTable()
-	milestonePointsRedeemRequestRecordExecutor.DeleteMilestonePointsRedeemRequestRecordTable()
-	walletAddressRecordExecutor.DeleteWalletAddressRecordTable()
-	sessionRecordExecutor.DeleteSessionRecordTable()
-	postVotesRecordExecutor.DeletePostVotesRecordTable()
-	purchaseMPsRecordExecutor.DeletePurchaseReputationsRecordTable()
-	postVotesCountersRecordExecutor.DeletePostVotesCountersRecordTable()
-	postRewardsRecordExecutor.DeletePostRewardsRecordTable()
-	actorVotesCountersRecordExecutor.DeleteActorVotesCountersRecordTable()
-	postRepliesRecordExecutor.DeletePostRepliesRecordTable()
-	refuelRecordExecutor.DeleteRefuelRecordTable()
-	postExecutor.DeletePostTable()
-	actorRewardsInfoRecordExecutor.DeleteActorRewardsInfoRecordTable()
-	actorProfileRecordExecutor.DeleteActorProfileRecordTable()
 
-	actorProfileRecordExecutor.CreateActorProfileRecordTable()
-	actorRewardsInfoRecordExecutor.CreateActorRewardsInfoRecordTable()
-	postExecutor.CreatePostTable()
-	postRepliesRecordExecutor.CreatePostRepliesRecordTable()
-	actorVotesCountersRecordExecutor.CreateActorVotesCountersRecordTable()
-	postRewardsRecordExecutor.CreatePostRewardsRecordTable()
-	postVotesCountersRecordExecutor.CreatePostVotesCountersRecordTable()
-	postVotesRecordExecutor.CreatePostVotesRecordTable()
-	purchaseMPsRecordExecutor.CreatePurchaseMPsRecordTable()
-	refuelRecordExecutor.CreateRefuelRecordTable()
-	sessionRecordExecutor.CreateSessionRecordTable()
-	walletAddressRecordExecutor.CreateWalletAddressRecordTable()
-	milestonePointsRedeemRequestRecordExecutor.CreateMilestonePointsRedeemRequestRecordTable()
-	redeemBlockInfoRecordExecutor.CreateRedeemBlockInfoRecordTable()
-	actorMilestonePointsRedeemHistoryRecordExecutor.CreateActorMilestonePointsRedeemHistoryRecordTable()
+	principalProxyVotesExecutor.ClearPrincipalProxyVotesTable()
+	milestoneValidatorRecordExecutor.ClearMilestoneValidatorRecordTable()
+	actorDelegateVotesAccountExecutor.ClearActorRatingVoteAccountTable()
+	objectiveExecutor.ClearObjectiveTable()
+	milestoneExecutor.ClearMilestoneTable()
+	projectExecutor.ClearProjectTable()
+	proxyExecutor.ClearProxyTable()
+	ratingVoteExecutor.ClearRatingVoteTable()
+	actorMilestonePointsRedeemHistoryRecordExecutor.ClearActorMilestonePointsRedeemHistoryRecordTable()
+	redeemBlockInfoRecordExecutor.ClearRedeemBlockInfoRecordTable()
+	milestonePointsRedeemRequestRecordExecutor.ClearMilestonePointsRedeemRequestRecordTable()
+
+	walletAddressRecordExecutor.ClearWalletAddressRecordTable()
+	sessionRecordExecutor.ClearSessionRecordTable()
+	postVotesRecordExecutor.ClearPostVotesRecordTable()
+	purchaseMPsRecordExecutor.ClearPurchaseReputationsRecordTable()
+	postVotesCountersRecordExecutor.ClearPostVotesCountersRecordTable()
+	postRewardsRecordExecutor.ClearPostRewardsRecordTable()
+	actorVotesCountersRecordExecutor.ClearActorVotesCountersRecordTable()
+	postRepliesRecordExecutor.ClearPostRepliesRecordTable()
+	refuelRecordExecutor.ClearRefuelRecordTable()
+	postExecutor.ClearPostTable()
+	actorRewardsInfoRecordExecutor.ClearActorRewardsInfoRecordTable()
+	actorProfileRecordExecutor.ClearActorProfileRecordTable()
 
 	postgresBigBangClient.Commit()
 	response.Ok = true

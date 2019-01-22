@@ -21,6 +21,10 @@ func (postRepliesRecordExecutor *PostRepliesRecordExecutor) DeletePostRepliesRec
 	postRepliesRecordExecutor.DeleteTable(TABLE_NAME_FOR_POST_REPLIES_RECORD)
 }
 
+func (postRepliesRecordExecutor *PostRepliesRecordExecutor) ClearPostRepliesRecordTable() {
+	postRepliesRecordExecutor.ClearTable(TABLE_NAME_FOR_POST_REPLIES_RECORD)
+}
+
 func (postRepliesRecordExecutor *PostRepliesRecordExecutor) UpsertPostRepliesRecordTx(postRepliesRecord *PostRepliesRecord) {
 	_, err := postRepliesRecordExecutor.Tx.NamedExec(UPSERT_POST_REPLIES_RECORD_COMMAND, postRepliesRecord)
 	if err != nil {

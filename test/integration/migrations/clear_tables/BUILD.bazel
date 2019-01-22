@@ -2,11 +2,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["tcr_table_creator.go"],
-    importpath = "BigBang/test/lambda/TCR/tcr_table_creator",
+    srcs = ["clear_tables.go"],
+    importpath = "BigBang/test/integration/migrations/clear_tables",
     visibility = ["//visibility:public"],
     deps = [
-        "//cmd/lambda/TCR/tcr_table_creator/config:go_default_library",
+        "//cmd/lambda/migrations/clear_tables/config:go_default_library",
         "//vendor/github.com/stretchr/testify/assert:go_default_library",
     ],
 )

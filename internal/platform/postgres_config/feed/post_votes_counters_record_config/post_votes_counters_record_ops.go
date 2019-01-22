@@ -20,6 +20,10 @@ func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) DeletePo
 	postVotesCountersRecordExecutor.DeleteTable(TABLE_NAME_FOR_POST_VOTES_COUNTERS_RECORD)
 }
 
+func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) ClearPostVotesCountersRecordTable() {
+	postVotesCountersRecordExecutor.ClearTable(TABLE_NAME_FOR_POST_VOTES_COUNTERS_RECORD)
+}
+
 func (postVotesCountersRecordExecutor *PostVotesCountersRecordExecutor) UpsertPostVotesCountersRecordTx(
 	postVotesCountersRecord *PostVotesCountersRecord) *PostVotesCountersRecord {
 	res, err := postVotesCountersRecordExecutor.Tx.NamedQuery(UPSERT_POST_VOTES_COUNTRS_RECORD_COMMAND, postVotesCountersRecord)

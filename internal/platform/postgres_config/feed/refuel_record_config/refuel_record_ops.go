@@ -22,6 +22,10 @@ func (refuelRecordExecutor *RefuelRecordExecutor) DeleteRefuelRecordTable() {
 	refuelRecordExecutor.DeleteTable(TABLE_NAME_FOR_REFUEL_RECORD)
 }
 
+func (refuelRecordExecutor *RefuelRecordExecutor) ClearRefuelRecordTable() {
+	refuelRecordExecutor.ClearTable(TABLE_NAME_FOR_REFUEL_RECORD)
+}
+
 func (refuelRecordExecutor *RefuelRecordExecutor) UpsertRefuelRecordTx(
 	refuelRecord *RefuelRecord) {
 	_, err := refuelRecordExecutor.Tx.NamedExec(

@@ -13,7 +13,6 @@ go_library(
         "//test/lambda/feed/delete_batch_actors:go_default_library",
         "//test/lambda/feed/delete_tracked_wallet_addresses:go_default_library",
         "//test/lambda/feed/dev_refuel:go_default_library",
-        "//test/lambda/feed/feed_events_table_creator:go_default_library",
         "//test/lambda/feed/feed_post:go_default_library",
         "//test/lambda/feed/feed_redeem_milestone_points:go_default_library",
         "//test/lambda/feed/feed_token_generator:go_default_library",

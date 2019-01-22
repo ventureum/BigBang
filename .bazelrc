@@ -11,10 +11,11 @@ test:ci \
     --noshow_progress \
     --test_output=errors  \
     --action_env="AUTH_LEVEL" \
-    --action_env="DB_USER" \
-    --action_env="DB_PASSWORD" \
-    --action_env="DB_HOST" \
-    --action_env="DB_NAME" \
+    --action_env="ENV" \
+    --action_env="DB_USER_DEV" \
+    --action_env="DB_PASSWORD_DEV" \
+    --action_env="DB_HOST_DEV" \
+    --action_env="DB_NAME_DEV" \
     --action_env="STREAM_API_KEY" \
     --action_env="STREAM_API_SECRET" \
     --action_env="MuMaxFuel" \

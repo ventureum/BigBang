@@ -22,6 +22,10 @@ func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) DeleteActo
 	actorRewardsInfoRecordExecutor.DeleteTable(TABLE_NAME_FOR_ACTOR_REWARDS_INFO_RECORD)
 }
 
+func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) ClearActorRewardsInfoRecordTable() {
+	actorRewardsInfoRecordExecutor.ClearTable(TABLE_NAME_FOR_ACTOR_REWARDS_INFO_RECORD)
+}
+
 func (actorRewardsInfoRecordExecutor *ActorRewardsInfoRecordExecutor) VerifyActorExistingTx(actor string) {
 	var existing bool
 	err := actorRewardsInfoRecordExecutor.Tx.Get(&existing, VERIFY_ACTOR_EXISTING_COMMAND, actor)

@@ -9,3 +9,8 @@ CREATE TABLE session_records (
     PRIMARY KEY (post_hash)
 );
 CREATE INDEX session_records_index ON session_records (actor, post_hash);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON session_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

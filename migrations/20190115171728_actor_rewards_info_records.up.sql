@@ -12,3 +12,8 @@ CREATE TABLE actor_rewards_info_records (
     PRIMARY KEY (actor)
 );
 CREATE INDEX actor_rewards_info_records_index ON actor_rewards_info_records (actor, fuel, reputation, milestone_points);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON actor_rewards_info_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

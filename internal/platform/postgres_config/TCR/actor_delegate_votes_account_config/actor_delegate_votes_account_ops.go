@@ -21,6 +21,10 @@ func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) Dele
 	actorDelegateVotesAccountExecutor.DeleteTable(TABLE_NAME_FOR_ACTOR_DELEGATE_VOTES_ACCOUNT)
 }
 
+func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) ClearActorRatingVoteAccountTable() {
+	actorDelegateVotesAccountExecutor.ClearTable(TABLE_NAME_FOR_ACTOR_DELEGATE_VOTES_ACCOUNT)
+}
+
 func (actorDelegateVotesAccountExecutor *ActorDelegateVotesAccountExecutor) UpsertActorDelegateVotesAccountRecordTx(
 	actorDelegateVotesAccountRecord *ActorDelegateVotesAccountRecord) {
 	_, err := actorDelegateVotesAccountExecutor.Tx.NamedExec(UPSERT_ACTOR_DELEGATE_VOTES_ACCOUNT_RECORD_COMMAND, actorDelegateVotesAccountRecord)

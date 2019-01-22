@@ -13,3 +13,8 @@ CREATE TABLE actor_votes_counters_records (
     PRIMARY KEY (post_hash, actor)
 );
 CREATE INDEX actor_votes_counters_records_index ON actor_votes_counters_records(post_hash, actor, latest_reputation, latest_vote_type, latest_reputation_for_upvote, latest_reputation_for_downvote, total_vote_count, updated_at);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON actor_votes_counters_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

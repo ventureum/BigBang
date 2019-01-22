@@ -190,6 +190,5 @@ func TestHandler(t *testing.T) {
 		assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.TotalEnrolledMilestonePoints, result.NextRedeem.RedeemBlockInfo.TotalEnrolledMilestonePoints)
 		assert.Equal(t, test.response.NextRedeem.RedeemBlockInfo.ExecutedAt.Unix(), result.NextRedeem.RedeemBlockInfo.ExecutedAt.Unix())
 	}
-
 	postgresBigBangClient.Commit()
 }

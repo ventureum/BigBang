@@ -23,3 +23,8 @@ CREATE TABLE rating_votes (
 );
 CREATE INDEX rating_votes_index ON rating_votes(id, project_id, milestone_id, objective_id, voter);
 CREATE INDEX rating_votes_asc_index ON rating_votes (id DESC NULLS LAST);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON rating_votes
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

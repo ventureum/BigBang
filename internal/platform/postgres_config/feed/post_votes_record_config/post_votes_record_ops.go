@@ -23,6 +23,10 @@ func (postVotesRecordExecutor *PostVotesRecordExecutor) DeletePostVotesRecordTab
 	postVotesRecordExecutor.DeleteTable(TABLE_NAME_FOR_POST_VOTES_RECORD)
 }
 
+func (postVotesRecordExecutor *PostVotesRecordExecutor) ClearPostVotesRecordTable() {
+	postVotesRecordExecutor.ClearTable(TABLE_NAME_FOR_POST_VOTES_RECORD)
+}
+
 func (postVotesRecordExecutor *PostVotesRecordExecutor) UpsertPostVotesRecordTx(postVotesRecord *PostVotesRecord) {
 	_, err := postVotesRecordExecutor.Tx.NamedExec(UPSERT_POST_VOTES_RECORD_COMMAND, postVotesRecord)
 	if err != nil {

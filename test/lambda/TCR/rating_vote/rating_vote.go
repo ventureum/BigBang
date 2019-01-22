@@ -10,6 +10,12 @@ import (
 )
 
 func TestHandler(t *testing.T) {
+	postgresBigBangClient := client_config.ConnectPostgresClient(nil)
+	postgresBigBangClient.Begin()
+	ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
+	ratingVoteExecutor.ClearRatingVoteTable()
+	postgresBigBangClient.Commit()
+
 	tests := []struct {
 		request  lambda_rating_vote_config.Request
 		response lambda_rating_vote_config.Response
@@ -196,9 +202,6 @@ func TestHandler(t *testing.T) {
 			err: nil,
 		},
 	}
-	postgresBigBangClient := client_config.ConnectPostgresClient(nil)
-	ratingVoteExecutor := rating_vote_config.RatingVoteExecutor{*postgresBigBangClient}
-	ratingVoteExecutor.ClearRatingVoteTable()
 
 	for _, test := range tests {
 		result, err := lambda_rating_vote_config.Handler(test.request)

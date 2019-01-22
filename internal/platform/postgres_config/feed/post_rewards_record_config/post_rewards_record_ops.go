@@ -21,6 +21,10 @@ func (postRewardsRecordExecutor *PostRewardsRecordExecutor) DeletePostRewardsRec
 	postRewardsRecordExecutor.DeleteTable(TABLE_NAME_FOR_POST_REWARDS_RECORD)
 }
 
+func (postRewardsRecordExecutor *PostRewardsRecordExecutor) ClearPostRewardsRecordTable() {
+	postRewardsRecordExecutor.ClearTable(TABLE_NAME_FOR_POST_REWARDS_RECORD)
+}
+
 func (postRewardsRecordExecutor *PostRewardsRecordExecutor) UpsertPostRewardsRecordTx(postRewardsRecord *PostRewardsRecord) {
 	_, err := postRewardsRecordExecutor.Tx.NamedExec(UPSERT_POST_REWARDS_RECORD_COMMAND, postRewardsRecord)
 	if err != nil {

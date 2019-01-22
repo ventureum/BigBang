@@ -7,3 +7,8 @@ CREATE TABLE purchase_mps_records (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (uuid)
 );
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON purchase_mps_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

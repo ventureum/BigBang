@@ -11,3 +11,8 @@ CREATE TABLE posts (
     PRIMARY KEY (post_hash)
 );
 CREATE INDEX posts_index ON posts (post_hash, update_count);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON posts
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

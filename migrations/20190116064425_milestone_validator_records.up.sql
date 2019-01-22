@@ -18,3 +18,8 @@ CREATE TABLE milestone_validator_records (
        REFERENCES actor_profile_records (actor) ON DELETE CASCADE
 );
 CREATE INDEX milestone_validator_records_index ON milestone_validator_records (project_id, milestone_id, validator);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON milestone_validator_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

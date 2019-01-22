@@ -13,3 +13,8 @@ CREATE TABLE post_rewards_records(
     PRIMARY KEY (post_hash)
 );
 CREATE INDEX post_rewards_records_index ON post_rewards_records (post_hash, actor, post_type, delta_fuel, delta_reputation, delta_milestone_points, withdrawable_mps);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON post_rewards_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

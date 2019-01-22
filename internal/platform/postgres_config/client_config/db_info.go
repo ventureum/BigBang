@@ -19,10 +19,11 @@ func (dbInfo *DBInfo) ToString() string {
 }
 
 func CreateDefaultDBInfo() *DBInfo {
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	dbHost := os.Getenv("DB_HOST")
+	env := os.Getenv("ENV")
+	dbUser := os.Getenv("DB_USER_" + env)
+	dbPassword := os.Getenv("DB_PASSWORD_" + env)
+	dbName := os.Getenv("DB_NAME_" + env)
+	dbHost := os.Getenv("DB_HOST_" + env)
 	return &DBInfo{
 		DBUser:     dbUser,
 		DBPassword: dbPassword,

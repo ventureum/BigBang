@@ -2,11 +2,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["feed_events_table_creator.go"],
-    importpath = "BigBang/cmd/lambda/feed/feed_events_table_creator/config",
+    srcs = ["clear_tables.go"],
+    importpath = "BigBang/cmd/lambda/migrations/clear_tables/config",
     visibility = ["//visibility:public"],
     deps = [
         "//internal/pkg/error_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/actor_delegate_votes_account_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/milestone_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/milestone_validator_record_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/objective_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/principal_proxy_votes_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/project_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/proxy_config:go_default_library",
+        "//internal/platform/postgres_config/TCR/rating_vote_config:go_default_library",
         "//internal/platform/postgres_config/client_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_milestone_points_redeem_history_record_config:go_default_library",
         "//internal/platform/postgres_config/feed/actor_profile_record_config:go_default_library",

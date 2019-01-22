@@ -13,3 +13,8 @@ CREATE TABLE post_votes_counters_records (
     PRIMARY KEY (post_hash)
 );
 CREATE INDEX post_votes_counters_records_index ON post_votes_counters_records (post_hash, latest_vote_type, downvote_count, upvote_count, total_vote_count);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON post_votes_counters_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

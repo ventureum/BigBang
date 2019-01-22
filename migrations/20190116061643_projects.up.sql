@@ -16,3 +16,8 @@ CREATE TABLE projects (
 );
 CREATE INDEX projects_index ON projects (project_id);
 CREATE INDEX projects_desc_index ON projects (id DESC);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON projects
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

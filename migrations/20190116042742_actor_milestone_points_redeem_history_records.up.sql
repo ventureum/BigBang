@@ -17,3 +17,8 @@ CREATE TABLE actor_milestone_points_redeem_history_records (
 CREATE INDEX actor_milestone_points_redeem_history_records_index ON actor_milestone_points_redeem_history_records (
      actor, redeem_block, redeemed_tokens, submitted_at, executed_at);
 CREATE INDEX actor_milestone_points_redeem_history_records_id_desc_index ON actor_milestone_points_redeem_history_records (id DESC NULLS LAST);
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON actor_milestone_points_redeem_history_records
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
